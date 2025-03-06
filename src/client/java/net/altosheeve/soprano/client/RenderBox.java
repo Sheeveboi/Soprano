@@ -25,7 +25,7 @@ public class RenderBox {
 
         this.r = 1f;
         this.g = 0f;
-        this.b = 0f;
+        this.b = 1f;
         this.a = 1f;
     }
 }
