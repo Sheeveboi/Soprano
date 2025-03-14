@@ -106,6 +106,7 @@ public class NodeCreation {
             newNode.z = nodeJson.getInt("z");
 
             newNode.type = Node.NodeType.valueOf(nodeJson.getString("type"));
+            newNode.tag = nodeJson.getString("tag");
 
             for (Object connection : nodeJson.getJSONArray("connections").toList()) newNode.connections.add((int) connection);
 
