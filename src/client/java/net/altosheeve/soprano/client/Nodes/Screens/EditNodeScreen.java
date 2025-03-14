@@ -28,6 +28,8 @@ public class EditNodeScreen extends Screen {
         TextFieldWidget type = new TextFieldWidget(this.textRenderer, 10, 80, 100, 20, Text.of("Node Type"));
         TextFieldWidget name = new TextFieldWidget(this.textRenderer, 10, 100, 100, 20, Text.of("Node Name"));
 
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        assert player != null;
 
         if (Navigation.currentNode != null) {
             nodeX.setText(String.valueOf(Navigation.currentNode.x));
@@ -35,10 +37,8 @@ public class EditNodeScreen extends Screen {
             nodeZ.setText(String.valueOf(Navigation.currentNode.z));
 
             name.setText(Navigation.currentNode.tag);
-            type.setText(Navigation.currentNode.type.name());
+            type.setText(Navigation.currentNode.type.toString());
         } else {
-            ClientPlayerEntity player = MinecraftClient.getInstance().player;
-            assert player != null;
 
             nodeX.setText(String.valueOf(player.getBlockX()));
             nodeY.setText(String.valueOf(player.getBlockY()));
