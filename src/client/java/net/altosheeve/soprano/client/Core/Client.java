@@ -22,6 +22,7 @@ public class Client implements ClientModInitializer {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            Execution.execute();
         });
 
         WorldRenderEvents.AFTER_TRANSLUCENT.register(Rendering::render);
