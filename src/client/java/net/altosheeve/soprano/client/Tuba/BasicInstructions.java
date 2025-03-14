@@ -2,6 +2,7 @@ package net.altosheeve.soprano.client.Tuba;
 
 import net.altosheeve.soprano.client.Tuba.Async.Request;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +19,7 @@ public abstract class BasicInstructions {
     protected int programPointer = 0;// tells where the TBM is in the program memory
     protected byte readByte = 0b0;
     protected byte writeByte = 0b0;
-    public boolean finished() { return TBMinstructionPointers.isEmpty(); }// tells the TBM if the program has finished executing or not
+    public boolean finished() { return TBMinstructionPointers.isEmpty() || this.programPointer == TBMinstructionPointers.size(); }// tells the TBM if the program has finished executing or not
     public boolean hasRequests() { return !this.requests.isEmpty(); }// tells the TBM if there are concurrent requests to be run after the main thread is finished with its current program iteration
     protected void fulfillRequests() {
         while (!this.requests.isEmpty() && this.requests.get(0).exec()) { this.requests.remove(0); }
@@ -36,4 +37,7 @@ public abstract class BasicInstructions {
         }
     }// if the current program bytecode is mapped to a callback function, run that function
     public void itter() { this.programPointer++; }
+    public BasicInstructions(ArrayList<Byte> program) {
+        this.TBMinstructionPointers = program;
+    }
 }
