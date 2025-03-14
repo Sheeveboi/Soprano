@@ -18,31 +18,22 @@ public abstract class BasicInstructions {
     protected int programPointer = 0;// tells where the TBM is in the program memory
     protected byte readByte = 0b0;
     protected byte writeByte = 0b0;
-    protected boolean finished() { return TBMinstructionPointers.isEmpty(); }// tells the TBM if the program has finished executing or not
-    protected boolean noRequests() { return this.requests.isEmpty(); }// tells the TBM if there are concurrent requests to be run after the main thread is finished with its current program iteration
+    public boolean finished() { return TBMinstructionPointers.isEmpty(); }// tells the TBM if the program has finished executing or not
+    public boolean hasRequests() { return !this.requests.isEmpty(); }// tells the TBM if there are concurrent requests to be run after the main thread is finished with its current program iteration
     protected void fulfillRequests() {
         while (!this.requests.isEmpty() && this.requests.get(0).exec()) { this.requests.remove(0); }
     }// runs all concurrent requests
+    protected void addRequest(Request request) { this.requests.add(request); }
     protected void registerInstruction(byte code, Cb cb) {
         instructionMap.put(code, cb);
         instructionRegister.put(cb, code);
     }// allows implementations of this class to register custom bytecodes or override current ones within a programs memory to a callback function
     protected byte translateInstruction(Cb cb) { return this.instructionRegister.get(cb); } //gets function registries from the instructionRegister
-    protected byte translateProgramPointer() { return this.TBMinstructionPointers.get(this.programPointer); }// returns the current program bytecode
+    public byte translateProgramPointer() { return this.TBMinstructionPointers.get(this.programPointer); }// returns the current program bytecode
     protected void translateInstruction(byte code) {
         if (instructionMap.containsKey(code)) {
             instructionMap.get(code).cb();
         }
     }// if the current program bytecode is mapped to a callback function, run that function
-    public BasicInstructions() {
-        registerInstruction((byte) 0b0 , this::_INIT);
-        registerInstruction((byte) 0b1 , this::_POINT);
-        registerInstruction((byte) 0b01 , this::_READ);
-        registerInstruction((byte) 0b11 , this::_WRITE);
-    }
-    //some fairly general and standard computational instructions a basic CPU might have
-    public abstract void _INIT();
-    public abstract void _POINT();
-    public abstract void _WRITE();
-    public abstract void _READ();
+    public void itter() { this.programPointer++; }
 }
