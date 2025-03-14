@@ -72,9 +72,9 @@ public class Movement extends BasicInstructions {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         assert player != null;
 
-        int blockX = ValueParsing._PARSE_INT(this);
-        int blockY = ValueParsing._PARSE_INT(this);
-        int blockZ = ValueParsing._PARSE_INT(this);
+        int blockX = Values._PARSE_INT(this);
+        int blockY = Values._PARSE_INT(this);
+        int blockZ = Values._PARSE_INT(this);
 
         double dx = player.getX() - blockX - .5;
         double dy = player.getY() - blockY;
@@ -86,12 +86,8 @@ public class Movement extends BasicInstructions {
         dy /= dist;
         dz /= dist;
 
-        int toleranceNumerator = ValueParsing._PARSE_INT(this);
-        int toleranceDenominator = ValueParsing._PARSE_INT(this);
-
-        System.out.println(dx);
-        System.out.println(dy);
-        System.out.println(dz);
+        int toleranceNumerator = Values._PARSE_INT(this);
+        int toleranceDenominator = Values._PARSE_INT(this);
 
         float pitch = (float) Math.asin(-dy);
         float yaw = (float) Math.atan2(dz, dx);
