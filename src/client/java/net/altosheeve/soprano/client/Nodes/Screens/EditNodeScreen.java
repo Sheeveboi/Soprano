@@ -100,6 +100,15 @@ public class EditNodeScreen extends Screen {
             catch (IOException e) { throw new RuntimeException(e); }
         }).dimensions(10, 120, 50, 20).build();
 
+        ButtonWidget getPlayerCoords = ButtonWidget.builder(
+                Text.of("Apply Player Coords"),
+                (widget) -> {
+                    nodeX.setText(String.valueOf(player.getBlockX()));
+                    nodeY.setText(String.valueOf(player.getBlockY()));
+                    nodeZ.setText(String.valueOf(player.getBlockZ()));
+                }
+        ).dimensions(10, 140, 100, 20).build();
+
         addDrawableChild(nodeX);
         addDrawableChild(nodeY);
         addDrawableChild(nodeZ);
@@ -107,5 +116,6 @@ public class EditNodeScreen extends Screen {
         addDrawableChild(type);
         addDrawableChild(update);
         addDrawableChild(add);
+        addDrawableChild(getPlayerCoords);
     }
 }
