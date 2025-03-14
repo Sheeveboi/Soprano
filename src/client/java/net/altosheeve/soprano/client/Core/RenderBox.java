@@ -1,4 +1,4 @@
-package net.altosheeve.soprano.client;
+package net.altosheeve.soprano.client.Core;
 
 public class RenderBox {
     public int x;
