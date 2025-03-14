@@ -19,9 +19,10 @@ public class NodeCreation {
         for (Node node : Navigation.nodes) {
             if (node.x == player.getBlockX() && node.y == player.getBlockY() && node.z == player.getBlockZ()) {
                 Navigation.currentNode = node;
-                break;
+                return;
             }
         }
+        Navigation.currentNode = null; //unselect
     }
 
     public static void connectNode() throws IOException {
