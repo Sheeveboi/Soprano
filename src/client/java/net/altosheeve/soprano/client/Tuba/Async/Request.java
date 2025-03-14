@@ -1,11 +1,11 @@
 package net.altosheeve.soprano.client.Tuba.Async;
 
 public class Request {
-    protected interface cb { //generic callback method
+    public interface cb { //generic callback method
         boolean cb();
     }
     protected final cb runtimeTask;
-    Request(cb runtime) {
+    public Request(cb runtime) {
         this.runtimeTask = runtime;
     }
     //if there's no fulfillment task that needs to be done, then a separate lambda does not need to be made and the runtime lambda can be assigned directly to the lambda parameter
