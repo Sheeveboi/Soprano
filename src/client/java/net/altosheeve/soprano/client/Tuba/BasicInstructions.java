@@ -19,7 +19,7 @@ public abstract class BasicInstructions {
     protected int programPointer = 0;// tells where the TBM is in the program memory
     protected byte readByte = 0b0;
     protected byte writeByte = 0b0;
-    public boolean finished() { return TBMinstructionPointers.isEmpty() || this.programPointer == TBMinstructionPointers.size(); }// tells the TBM if the program has finished executing or not
+    public boolean finished() { return (TBMinstructionPointers.isEmpty() || this.programPointer > TBMinstructionPointers.size() - 1) && this.requests.isEmpty(); }// tells the TBM if the program has finished executing or not
     public boolean hasRequests() { return !this.requests.isEmpty(); }// tells the TBM if there are concurrent requests to be run after the main thread is finished with its current program iteration
     protected void fulfillRequests() {
         while (!this.requests.isEmpty() && this.requests.get(0).exec()) { this.requests.remove(0); }

@@ -26,12 +26,24 @@ public class NodeCreation {
 
     public static void connectNode() throws IOException {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
+
         assert player != null;
+        if (Navigation.currentNode == null) return;
+
         for (Node node : Navigation.nodes) {
             if (node.x == player.getBlockX() && node.y == player.getBlockY() && node.z == player.getBlockZ()) {
+
+                if (Navigation.currentNode.connections.contains(Navigation.nodes.indexOf(node)) || node.connections.contains(Navigation.nodes.indexOf(Navigation.currentNode))) {
+                    node.connections.remove(Navigation.nodes.indexOf(Navigation.currentNode));
+                    Navigation.currentNode.connections.remove(Navigation.nodes.indexOf(node));
+
+                    return;
+                }
+
                 node.connections.add(Navigation.nodes.indexOf(Navigation.currentNode));
                 Navigation.currentNode.connections.add(Navigation.nodes.indexOf(node));
-                break;
+
+                return;
             }
         }
 
