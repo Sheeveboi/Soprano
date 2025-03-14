@@ -1,11 +1,42 @@
 package net.altosheeve.soprano.client.Nodes;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.SpawnReason;
+
 import java.io.IOException;
 import java.util.*;
 
 public class Navigation {
     public static ArrayList<Node> nodes = new ArrayList<>();
     public static Node currentNode;
+    public static double velocityThreshold;
+
+    public static Handler handler;
+
+    public interface Handler {
+        void cb();
+    }
+
+    public static void basicWalkHandler() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayerEntity player = client.player;
+        assert player != null;
+
+        double velocity = player.getVelocity().length();
+
+        System.out.println(velocity);
+
+        client.options.useKey.setPressed(false);
+        client.options.jumpKey.setPressed(false);
+
+        if (velocity > velocityThreshold) return;
+
+        System.out.println("handling");
+
+        client.options.useKey.setPressed(true);
+        client.options.jumpKey.setPressed(true);
+    }
 
     public static ArrayList<Integer> generatePathingIttinerary(String nodeTag) {
         ArrayList<Integer> out = new ArrayList<>();
@@ -65,7 +96,6 @@ public class Navigation {
             }
         }
 
-        System.out.println(out);
         return out;
     }
 }
