@@ -35,16 +35,17 @@ public class NodeCreation {
             if (node.x == player.getBlockX() && node.y == player.getBlockY() && node.z == player.getBlockZ()) {
 
                 if (Navigation.currentNode.connections.contains(Navigation.nodes.indexOf(node)) || node.connections.contains(Navigation.nodes.indexOf(Navigation.currentNode))) {
-                    node.connections.remove(Navigation.nodes.indexOf(Navigation.currentNode));
-                    Navigation.currentNode.connections.remove(Navigation.nodes.indexOf(node));
+                    node.connections.remove((Object) Navigation.nodes.indexOf(Navigation.currentNode));
+                    Navigation.currentNode.connections.remove((Object) Navigation.nodes.indexOf(node));
+                    //these need to be cast to Object, because the remove function will treat these like actual indexes instead
 
-                    return;
+                    break;
                 }
 
                 node.connections.add(Navigation.nodes.indexOf(Navigation.currentNode));
                 Navigation.currentNode.connections.add(Navigation.nodes.indexOf(node));
 
-                return;
+                break;
             }
         }
 
