@@ -92,9 +92,6 @@ public class Rendering {
             lineBuffer.vertex(Navigation.currentNode.x + .5f, Navigation.currentNode.y + .5f, Navigation.currentNode.z + .5f).color(1f, 0f, 0f, 1f);
         }
 
-        lineBuffer.vertex(0f, 0f, 0f).color(1f,0f,0f, 1f);
-        lineBuffer.vertex(0f, -60f, 0f).color(1f,0f,0f,1f);
-
         BufferRenderer.drawWithGlobalProgram(lineBuffer.end());
 
         //reset rendering system
