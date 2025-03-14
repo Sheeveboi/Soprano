@@ -49,18 +49,23 @@ public class EditNodeScreen extends Screen {
         ButtonWidget update = ButtonWidget.builder(Text.of("Update"), (widget) -> {
             if (Navigation.currentNode == null) return;
 
-            Navigation.nodes.remove(Navigation.currentNode);
+            for (Node node : Navigation.nodes) {
+                if (node == Navigation.currentNode) {
+                    node.x = Integer.parseInt(nodeX.getText());
+                    node.y = Integer.parseInt(nodeY.getText());
+                    node.z = Integer.parseInt(nodeZ.getText());
 
-            Navigation.currentNode.x = Integer.parseInt(nodeX.getText());
-            Navigation.currentNode.y = Integer.parseInt(nodeY.getText());
-            Navigation.currentNode.z = Integer.parseInt(nodeZ.getText());
+                    node.tag = name.getText();
 
-            Navigation.currentNode.tag = name.getText();
+                    try {
+                        node.type = Node.NodeType.valueOf(type.getText());
+                    } catch (IllegalArgumentException ignored) {
+                        System.out.println(ignored);
+                    }
 
-            try { Navigation.currentNode.type = Node.NodeType.valueOf(type.getText()); }
-            catch (IllegalArgumentException ignored) { System.out.println(ignored); }
-
-            Navigation.nodes.add(Navigation.currentNode);
+                    break;
+                }
+            }
 
             try { NodeCreation.dumpNodes(); }
             catch (IOException e) { throw new RuntimeException(e); }
@@ -70,8 +75,6 @@ public class EditNodeScreen extends Screen {
 
         ButtonWidget add = ButtonWidget.builder(Text.of("Add"), (widget) -> {
             try {
-                ClientPlayerEntity player = MinecraftClient.getInstance().player;
-                assert player != null;
 
                 Node newNode = new Node(
                         player.getBlockX(),
