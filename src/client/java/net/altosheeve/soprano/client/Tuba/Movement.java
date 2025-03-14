@@ -97,16 +97,12 @@ public class Movement extends BasicInstructions {
 
         yaw += 90;
 
-        System.out.println(pitch);
-        System.out.println(yaw);
-
         double tolerance = (double) toleranceNumerator / (double) toleranceDenominator;
 
         player.setPitch(pitch);
         player.setYaw(yaw);
 
         this.addRequest(new Request(() -> {
-            System.out.println(player.getPos().distanceTo(new Vec3d(blockX + .5, blockY + .5, blockZ + .5)));
             boolean out = player.getPos().distanceTo(new Vec3d(blockX + .5, blockY + .5, blockZ + .5)) < tolerance;
             MinecraftClient.getInstance().options.forwardKey.setPressed(!out);
 
@@ -138,6 +134,8 @@ public class Movement extends BasicInstructions {
 
     public Movement(ArrayList<Byte> program) {
         super(program);
-        this.registerInstruction((byte) 0x0, this::_WALK_TO);
+        this.registerInstruction((byte) 0x0, this::_CALIBRATE);
+        this.registerInstruction((byte) 0x1, this::_WALK_TO);
+        this.registerInstruction((byte) 0x2, this::_PATH_TO);
     }
 }
