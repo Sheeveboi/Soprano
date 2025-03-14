@@ -1,0 +1,27 @@
+package net.altosheeve.soprano.client.Tuba;
+
+import java.util.ArrayList;
+
+public class Values {
+    public static int _PARSE_INT(BasicInstructions instructions) {
+        instructions.itter();
+        return instructions.translateProgramPointer();
+    }
+
+    public static String _PARSE_STRING(BasicInstructions instructions) {
+        int size = _PARSE_INT(instructions);
+        StringBuilder out = new StringBuilder();
+        for (int i = 0 ; i < size; i++) {
+            instructions.itter();
+            out.append((char) instructions.translateProgramPointer());
+        }
+        return out.toString();
+    }
+
+    public static ArrayList<Byte> _ENCODE_STRING(String string) {
+        ArrayList<Byte> out = new ArrayList<>();
+        out.add((byte) string.length());
+        for (char c : string.toCharArray()) out.add((byte) c);
+        return out;
+    }
+}
