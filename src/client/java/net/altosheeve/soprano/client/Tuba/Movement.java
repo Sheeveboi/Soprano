@@ -24,8 +24,6 @@ public class Movement extends BasicInstructions {
         int toleranceNumerator = Values._PARSE_INT(this);
         int toleranceDenominator = Values._PARSE_INT(this);
 
-        System.out.println(targetTag);
-
         double tolerance = (double) toleranceNumerator / toleranceDenominator;
 
         Optional<Node> testing = Navigation.nodes.stream().filter(node -> Objects.equals(targetTag, node.tag)).findFirst();
@@ -102,9 +100,12 @@ public class Movement extends BasicInstructions {
         player.setPitch(pitch);
         player.setYaw(yaw);
 
+        final boolean[] firstTick = {true};
         this.addRequest(new Request(() -> {
             boolean out = player.getPos().distanceTo(new Vec3d(blockX + .5, blockY + .5, blockZ + .5)) < tolerance;
             MinecraftClient.getInstance().options.forwardKey.setPressed(!out);
+            if (!firstTick[0]) Navigation.handler.cb();
+            firstTick[0] = false;
 
             return out;
         }));
@@ -115,15 +116,14 @@ public class Movement extends BasicInstructions {
         int toleranceNumerator = Values._PARSE_INT(this);
         int toleranceDenominator = Values._PARSE_INT(this);
 
-        System.out.println(targetTag);
-
-        int origin = this.programPointer;
+        int origin = this.programPointer + 1;
         for (int i : Objects.requireNonNull(Navigation.generatePathingIttinerary(targetTag))) {
             Node node = Navigation.nodes.get(i);
 
-            System.out.println(node.tag);
-
-            this.addInstruction((byte) 0x1, origin); origin++;
+            this.addInstruction((byte) 0x3, origin); origin++; //set basic movement handler
+            this.addInstruction((byte) 8, origin); origin++; //apply velocity threshold
+            this.addInstruction((byte) 100, origin); origin++;
+            this.addInstruction((byte) 0x1, origin); origin++; //walk to
             this.addInstruction((byte) node.x, origin); origin++;
             this.addInstruction((byte) node.y, origin); origin++;
             this.addInstruction((byte) node.z, origin); origin++;
@@ -132,10 +132,18 @@ public class Movement extends BasicInstructions {
         }
     }
 
+    public void _SET_BASIC_MOVEMENT_HANDLER() {
+        int numerator = Values._PARSE_INT(this);
+        int denominator = Values._PARSE_INT(this);
+        Navigation.velocityThreshold = (double) numerator / denominator;
+        Navigation.handler = Navigation::basicWalkHandler;
+    }
+
     public Movement(ArrayList<Byte> program) {
         super(program);
         this.registerInstruction((byte) 0x0, this::_CALIBRATE);
         this.registerInstruction((byte) 0x1, this::_WALK_TO);
         this.registerInstruction((byte) 0x2, this::_PATH_TO);
+        this.registerInstruction((byte) 0x3, this::_SET_BASIC_MOVEMENT_HANDLER);
     }
 }
