@@ -1,11 +1,15 @@
 package net.altosheeve.soprano.client.Tuba;
 
+import net.altosheeve.soprano.client.Nodes.Navigation;
+import net.altosheeve.soprano.client.Nodes.Node;
 import net.altosheeve.soprano.client.Tuba.Async.Request;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Optional;
 
 public class Movement extends BasicInstructions {
 
