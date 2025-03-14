@@ -37,6 +37,10 @@ public abstract class BasicInstructions {
         }
     }// if the current program bytecode is mapped to a callback function, run that function
     public void itter() { this.programPointer++; }
+    public void addInstruction(byte b) { this.TBMinstructionPointers.add(b); }
+    public void addInstruction(byte b, int i) { this.TBMinstructionPointers.add(i, b); }
+    public void addInstructions(ArrayList<Byte> bytes) { this.TBMinstructionPointers.addAll(bytes); }
+    public void addInstructions(ArrayList<Byte> bytes, int i) { this.TBMinstructionPointers.addAll(i, bytes); }
     public BasicInstructions(ArrayList<Byte> program) {
         this.TBMinstructionPointers = program;
     }
