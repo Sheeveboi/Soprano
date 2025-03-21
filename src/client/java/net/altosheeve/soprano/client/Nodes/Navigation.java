@@ -11,7 +11,9 @@ import java.util.*;
 public class Navigation {
     public static ArrayList<Node> nodes = new ArrayList<>();
     public static Node currentNode;
+    public static Node targetNode;
     public static double velocityThreshold;
+    public static double doorThreshold;
 
     public static Handler handler;
 
