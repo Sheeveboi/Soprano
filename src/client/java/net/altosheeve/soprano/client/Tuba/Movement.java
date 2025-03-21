@@ -149,6 +149,16 @@ public class Movement extends BasicInstructions {
         }
     }
 
+    public void _SET_CURRENT_NODE() {
+        int index = Values._PARSE_INT(this);
+        Navigation.targetNode = Navigation.nodes.get(index);
+    }
+
+    public void _SET_TARGET_NODE() {
+        int index = Values._PARSE_INT(this);
+        Navigation.targetNode = Navigation.nodes.get(index);
+    }
+
     public void _SET_BASIC_MOVEMENT_HANDLER() {
         int numerator = Values._PARSE_INT(this);
         int denominator = Values._PARSE_INT(this);
