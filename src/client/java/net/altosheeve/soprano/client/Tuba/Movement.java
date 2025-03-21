@@ -181,6 +181,9 @@ public class Movement extends BasicInstructions {
         this.registerInstruction((byte) 0x0, this::_CALIBRATE);
         this.registerInstruction((byte) 0x1, this::_WALK_TO);
         this.registerInstruction((byte) 0x2, this::_PATH_TO);
-        this.registerInstruction((byte) 0x3, this::_SET_BASIC_MOVEMENT_HANDLER);
+        this.registerInstruction((byte) 0x3, this::_SET_TARGET_NODE);
+        this.registerInstruction((byte) 0x4, this::_SET_CURRENT_NODE);
+        this.registerInstruction((byte) 0x5, this::_SET_BASIC_MOVEMENT_HANDLER);
+        this.registerInstruction((byte) 0x6, this::_SET_DOOR_HANDLER);
     }
 }
