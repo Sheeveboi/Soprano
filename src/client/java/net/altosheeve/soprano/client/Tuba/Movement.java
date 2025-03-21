@@ -166,6 +166,16 @@ public class Movement extends BasicInstructions {
         Navigation.handler = Navigation::basicWalkHandler;
     }
 
+    public void _SET_DOOR_HANDLER() {
+        int numerator = Values._PARSE_INT(this);
+        int denominator = Values._PARSE_INT(this);
+        Navigation.doorThreshold = (double) numerator / denominator;
+        numerator = Values._PARSE_INT(this);
+        denominator = Values._PARSE_INT(this);
+        Navigation.velocityThreshold = (double) numerator / denominator;
+        Navigation.handler = Navigation::doorHandler;
+    }
+
     public Movement(ArrayList<Byte> program) {
         super(program);
         this.registerInstruction((byte) 0x0, this::_CALIBRATE);
