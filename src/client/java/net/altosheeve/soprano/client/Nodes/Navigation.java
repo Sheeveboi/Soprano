@@ -3,6 +3,7 @@ package net.altosheeve.soprano.client.Nodes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.util.math.Vec3d;
 
 import java.io.IOException;
 import java.util.*;
