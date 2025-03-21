@@ -144,6 +144,8 @@ public class Movement extends BasicInstructions {
             this.addInstruction((byte) node.z, origin); origin++;
             this.addInstruction((byte) toleranceNumerator, origin); origin++;
             this.addInstruction((byte) toleranceDenominator, origin); origin++;
+            this.addInstruction((byte) 0x4, origin); origin++; //set as current node
+            this.addInstruction((byte) i, origin); origin++;
         }
     }
 
