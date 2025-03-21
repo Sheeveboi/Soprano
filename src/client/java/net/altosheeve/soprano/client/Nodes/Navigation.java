@@ -41,6 +41,43 @@ public class Navigation {
         client.options.jumpKey.setPressed(true);
     }
 
+    public static void doorHandler() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayerEntity player = client.player;
+        assert player != null;
+
+        client.options.jumpKey.setPressed(false);
+        client.options.useKey.setPressed(false);
+
+        double velocity = player.getVelocity().length();
+
+        if (player.getPos().distanceTo(new Vec3d(targetNode.x + .5, targetNode.y + .5, targetNode.z + .5)) < doorThreshold) {
+            client.options.useKey.setPressed(true);
+        } else {
+            client.options.useKey.setPressed(false);
+        }
+
+        client.options.leftKey.setPressed(false);
+        client.options.rightKey.setPressed(false);
+
+        if (velocity > velocityThreshold) return;
+
+        double dx = player.getX() - targetNode.x - .5;
+        double dz = player.getZ() - targetNode.z - .5;
+
+        double dist = Math.sqrt(dx*dx + dz*dz);
+
+        dx /= dist;
+        dz /= dist;
+
+        float yaw = (float) Math.atan2(dz, dx);
+
+        boolean direction = player.getYaw() - yaw < 0;
+
+        if (direction) client.options.rightKey.setPressed(true);
+        else client.options.leftKey.setPressed(true);
+    }
+
     public static ArrayList<Integer> generatePathingIttinerary(String nodeTag) {
         ArrayList<Integer> out = new ArrayList<>();
 
