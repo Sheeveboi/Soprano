@@ -120,9 +120,24 @@ public class Movement extends BasicInstructions {
         for (int i : Objects.requireNonNull(Navigation.generatePathingIttinerary(targetTag))) {
             Node node = Navigation.nodes.get(i);
 
-            this.addInstruction((byte) 0x3, origin); origin++; //set basic movement handler
-            this.addInstruction((byte) 8, origin); origin++; //apply velocity threshold
-            this.addInstruction((byte) 100, origin); origin++;
+            this.addInstruction((byte) 0x3, origin); origin++; //set as target node
+            this.addInstruction((byte) i, origin); origin++; //index of node
+
+            switch (node.type) {
+                case NORMAL:
+                    this.addInstruction((byte) 0x5, origin); origin++; //set basic movement handler
+                    this.addInstruction((byte) 8, origin); origin++; //apply velocity threshold
+                    this.addInstruction((byte) 100, origin); origin++;
+                    break;
+                case DOOR:
+                    this.addInstruction((byte) 0x6, origin); origin++; //set basic movement handler
+                    this.addInstruction((byte) 3, origin); origin++; //apply door threshold
+                    this.addInstruction((byte) 1, origin); origin++;
+                    this.addInstruction((byte) 8, origin); origin++; //apply velocity threshold
+                    this.addInstruction((byte) 100, origin); origin++;
+                    break;
+            }
+
             this.addInstruction((byte) 0x1, origin); origin++; //walk to
             this.addInstruction((byte) node.x, origin); origin++;
             this.addInstruction((byte) node.y, origin); origin++;
