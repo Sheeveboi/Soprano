@@ -66,7 +66,6 @@ public class Movement extends BasicInstructions {
     }
 
     public void _WALK_TO() {
-        System.out.println("walking");
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         assert player != null;
 
@@ -136,6 +135,11 @@ public class Movement extends BasicInstructions {
                     this.addInstruction((byte) 8, origin); origin++; //apply velocity threshold
                     this.addInstruction((byte) 100, origin); origin++;
                     break;
+                case ICEROAD:
+                    this.addInstruction((byte) 0x7, origin); origin++; //set basic movement handler
+                    this.addInstruction((byte) 8, origin); origin++; //apply velocity threshold
+                    this.addInstruction((byte) 100, origin); origin++;
+                    break;
             }
 
             this.addInstruction((byte) 0x1, origin); origin++; //walk to
@@ -176,6 +180,13 @@ public class Movement extends BasicInstructions {
         Navigation.handler = Navigation::doorHandler;
     }
 
+    public void _SET_ICEROAD_HANDLER() {
+        float numerator = Values._PARSE_INT(this);
+        float denominator = Values._PARSE_INT(this);
+        Navigation.velocityThreshold = (double) numerator / denominator;
+        Navigation.handler = Navigation::iceroadHandler;
+    }
+
     public Movement(ArrayList<Byte> program) {
         super(program);
         this.registerInstruction((byte) 0x0, this::_CALIBRATE);
@@ -185,5 +196,6 @@ public class Movement extends BasicInstructions {
         this.registerInstruction((byte) 0x4, this::_SET_CURRENT_NODE);
         this.registerInstruction((byte) 0x5, this::_SET_BASIC_MOVEMENT_HANDLER);
         this.registerInstruction((byte) 0x6, this::_SET_DOOR_HANDLER);
+        this.registerInstruction((byte) 0x7, this::_SET_ICEROAD_HANDLER);
     }
 }
