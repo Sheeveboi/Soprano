@@ -73,6 +73,49 @@ public class Navigation {
         else client.options.leftKey.setPressed(true);
     }
 
+    public static void iceroadHandler() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayerEntity player = client.player;
+        assert player != null;
+
+        if (tick % 2 == 0) client.options.jumpKey.setPressed(true);
+        else client.options.jumpKey.setPressed(false);
+        client.options.sprintKey.setPressed(true);
+
+        if (player.getVelocity().length() < velocityThreshold) {
+            double dx = player.getX() - targetNode.x - .5;
+            double dz = player.getZ() - targetNode.z - .5;
+
+            double dist = Math.sqrt(dx*dx + dz*dz);
+
+            dx /= dist;
+            dz /= dist;
+
+            float yaw = (float) Math.atan2(dz, dx);
+
+            boolean direction = player.getYaw() - yaw < 0;
+
+            client.options.rightKey.setPressed(false);
+            client.options.leftKey.setPressed(false);
+
+            if (direction) client.options.rightKey.setPressed(true);
+            else client.options.leftKey.setPressed(true);
+        }
+
+        if (player.getHungerManager().getFoodLevel() < 17) {
+            if (!Objects.equals(player.getInventory().getStack(0).getItemName().getString(), "Baked Potato")) {
+                for (int slot = 0; slot < 36; slot++) {
+                    if (Objects.equals(player.getInventory().getStack(slot).getItemName().getString(), "Baked Potato")) {
+                        player.getInventory().setSelectedSlot(0);
+                        player.getInventory().swapSlotWithHotbar(slot);
+                        break;
+                    }
+                }
+            }
+            client.options.useKey.setPressed(true);
+        }
+    }
+
     public static ArrayList<Integer> generatePathingIttinerary(String nodeTag) {
         ArrayList<Integer> out = new ArrayList<>();
 
