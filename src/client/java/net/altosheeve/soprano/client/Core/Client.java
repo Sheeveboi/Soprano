@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public class Client implements ClientModInitializer {
 
+    private static int tick = 0;
     @Override
     public void onInitializeClient() {
         Keys.registerKeys();
@@ -19,6 +20,9 @@ public class Client implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             try {
                 Keys.handleKeys();
+                tick++;
+                tick = tick % 100;
+                Navigation.tick = tick;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

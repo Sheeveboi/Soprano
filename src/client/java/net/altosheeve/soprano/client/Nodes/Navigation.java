@@ -14,6 +14,7 @@ public class Navigation {
     public static Node targetNode;
     public static double velocityThreshold;
     public static double doorThreshold;
+    public static int tick;
 
     public static Handler handler;
 
