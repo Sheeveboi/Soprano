@@ -155,7 +155,7 @@ public class Movement extends BasicInstructions {
 
     public void _SET_CURRENT_NODE() {
         int index = Values._PARSE_INT(this);
-        Navigation.targetNode = Navigation.nodes.get(index);
+        Navigation.currentNode = Navigation.nodes.get(index);
     }
 
     public void _SET_TARGET_NODE() {
