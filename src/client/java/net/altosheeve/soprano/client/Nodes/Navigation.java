@@ -35,8 +35,6 @@ public class Navigation {
 
         if (velocity > velocityThreshold) return;
 
-        System.out.println("handling");
-
         client.options.useKey.setPressed(true);
         client.options.jumpKey.setPressed(true);
     }
@@ -46,9 +44,6 @@ public class Navigation {
         ClientPlayerEntity player = client.player;
         assert player != null;
 
-        client.options.jumpKey.setPressed(false);
-        client.options.useKey.setPressed(false);
-
         double velocity = player.getVelocity().length();
 
         if (player.getPos().distanceTo(new Vec3d(targetNode.x + .5, targetNode.y + .5, targetNode.z + .5)) < doorThreshold) {
@@ -56,9 +51,6 @@ public class Navigation {
         } else {
             client.options.useKey.setPressed(false);
         }
-
-        client.options.leftKey.setPressed(false);
-        client.options.rightKey.setPressed(false);
 
         if (velocity > velocityThreshold) return;
 
@@ -73,6 +65,9 @@ public class Navigation {
         float yaw = (float) Math.atan2(dz, dx);
 
         boolean direction = player.getYaw() - yaw < 0;
+
+        client.options.rightKey.setPressed(false);
+        client.options.leftKey.setPressed(false);
 
         if (direction) client.options.rightKey.setPressed(true);
         else client.options.leftKey.setPressed(true);
@@ -135,6 +130,8 @@ public class Navigation {
                 testNode = nodes.get(out.getLast());
             }
         }
+
+        System.out.println(out);
 
         return out;
     }
