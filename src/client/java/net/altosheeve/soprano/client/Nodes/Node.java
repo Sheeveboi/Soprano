@@ -1,6 +1,6 @@
 package net.altosheeve.soprano.client.Nodes;
 
-import net.altosheeve.soprano.client.Core.RenderBox;
+import net.altosheeve.soprano.client.RenderMethods.RenderBox;
 
 import java.util.ArrayList;
 
