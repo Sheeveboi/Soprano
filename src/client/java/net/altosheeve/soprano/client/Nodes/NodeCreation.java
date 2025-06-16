@@ -101,6 +101,8 @@ public class NodeCreation {
             Node newNode = new Node(0, 0, 0);
             JSONObject nodeJson = nodes.getJSONObject(i);
 
+            System.out.println(nodeJson.toString());
+
             newNode.x = nodeJson.getInt("x");
             newNode.y = nodeJson.getInt("y");
             newNode.z = nodeJson.getInt("z");
