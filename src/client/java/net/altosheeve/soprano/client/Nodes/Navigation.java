@@ -3,6 +3,9 @@ package net.altosheeve.soprano.client.Nodes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 import java.io.IOException;
@@ -20,6 +23,21 @@ public class Navigation {
 
     public interface Handler {
         void cb();
+    }
+
+    public static void resetControls() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayerEntity player = client.player;
+        assert player != null;
+
+        client.options.useKey.setPressed(false);
+        client.options.jumpKey.setPressed(false);
+        client.options.leftKey.setPressed(false);
+        client.options.rightKey.setPressed(false);
+        client.options.forwardKey.setPressed(false);
+        client.options.backKey.setPressed(false);
+        client.options.attackKey.setPressed(false);
+        client.options.sprintKey.setPressed(false);
     }
 
     public static void basicWalkHandler() {
