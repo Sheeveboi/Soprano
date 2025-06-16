@@ -101,6 +101,7 @@ public class Movement extends BasicInstructions {
 
         final boolean[] firstTick = {true};
         this.addRequest(new Request(() -> {
+            System.out.println(player.getVelocity().length());
             boolean out = player.getPos().distanceTo(new Vec3d(blockX + .5, blockY + .5, blockZ + .5)) < tolerance;
             MinecraftClient.getInstance().options.forwardKey.setPressed(!out);
             if (!firstTick[0]) Navigation.handler.cb();
@@ -161,6 +162,7 @@ public class Movement extends BasicInstructions {
     public void _SET_TARGET_NODE() {
         int index = Values._PARSE_INT(this);
         Navigation.targetNode = Navigation.nodes.get(index);
+        System.out.println(Navigation.targetNode.tag);
     }
 
     public void _SET_BASIC_MOVEMENT_HANDLER() {
