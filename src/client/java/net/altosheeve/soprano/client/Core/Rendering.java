@@ -22,6 +22,11 @@ public class Rendering {
     public static MinecraftClient client = MinecraftClient.getInstance();
     public static Matrix4fStack modelViewStack;
 
+    public static float scalingFunction(float scale, Waypoint.Type type, float x, float y, float z) {
+        float originalScale = scale * Values.scaleRegistry(type);
+        return originalScale * (float) (0.005f * (Rendering.client.player.getEyePos().distanceTo(new Vec3d(x + .5, y - .5, z + .5)) / (Math.E)));
+    }
+
     public static void render3d(WorldRenderContext context) {
         ClientPlayerEntity player = client.player;
         if (player == null) return;
