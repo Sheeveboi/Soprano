@@ -20,7 +20,7 @@ public class Request extends Thread {
             .build();
 
     public interface RequestCallback {
-        void cb(Map<String, List<String>> headers, String body);
+        void cb(Map<String, List<String>> headers, String body) throws IOException;
     }
 
     private static class RequestFuture extends Thread {
@@ -41,6 +41,7 @@ public class Request extends Thread {
             }
         }
     }
+
     public static void get(String url, RequestCallback cb) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
