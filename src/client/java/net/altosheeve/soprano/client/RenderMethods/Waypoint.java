@@ -1,20 +1,17 @@
 package net.altosheeve.soprano.client.RenderMethods;
 
+import net.altosheeve.soprano.client.Core.Values;
 import net.altosheeve.soprano.client.Core.Rendering;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.render.Camera;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
-import org.joml.Matrix4fStack;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
 
 public class Waypoint {
-
+    
     public enum Type {
         GOOD_GUY,
         NORMAL,
@@ -28,7 +25,7 @@ public class Waypoint {
     }
 
     public static ArrayList<Waypoint> waypoints = new ArrayList<>();
-
+    
     public float x;
     public float y;
     public float z;
@@ -41,20 +38,133 @@ public class Waypoint {
         this.x = x;
         this.y = y;
         this.z = z;
+
+        this.type = Type.GOOD_GUY;
+        this.importance = 1;
+        this.decayRate = 0;
+    }
+
+    public Waypoint(float x, float y, float z, Type type) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+
+        this.type = type;
+        this.importance = 1;
+        this.decayRate = 0;
+    }
+    
+    public void drawGoodGuy(BufferBuilder buffer, Matrix4f spriteTransform) {
+        RenderCircle outerOutline = new RenderCircle(0,0,0, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance, .8f, 1);
+        RenderCircle innerCircle  = new RenderCircle(0,0,0, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance, 0, .6f);
+
+        outerOutline.draw(buffer, spriteTransform);
+        innerCircle.draw(buffer, spriteTransform);
+    }
+
+    public void drawNormal(BufferBuilder buffer, Matrix4f spriteTransform) {
+        RenderCircle outerOutline = new RenderCircle(0,0,0, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance, .9f, 1);
+        RenderCircle innerCircle  = new RenderCircle(0,0,0, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance, 0, .4f);
+
+        outerOutline.draw(buffer, spriteTransform);
+        innerCircle.draw(buffer, spriteTransform);
+    }
+
+    public void drawShitter(BufferBuilder buffer, Matrix4f spriteTransform) {
+        RenderCircle outerOutline = new RenderCircle(0,0,0, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance, .5f, 1);
+
+        outerOutline.draw(buffer, spriteTransform);
+    }
+
+    public void drawHitler(BufferBuilder buffer, Matrix4f spriteTransform) {
+        RenderCircle outerOutline = new RenderCircle(0,0,0, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance, 0, 1);
+
+        outerOutline.draw(buffer, spriteTransform);
+    }
+
+    public void drawSnitch(BufferBuilder buffer, Matrix4f spriteTransform) {
+        buffer.vertex(spriteTransform, 0, .999f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, 0, .999f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, .999f, -.999f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, -.999f, -.999f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+    }
+
+    public void drawSnitchAlert(BufferBuilder buffer, Matrix4f spriteTransform) {
+        buffer.vertex(spriteTransform, 0, .999f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, 0, .999f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, .999f, -.999f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, -.999f, -.999f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+    }
+
+    public void drawPing(BufferBuilder buffer, Matrix4f spriteTransform) {
+        RenderCircle firstRing  = new RenderCircle(0, 0, 0, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], 1, 1, .80f);
+        RenderCircle secondRing = new RenderCircle(0, 0, 0, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], 1, .60f, .40f);
+
+        firstRing.draw(buffer, spriteTransform);
+        secondRing.draw(buffer, spriteTransform);
+    }
+
+    public void drawAlert(BufferBuilder buffer, Matrix4f spriteTransform) {
+        RenderCircle firstRing  = new RenderCircle(0, 0, 0, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], 1, 1, .80f);
+        RenderCircle secondRing = new RenderCircle(0, 0, 0, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], 1, .60f, .40f);
+        RenderCircle thirdRing  = new RenderCircle(0, 0, 0, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], 1, .20f, 0);
+
+        firstRing.draw(buffer, spriteTransform);
+        secondRing.draw(buffer, spriteTransform);
+        thirdRing.draw(buffer, spriteTransform);
+    }
+
+    public void drawPermanent(BufferBuilder buffer, Matrix4f spriteTransform) {
+        buffer.vertex(spriteTransform, 1, 1, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, .8f, .8f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, -.8f, .8f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, -1, 1, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+
+        buffer.vertex(spriteTransform, 1, 1, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, .8f, .8f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, .8f, -.8f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, 1, -1, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+
+        buffer.vertex(spriteTransform, -1, 1, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, -.8f, .8f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, -.8f, -.8f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, -1, -1, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+
+        buffer.vertex(spriteTransform, 1, -1, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, .8f, -.8f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, -.8f, -.8f, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+        buffer.vertex(spriteTransform, -1, -1, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
+    }
+
+    public void drawShaft(BufferBuilder buffer) {
+        float scale = Rendering.scalingFunction(2f, this.type, this.x, this.y, this.z);
+        Matrix4f transform = new Matrix4f();
+        transform.translationRotateScale(new Vector3f(this.x + .5f - scale / 2, this.y, this.z + .5f - scale / 2), new Quaternionf(), new Vector3f(scale, 1, scale));
+
+        RenderBox shaft = new RenderBox(0, -500, 0, 1, 9000, 1, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], .2f);
+        shaft.draw(buffer, transform);
     }
 
     public void draw(BufferBuilder buffer) {
+        float scale = Rendering.scalingFunction(Values.waypointScale, this.type, this.x, this.y, this.z);
+        Matrix4f spriteTransform = new Matrix4f();
+        spriteTransform.translationRotateScale(new Vector3f(this.x + .5f, this.y - .5f, this.z + .5f), Rendering.client.getEntityRenderDispatcher().getRotation(), scale);
 
-        float originalScale = 10f;
-        float scale = originalScale * (float) (0.005f * (Rendering.client.player.getPos().distanceTo(new Vec3d(this.x + .5, this.y + .5, this.z + .5)) / 2.4));
-        scale = Math.clamp(scale, originalScale / 20, originalScale * 4);
-        Matrix4f transform = new Matrix4f();
+        drawShaft(buffer);
 
-        transform.translationRotateScale(new Vector3f(this.x + .5f, this.y + .5f, this.z + .5f), Rendering.client.getEntityRenderDispatcher().getRotation(), scale);
+        switch (this.type) {
+            case GOOD_GUY -> drawGoodGuy(buffer, spriteTransform);
+            case NORMAL   -> drawNormal(buffer, spriteTransform);
+            case SHITTER  -> drawShitter(buffer, spriteTransform);
+            case HITLER   -> drawHitler(buffer, spriteTransform);
 
-        buffer.vertex(transform, -.5f, -.5f, 0).color(1f, 0f, 0f, 1f);
-        buffer.vertex(transform,.5f, -.5f, 0).color(1f, 0f, 0f, 1f);
-        buffer.vertex(transform,.5f, .5f, 0).color(1f, 0f, 0f, 1f);
-        buffer.vertex(transform,-.5f, .5f, 0).color(1f, 0f, 0f, 1f);
+            case SNITCH         -> drawSnitch(buffer, spriteTransform);
+            case SNITCH_ALERT   -> drawSnitchAlert(buffer, spriteTransform);
+
+            case PING  -> drawPing(buffer, spriteTransform);
+            case ALERT -> drawAlert(buffer, spriteTransform);
+
+            case PERMANENT -> drawPermanent(buffer, spriteTransform);
+        }
     }
 }
