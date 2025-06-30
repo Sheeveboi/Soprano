@@ -21,6 +21,28 @@ public class Values {
     public static float alertScale = 1f;
     public static float permanentScale = 1f;
 
+    public static float waypointImportance = .8f;
+    public static float goodGuyImportance = 1f;
+    public static float normalImportance = .3f;
+    public static float shitterImportance = .7f;
+    public static float hitlerImportance = 1f;
+    public static float snitchImportance = .2f;
+    public static float snitchAlertImportance = .8f;
+    public static float pingImportance = 1f;
+    public static float alertImportance = 1f;
+    public static float permanentImportance = .7f;
+
+    public static float waypointDecayRate = .001f;
+    public static float goodGuyDecayRate = .0001f;
+    public static float normalDecayRate = .0001f;
+    public static float shitterDecayRate = .0001f;
+    public static float hitlerDecayRate = .0001f;
+    public static float snitchDecayRate = .01f;
+    public static float snitchAlertDecayRate = .0001f;
+    public static float pingDecayRate = .001f;
+    public static float alertDecayRate = .0001f;
+    public static float permanentDecayRate = 0f;
+
     public static float scaleRegistry(Waypoint.Type type) {
         switch (type) {
             case GOOD_GUY -> { return goodGuyScale; }
@@ -37,6 +59,44 @@ public class Values {
             case PERMANENT -> { return permanentScale; }
 
             default -> { return waypointScale; }
+        }
+    }
+
+    public static float importanceRegistry(Waypoint.Type type) {
+        switch (type) {
+            case GOOD_GUY -> { return goodGuyImportance; }
+            case NORMAL   -> { return normalImportance; }
+            case SHITTER  -> { return shitterImportance; }
+            case HITLER   -> { return hitlerImportance; }
+
+            case SNITCH         -> { return snitchImportance; }
+            case SNITCH_ALERT   -> { return snitchAlertImportance; }
+
+            case PING  -> { return pingImportance; }
+            case ALERT -> { return alertImportance; }
+
+            case PERMANENT -> { return permanentImportance; }
+
+            default -> { return waypointImportance; }
+        }
+    }
+
+    public static float decayRateRegistry(Waypoint.Type type) {
+        switch (type) {
+            case GOOD_GUY -> { return goodGuyDecayRate; }
+            case NORMAL   -> { return normalDecayRate; }
+            case SHITTER  -> { return shitterDecayRate; }
+            case HITLER   -> { return hitlerDecayRate; }
+
+            case SNITCH         -> { return snitchDecayRate; }
+            case SNITCH_ALERT   -> { return snitchAlertDecayRate; }
+
+            case PING  -> { return pingDecayRate; }
+            case ALERT -> { return alertDecayRate; }
+
+            case PERMANENT -> { return permanentDecayRate; }
+
+            default -> { return waypointDecayRate; }
         }
     }
 

@@ -29,6 +29,7 @@ public class UDPClient {
             this.socket = socket;
         }
         public void run() {
+
             byte[] recieve = new byte[packetLength];
             while (true) {
                 DatagramPacket packet = new DatagramPacket(recieve, packetLength);
@@ -40,6 +41,7 @@ public class UDPClient {
                     break;
                 }
             }
+
             while (true) {
                 int tries = 0;
                 try {
@@ -51,6 +53,7 @@ public class UDPClient {
                     System.out.println("reconnect failed with " + tries + " tries");
                 }
             }
+
         }
     }
 

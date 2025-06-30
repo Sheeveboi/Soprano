@@ -9,6 +9,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Waypoint {
     
@@ -33,6 +34,31 @@ public class Waypoint {
     public Type type;
     public float importance;
     public float decayRate;
+    public boolean overworld;
+
+    public String name;
+
+    public static void updateWaypoint(float x, float y, float z, Type type, String name, boolean overworld) {
+        for (Waypoint waypoint : waypoints) {
+            if (Objects.equals(waypoint.name, name)) {
+                waypoint.type = type;
+
+                waypoint.x = x;
+                waypoint.y = y;
+                waypoint.z = z;
+
+                waypoint.importance = Values.importanceRegistry(type);
+                waypoint.decayRate = Values.decayRateRegistry(type);
+
+                waypoint.overworld = overworld;
+
+                return;
+            }
+        }
+
+        waypoints.add(new Waypoint(x, y, z,type, name));
+
+    }
 
     public Waypoint(float x, float y, float z) {
         this.x = x;
@@ -52,6 +78,17 @@ public class Waypoint {
         this.type = type;
         this.importance = 1;
         this.decayRate = 0;
+    }
+
+    public Waypoint(float x, float y, float z, Type type, String name) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+
+        this.type = type;
+        this.importance = Values.importanceRegistry(type);
+        this.decayRate = Values.decayRateRegistry(type);;
+        this.name = name;
     }
     
     public void drawGoodGuy(BufferBuilder buffer, Matrix4f spriteTransform) {

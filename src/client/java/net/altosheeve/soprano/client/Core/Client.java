@@ -6,7 +6,6 @@ import net.altosheeve.soprano.client.Tuba.Execution;
 import net.altosheeve.soprano.client.Tuba.Values;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 
 import java.io.IOException;
@@ -19,7 +18,7 @@ public class Client implements ClientModInitializer {
     public void onInitializeClient() {
         Keys.registerKeys();
 
-        try { NodeCreation.loadNodes(); }
+        /*try { NodeCreation.loadNodes(); }
         catch (IOException e) { throw new RuntimeException(e); }
 
         ArrayList<Byte> testProgram = new ArrayList<>();
@@ -58,7 +57,13 @@ public class Client implements ClientModInitializer {
         testProgram.add((byte) 8); //set tolerance
         testProgram.add((byte) 10);
 
-        Execution.setProgram(testProgram);
+        Execution.setProgram(testProgram);*/
+
+        try {
+            Relaying.startStream();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             try {
@@ -69,9 +74,14 @@ public class Client implements ClientModInitializer {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            Execution.execute();
+            //Execution.execute();
+            try {
+                Relaying.relayInfo();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
 
-        WorldRenderEvents.LAST.register(Rendering::render3d);
+        WorldRenderEvents.LAST.register((Rendering::render3d));
     }
 }

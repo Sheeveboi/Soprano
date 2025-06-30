@@ -71,19 +71,15 @@ public class Rendering {
             BufferRenderer.drawWithGlobalProgram(lineBuffer.end());
         }
 
-        if (true) {
+        if (!Waypoint.waypoints.isEmpty()) {
 
             RenderSystem.disableDepthTest();
-            RenderSystem.disableBlend();
 
             BufferBuilder waypointBuffer = RenderSystem.renderThreadTesselator().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 
-            Waypoint test = new Waypoint(0, -58, 0);
-            Waypoint test2 = new Waypoint(3, -58, 0);
-            test.draw(waypointBuffer);
-            test2.draw(waypointBuffer);
-
+            for (Waypoint waypoint : Waypoint.waypoints) waypoint.draw(waypointBuffer);
             BufferRenderer.drawWithGlobalProgram(waypointBuffer.end());
+
         }
         //reset rendering system
         RenderSystem.enableDepthTest();
