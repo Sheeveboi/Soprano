@@ -1,6 +1,7 @@
 package net.altosheeve.soprano.client.Core;
 
 import net.altosheeve.soprano.client.RenderMethods.Waypoint;
+import net.minecraft.client.MinecraftClient;
 
 public class Values {
     public static float[] greenColor        = {.145f, .917f, .364f};
@@ -10,7 +11,10 @@ public class Values {
     public static float[] blueColor         = {.145f, .427f, .917f};
     public static float[] purpleColor       = {.749f, .145f, .917f};
 
-    public static float waypointScale = 14f;
+    public static float scaleThreshold = 1f;
+    public static float shaftScale = 4f;
+
+    public static float waypointScale = .02f;
     public static float goodGuyScale = 1f;
     public static float normalScale = 1f;
     public static float shitterScale = 1f;
