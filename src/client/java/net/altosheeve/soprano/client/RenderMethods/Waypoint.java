@@ -2,18 +2,21 @@ package net.altosheeve.soprano.client.RenderMethods;
 
 import net.altosheeve.soprano.client.Core.Values;
 import net.altosheeve.soprano.client.Core.Rendering;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.Font;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.text.Text;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import org.joml.Vector3fc;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Waypoint {
-    
+
     public enum Type {
         GOOD_GUY,
         NORMAL,
@@ -27,7 +30,7 @@ public class Waypoint {
     }
 
     public static ArrayList<Waypoint> waypoints = new ArrayList<>();
-    
+
     public float x;
     public float y;
     public float z;
@@ -37,11 +40,12 @@ public class Waypoint {
     public float decayRate;
     public boolean overworld;
 
-    public String name;
+    public String uuid;
+    public String username;
 
     public static void updateWaypoint(float x, float y, float z, Type type, String name, boolean overworld) {
         for (Waypoint waypoint : waypoints) {
-            if (Objects.equals(waypoint.name, name)) {
+            if (Objects.equals(waypoint.uuid, name)) {
                 waypoint.type = type;
 
                 waypoint.x = x;
@@ -89,9 +93,9 @@ public class Waypoint {
         this.type = type;
         this.importance = Values.importanceRegistry(type);
         this.decayRate = Values.decayRateRegistry(type);;
-        this.name = name;
+        this.uuid = name;
     }
-    
+
     public void drawGoodGuy(BufferBuilder buffer, Matrix4f spriteTransform) {
         RenderCircle outerOutline = new RenderCircle(0,0,0, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance, .8f, 1);
         RenderCircle innerCircle  = new RenderCircle(0,0,0, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance, 0, .6f);
@@ -180,32 +184,12 @@ public class Waypoint {
     }
 
     public void draw(BufferBuilder buffer) {
-        //float scale = Rendering.scalingFunction(Values.waypointScale, this.type, this.x + .5f, this.y - .5f, this.z + .5f);
-        float scale = Values.waypointScale;
 
-        Vector3f directionalVector = new Vector3f(this.x + .5f, this.y - .5f, this.z + .5f);
-        Vector3f playerPos = new Vector3f((float) Rendering.client.gameRenderer.getCamera().getPos().x, (float) Rendering.client.gameRenderer.getCamera().getPos().y, (float) Rendering.client.gameRenderer.getCamera().getPos().z);
+        this.importance -= decayRate;
+        if (importance == 0) Waypoint.waypoints.remove(this);
 
-        float shaftScale = Rendering.scalingFunction(Values.shaftScale, this.type, this.x + .5f, this.y - .5f, this.z + .5f);
-
-        Matrix4f shaftTransform = new Matrix4f();
-        shaftTransform.translationRotateScale(new Vector3f(this.x + .5f - shaftScale / 2, this.y - .5f, this.z + .5f - shaftScale / 2), new Quaternionf(), new Vector3f(shaftScale, 1, shaftScale));
-
-        directionalVector.sub(playerPos);
-        //get vector of player to waypoint
-
-        float dist = directionalVector.distance(0, 0, 0);
-        directionalVector.div(dist, dist, dist);
-        //get unit vector of the directional vector
-
-        directionalVector.mul(Values.scaleThreshold, Values.scaleThreshold, Values.scaleThreshold);
-        //scale vector by scale factor, essentially moving the waypoint away from the player from a set distance
-
-        directionalVector.add(playerPos);
-        //offset vector back to player position
-
-        Matrix4f spriteTransform = new Matrix4f();
-        spriteTransform.translationRotateScale(directionalVector, Rendering.client.getEntityRenderDispatcher().getRotation(), scale);
+        Matrix4f spriteTransform = Transforms.getSpriteTransform(this.x, this.y, this.z, Values.waypointScale);
+        Matrix4f shaftTransform = Transforms.getShaftTransform(this.x, this.y, this.z, Values.shaftScale, this.type);
 
         drawShaft(buffer, shaftTransform);
 
@@ -223,5 +207,7 @@ public class Waypoint {
 
             case PERMANENT -> drawPermanent(buffer, spriteTransform);
         }
+
+
     }
 }
