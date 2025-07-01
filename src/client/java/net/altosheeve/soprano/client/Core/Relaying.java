@@ -60,7 +60,7 @@ public class Relaying {
                 i += (int) (z[1] + 1);
                 int threat = message.getBytes(StandardCharsets.UTF_8)[i];
 
-                Waypoint.updateWaypoint(x[0] - .5f, y[0], z[0] - .5f, Waypoint.Type.values()[threat], UUID, true);
+                if (!UUID.equals(Rendering.client.player.getUuidAsString())) Waypoint.updateWaypoint(x[0] - .5f, (float) Rendering.client.player.getY(), z[0] - .5f, Waypoint.Type.values()[threat - 2], UUID, true);
             }
         }
 
