@@ -7,6 +7,7 @@ import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -173,21 +174,40 @@ public class Waypoint {
         buffer.vertex(spriteTransform, -1, -1, 0).color(Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], importance);
     }
 
-    public void drawShaft(BufferBuilder buffer) {
-        float scale = Rendering.scalingFunction(2f, this.type, this.x, this.y, this.z);
-        Matrix4f transform = new Matrix4f();
-        transform.translationRotateScale(new Vector3f(this.x + .5f - scale / 2, this.y, this.z + .5f - scale / 2), new Quaternionf(), new Vector3f(scale, 1, scale));
-
+    public void drawShaft(BufferBuilder buffer, Matrix4f shaftTransform) {
         RenderBox shaft = new RenderBox(0, -500, 0, 1, 9000, 1, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], .2f);
-        shaft.draw(buffer, transform);
+        shaft.draw(buffer, shaftTransform);
     }
 
     public void draw(BufferBuilder buffer) {
-        float scale = Rendering.scalingFunction(Values.waypointScale, this.type, this.x, this.y, this.z);
-        Matrix4f spriteTransform = new Matrix4f();
-        spriteTransform.translationRotateScale(new Vector3f(this.x + .5f, this.y - .5f, this.z + .5f), Rendering.client.getEntityRenderDispatcher().getRotation(), scale);
+        //float scale = Rendering.scalingFunction(Values.waypointScale, this.type, this.x + .5f, this.y - .5f, this.z + .5f);
+        float scale = Values.waypointScale;
 
-        drawShaft(buffer);
+        Vector3f directionalVector = new Vector3f(this.x + .5f, this.y - .5f, this.z + .5f);
+        Vector3f playerPos = new Vector3f((float) Rendering.client.gameRenderer.getCamera().getPos().x, (float) Rendering.client.gameRenderer.getCamera().getPos().y, (float) Rendering.client.gameRenderer.getCamera().getPos().z);
+
+        float shaftScale = Rendering.scalingFunction(Values.shaftScale, this.type, this.x + .5f, this.y - .5f, this.z + .5f);
+
+        Matrix4f shaftTransform = new Matrix4f();
+        shaftTransform.translationRotateScale(new Vector3f(this.x + .5f - shaftScale / 2, this.y - .5f, this.z + .5f - shaftScale / 2), new Quaternionf(), new Vector3f(shaftScale, 1, shaftScale));
+
+        directionalVector.sub(playerPos);
+        //get vector of player to waypoint
+
+        float dist = directionalVector.distance(0, 0, 0);
+        directionalVector.div(dist, dist, dist);
+        //get unit vector of the directional vector
+
+        directionalVector.mul(Values.scaleThreshold, Values.scaleThreshold, Values.scaleThreshold);
+        //scale vector by scale factor, essentially moving the waypoint away from the player from a set distance
+
+        directionalVector.add(playerPos);
+        //offset vector back to player position
+
+        Matrix4f spriteTransform = new Matrix4f();
+        spriteTransform.translationRotateScale(directionalVector, Rendering.client.getEntityRenderDispatcher().getRotation(), scale);
+
+        drawShaft(buffer, shaftTransform);
 
         switch (this.type) {
             case GOOD_GUY -> drawGoodGuy(buffer, spriteTransform);
