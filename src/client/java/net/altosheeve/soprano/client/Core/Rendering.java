@@ -77,7 +77,12 @@ public class Rendering {
 
             BufferBuilder waypointBuffer = RenderSystem.renderThreadTesselator().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 
-            for (Waypoint waypoint : Waypoint.waypoints) waypoint.draw(waypointBuffer);
+            for (Waypoint waypoint : new ArrayList<>(Waypoint.waypoints)) {
+                waypoint.drawPoint(waypointBuffer);
+                waypoint.drawText(textBuffer);
+                if (waypoint.importance <= 0) Waypoint.waypoints.remove(waypoint);
+            }
+
             BufferRenderer.drawWithGlobalProgram(waypointBuffer.end());
 
         }
