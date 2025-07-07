@@ -1,9 +1,10 @@
 package net.altosheeve.soprano.client.Core;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.altosheeve.soprano.client.Networking.TypeGenerators;
 import net.altosheeve.soprano.client.Nodes.Navigation;
 import net.altosheeve.soprano.client.Nodes.Node;
-import net.altosheeve.soprano.client.RenderMethods.RenderBox;
+import net.altosheeve.soprano.client.RenderMethods.Transforms;
 import net.altosheeve.soprano.client.RenderMethods.Waypoint;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
@@ -12,15 +13,17 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
-import org.joml.Quaternionfc;
 import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
 
 public class Rendering {
     public static MinecraftClient client = MinecraftClient.getInstance();
     public static Matrix4fStack modelViewStack;
+    public static int renderTick = 0;
+    public static int maxRenderTick = 100000;
 
     public static float scalingFunction(float scale, Waypoint.Type type, float x, float y, float z) {
         float originalScale = scale * Values.scaleRegistry(type);
@@ -31,6 +34,11 @@ public class Rendering {
         ClientPlayerEntity player = client.player;
         if (player == null) return;
         if (client.world == null) return;
+
+        renderContext = context;
+
+        renderTick ++;
+        renderTick %= maxRenderTick;
 
         //initialize rendering system
         RenderSystem.enableDepthTest();
