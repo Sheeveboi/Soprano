@@ -1,12 +1,12 @@
 package net.altosheeve.soprano.client.RenderMethods;
 
-import net.altosheeve.soprano.client.Core.Values;
 import net.altosheeve.soprano.client.Core.Rendering;
+import net.altosheeve.soprano.client.Core.Values;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.Font;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.*;
+import net.minecraft.client.util.BufferAllocator;
 import net.minecraft.text.Text;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -183,7 +183,7 @@ public class Waypoint {
         shaft.draw(buffer, shaftTransform);
     }
 
-    public void draw(BufferBuilder buffer) {
+    public void drawPoint(BufferBuilder buffer) {
 
         this.importance -= decayRate;
         if (importance == 0) Waypoint.waypoints.remove(this);
