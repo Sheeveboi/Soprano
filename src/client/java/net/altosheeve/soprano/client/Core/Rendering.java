@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 public class Rendering {
     public static MinecraftClient client = MinecraftClient.getInstance();
+    public static WorldRenderContext renderContext;
     public static Matrix4fStack modelViewStack;
     public static int renderTick = 0;
     public static int maxRenderTick = 100000;
@@ -100,8 +101,6 @@ public class Rendering {
         RenderSystem.enableDepthTest();
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
-        RenderSystem.lineWidth(1.0F);
-        RenderSystem.clearColor(1, 1, 1, 1);
 
         //clear view matrix stack
         modelViewStack.popMatrix();
