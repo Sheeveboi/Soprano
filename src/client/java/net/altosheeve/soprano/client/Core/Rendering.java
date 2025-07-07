@@ -76,6 +76,7 @@ public class Rendering {
             RenderSystem.disableDepthTest();
 
             BufferBuilder waypointBuffer = RenderSystem.renderThreadTesselator().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+            VertexConsumerProvider.Immediate textBuffer = client.getBufferBuilders().getEntityVertexConsumers();
 
             for (Waypoint waypoint : new ArrayList<>(Waypoint.waypoints)) {
                 waypoint.drawPoint(waypointBuffer);
@@ -84,6 +85,7 @@ public class Rendering {
             }
 
             BufferRenderer.drawWithGlobalProgram(waypointBuffer.end());
+            textBuffer.draw();
 
         }
         //reset rendering system
