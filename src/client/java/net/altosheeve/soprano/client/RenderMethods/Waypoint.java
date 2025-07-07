@@ -179,7 +179,7 @@ public class Waypoint {
     }
 
     public void drawShaft(BufferBuilder buffer, Matrix4f shaftTransform) {
-        RenderBox shaft = new RenderBox(0, -500, 0, 1, 9000, 1, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], .2f);
+        RenderBox shaft = new RenderBox(0, -500, 0, 1, 9000, 1, Values.waypointRegistry(this.type)[0], Values.waypointRegistry(this.type)[1], Values.waypointRegistry(this.type)[2], this.importance / 2);
         shaft.draw(buffer, shaftTransform);
     }
 
