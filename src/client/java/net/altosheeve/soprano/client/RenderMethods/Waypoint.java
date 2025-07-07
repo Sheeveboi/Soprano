@@ -186,7 +186,6 @@ public class Waypoint {
     public void drawPoint(BufferBuilder buffer) {
 
         this.importance -= decayRate;
-        if (importance == 0) Waypoint.waypoints.remove(this);
 
         Matrix4f spriteTransform = Transforms.getSpriteTransform(this.x, this.y, this.z, Values.waypointScale);
         Matrix4f shaftTransform = Transforms.getShaftTransform(this.x, this.y, this.z, Values.shaftScale, this.type);
