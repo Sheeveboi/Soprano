@@ -2,31 +2,32 @@ package net.altosheeve.soprano.client.RenderMethods;
 
 import net.altosheeve.soprano.client.Core.Rendering;
 import net.altosheeve.soprano.client.Core.Values;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
+import net.minecraft.client.render.Camera;
+import org.joml.*;
 
 public class Transforms {
 
     public static Matrix4f getSpriteTransform(float x, float y, float z, float scale) {
         Vector3f directionalVector = new Vector3f(x + .5f, y - .5f, z + .5f);
-        Vector3f playerPos = new Vector3f((float) Rendering.client.gameRenderer.getCamera().getPos().x, (float) Rendering.client.gameRenderer.getCamera().getPos().y, (float) Rendering.client.gameRenderer.getCamera().getPos().z);
+        Vector3f playerPos         = new Vector3f((float) camera.getPos().x, (float) camera.getPos().y, (float) camera.getPos().z);
 
-        directionalVector.sub(playerPos);
         //get vector of player to waypoint
+        directionalVector.sub(playerPos);
 
-        float dist = directionalVector.distance(0, 0, 0);
-        directionalVector.div(dist, dist, dist);
         //get unit vector of the directional vector
+        directionalVector.normalize();
 
-        directionalVector.mul(Values.scaleThreshold, Values.scaleThreshold, Values.scaleThreshold);
         //scale vector by scale factor, essentially moving the waypoint away from the player from a set distance
+        directionalVector.mul(Values.scaleThreshold, Values.scaleThreshold, Values.scaleThreshold);
 
-        directionalVector.add(playerPos);
         //offset vector back to player position
+        directionalVector.add(playerPos);
 
         Matrix4f spriteTransform = new Matrix4f();
-        spriteTransform.translationRotateScale(directionalVector, Rendering.client.getEntityRenderDispatcher().getRotation(), Values.waypointScale);
+
+        //execute main sprite transforms
+        spriteTransform.translationRotateScale(directionalVector, Rendering.client.getEntityRenderDispatcher().getRotation(), new Vector3f(scaleX, scaleY, scaleZ));
 
         return spriteTransform;
     }
