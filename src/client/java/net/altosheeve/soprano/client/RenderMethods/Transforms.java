@@ -6,9 +6,37 @@ import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.client.render.Camera;
 import org.joml.*;
 
+import java.lang.Math;
+
 public class Transforms {
 
-    public static Matrix4f getSpriteTransform(float x, float y, float z, float scale) {
+    public static float distanceValue(float x, float y, float z) {
+        Camera camera = Rendering.client.gameRenderer.getCamera();
+
+        Vector3f directionalVector = new Vector3f(x + .5f, y - .5f, z + .5f);
+        Vector3f playerPos         = new Vector3f((float) camera.getPos().x, (float) camera.getPos().y, (float) camera.getPos().z);
+
+        return directionalVector.distance(playerPos);
+    }
+
+    public static float facingValue(float x, float y, float z) {
+        Camera camera = Rendering.client.gameRenderer.getCamera();
+
+        float pitchRad = (float) (((Rendering.client.player.getPitch() + 90) * Math.PI) / 180);
+        float yawRad = (float) (((Rendering.client.player.getYaw() + 90) * Math.PI) / 180);
+
+        Vector3f directionalVector = new Vector3f(x + .5f, y - .5f, z + .5f);
+        Vector3f playerPos         = new Vector3f((float) camera.getPos().x, (float) camera.getPos().y, (float) camera.getPos().z);
+        Vector3f cameraVector      = new Vector3f((float) (Math.sin(pitchRad) * Math.cos(yawRad)), (float) Math.cos(pitchRad),  (float) (Math.sin(pitchRad) * Math.sin(yawRad)));
+
+        directionalVector.sub(playerPos).normalize();
+
+        return directionalVector.dot(cameraVector);
+    }
+
+    public static Matrix4f getSpriteTransform(float x, float y, float z, float scaleX, float scaleY, float scaleZ) {
+        Camera camera = Rendering.client.gameRenderer.getCamera();
+
         Vector3f directionalVector = new Vector3f(x + .5f, y - .5f, z + .5f);
         Vector3f playerPos         = new Vector3f((float) camera.getPos().x, (float) camera.getPos().y, (float) camera.getPos().z);
 

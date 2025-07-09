@@ -211,9 +211,19 @@ public class Waypoint {
     }
 
     public void drawText(VertexConsumerProvider.Immediate provider) {
+        if (Transforms.facingValue(this.x, this.y, this.z) <= 1 - Values.focusThresholdRegistry(this.type)) return;
 
-        Matrix4f spriteTransform = Transforms.getSpriteTransform(this.x, this.y, this.z, .02f, -.02f, .02f);
-        Rendering.client.textRenderer.draw(Text.literal("testong"), 0, 0, 0x333333, false, spriteTransform, provider, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
+        float scale = Values.textSizeRegistry(this.type);
+        float dist = Transforms.distanceValue(this.x, this.y, this.z);
 
+        String distanceString = String.format("[%.2gm]", dist);
+
+        float distanceStringWidth = -Rendering.client.textRenderer.getWidth(distanceString) / 2f;
+        float usernameStringWidth = -Rendering.client.textRenderer.getWidth(this.username) / 2f;
+
+        Matrix4f spriteTransform = Transforms.getSpriteTransform(this.x, this.y, this.z, scale, -scale, scale);
+
+        Rendering.client.textRenderer.draw(Text.literal(distanceString), distanceStringWidth, 5, 0xaaaaaa, true, spriteTransform, provider, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
+        Rendering.client.textRenderer.draw(Text.literal(username), usernameStringWidth, 5, 0xaaaaaa, true, spriteTransform, provider, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
     }
 }
