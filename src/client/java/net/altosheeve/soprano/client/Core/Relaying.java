@@ -44,6 +44,31 @@ public class Relaying {
     public static void gatherTelemetry(String message) {
 
         for (int i = 0; i < message.length(); i++) {
+
+            if (message.getBytes(StandardCharsets.UTF_8)[i] == 0x2) {
+
+                i += 1;
+                String UUID = TypeGenerators.decodeUUID(message, i);
+
+                i += 36;
+                int[] x = TypeGenerators.decodeInt(message, i);
+
+                i += x[1] + 1;
+                int[] y = TypeGenerators.decodeInt(message, i);
+
+                i += y[1] + 1;
+                int[] z = TypeGenerators.decodeInt(message, i);
+
+                i += z[1] + 1;
+                int[] threat = TypeGenerators.decodeInt(message, i);
+
+                i += threat[1];
+
+                if (!UUID.equals(Rendering.client.player.getUuidAsString())) Waypoint.updateWaypoint(x[0] - .5f, y[0] - .5f, z[0] - .5f, Waypoint.Type.values()[threat[0]], UUID, true);
+            }
+
+            if (i >= message.length()) break;
+
             if (message.getBytes(StandardCharsets.UTF_8)[i] == 0x1) {
                 i += 1;
                 String UUID = TypeGenerators.decodeUUID(message, i);
