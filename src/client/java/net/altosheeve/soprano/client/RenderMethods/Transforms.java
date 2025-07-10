@@ -47,7 +47,7 @@ public class Transforms {
         directionalVector.normalize();
 
         //scale vector by scale factor, essentially moving the waypoint away from the player from a set distance
-        directionalVector.mul(Values.scaleThreshold, Values.scaleThreshold, Values.scaleThreshold);
+        directionalVector.mul(Values.globalSpriteDistance, Values.globalSpriteDistance, Values.globalSpriteDistance);
 
         //offset vector back to player position
         directionalVector.add(playerPos);
