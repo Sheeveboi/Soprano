@@ -2,15 +2,10 @@ package net.altosheeve.soprano.client.RenderMethods;
 
 import net.altosheeve.soprano.client.Core.Rendering;
 import net.altosheeve.soprano.client.Core.Values;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
-import net.minecraft.client.util.BufferAllocator;
 import net.minecraft.text.Text;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -24,8 +19,6 @@ public class Waypoint {
         HITLER,
         SNITCH,
         SNITCH_ALERT,
-        PING,
-        ALERT,
         PERMANENT
     }
 
@@ -40,12 +33,15 @@ public class Waypoint {
     public float decayRate;
     public boolean overworld;
 
-    public String uuid;
-    public String username;
+    public String uuid = "";
+    public String username = "";
 
     public static void updateWaypoint(float x, float y, float z, Type type, String name, boolean overworld) {
         for (Waypoint waypoint : waypoints) {
             if (Objects.equals(waypoint.uuid, name)) {
+
+                if (waypoint.importance > Values.importanceRegistry(type)) return;
+
                 waypoint.type = type;
 
                 waypoint.x = x;
@@ -206,7 +202,6 @@ public class Waypoint {
 
             case PERMANENT -> drawPermanent(buffer, spriteTransform);
         }
-
 
     }
 
