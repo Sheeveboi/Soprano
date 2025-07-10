@@ -1,7 +1,6 @@
 package net.altosheeve.soprano.client.Core;
 
 import net.altosheeve.soprano.client.RenderMethods.Waypoint;
-import net.minecraft.client.MinecraftClient;
 
 public class Values {
     public static float[] greenColor        = {.145f, .917f, .364f};
@@ -11,8 +10,8 @@ public class Values {
     public static float[] blueColor         = {.145f, .427f, .917f};
     public static float[] purpleColor       = {.749f, .145f, .917f};
 
-    public static float scaleThreshold = 1f;
-    public static float shaftScale = 4f;
+    public static float globalSpriteDistance = 1f;
+    public static float shaftScale = 3f;
 
     public static float waypointScale = .02f;
     public static float goodGuyScale = 1f;
@@ -39,13 +38,35 @@ public class Values {
     public static float waypointDecayRate = .001f;
     public static float goodGuyDecayRate = .0001f;
     public static float normalDecayRate = .0001f;
-    public static float shitterDecayRate = .0001f;
-    public static float hitlerDecayRate = .0001f;
-    public static float snitchDecayRate = .01f;
+    public static float shitterDecayRate = .00001f;
+    public static float hitlerDecayRate = .000001f;
+    public static float snitchDecayRate = .0001f;
     public static float snitchAlertDecayRate = .0001f;
     public static float pingDecayRate = .001f;
     public static float alertDecayRate = .0001f;
     public static float permanentDecayRate = 0f;
+
+    public static float waypointFocusThreshold = .01f;
+    public static float goodGuyFocusThreshold = .05f;
+    public static float normalFocusThreshold = .001f;
+    public static float shitterFocusThreshold = .01f;
+    public static float hitlerFocusThreshold = .05f;
+    public static float snitchFocusThreshold = .001f;
+    public static float snitchAlertFocusThreshold = .01f;
+    public static float pingFocusThreshold = .001f;
+    public static float alertFocusThreshold = .05f;
+    public static float permanentFocusThreshold = .01f;
+
+    public static float waypointTextSize = .003f;
+    public static float goodGuyTextSize = .0055f;
+    public static float normalTextSize = .005f;
+    public static float shitterTextSize = .0055f;
+    public static float hitlerTextSize = .0055f;
+    public static float snitchTextSize = .002f;
+    public static float snitchAlertTextSize = .005f;
+    public static float pingTextSize = .004f;
+    public static float alertTextSize = .005f;
+    public static float permanentTextSize = .004f;
 
     public static float scaleRegistry(Waypoint.Type type) {
         switch (type) {
@@ -101,6 +122,44 @@ public class Values {
             case PERMANENT -> { return permanentDecayRate; }
 
             default -> { return waypointDecayRate; }
+        }
+    }
+
+    public static float focusThresholdRegistry(Waypoint.Type type) {
+        switch (type) {
+            case GOOD_GUY -> { return goodGuyFocusThreshold; }
+            case NORMAL   -> { return normalFocusThreshold; }
+            case SHITTER  -> { return shitterFocusThreshold; }
+            case HITLER   -> { return hitlerFocusThreshold; }
+
+            case SNITCH         -> { return snitchFocusThreshold; }
+            case SNITCH_ALERT   -> { return snitchAlertFocusThreshold; }
+
+            case PING  -> { return pingFocusThreshold; }
+            case ALERT -> { return alertFocusThreshold; }
+
+            case PERMANENT -> { return permanentFocusThreshold; }
+
+            default -> { return waypointFocusThreshold; }
+        }
+    }
+
+    public static float textSizeRegistry(Waypoint.Type type) {
+        switch (type) {
+            case GOOD_GUY -> { return goodGuyTextSize; }
+            case NORMAL   -> { return normalTextSize; }
+            case SHITTER  -> { return shitterTextSize; }
+            case HITLER   -> { return hitlerTextSize; }
+
+            case SNITCH         -> { return snitchTextSize; }
+            case SNITCH_ALERT   -> { return snitchAlertTextSize; }
+
+            case PING  -> { return pingTextSize; }
+            case ALERT -> { return alertTextSize; }
+
+            case PERMANENT -> { return permanentTextSize; }
+
+            default -> { return waypointTextSize; }
         }
     }
 
