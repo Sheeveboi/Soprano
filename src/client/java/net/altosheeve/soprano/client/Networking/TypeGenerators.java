@@ -41,6 +41,11 @@ public class TypeGenerators {
         return new float[] {Float.intBitsToFloat((int) i), length};
     }
 
+    public static int[] decodeInt(String message, int index) {
+        int length = message.getBytes(StandardCharsets.UTF_8)[index];
+        return new int[] {Integer.parseInt(message.substring(index + 1, index + length + 1)), length};
+    }
+
     public static byte[] encodePlayer(float x, float y, float z, UUID UUID) {
 
         byte[] UUIDBytes = UUID.toString().getBytes();
