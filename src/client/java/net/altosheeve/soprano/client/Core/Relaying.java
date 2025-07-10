@@ -98,40 +98,4 @@ public class Relaying {
         UDPClient.listen(Relaying::gatherTelemetry);
 
     }
-
-    public static void verify(Map<String, List<String>> headers, String body) throws IOException {
-
-        String refreshR;
-        refreshR = String.valueOf(headers.get("refresh"));
-
-        FileWriter writer = new FileWriter("identity.id");
-        writer.write(refreshR);
-        writer.close();
-
-        Request.get("http://170.187.207.133/verify?token=%s".formatted(token), (h, b) -> startStream());
-
-    }
-
-    public static void createSession() throws IOException {
-
-        if (!identityFile.exists()) {
-            identityFile.createNewFile();
-            return;
-        }
-
-        Scanner scanner = new Scanner(identityFile);
-        StringBuilder refresh = new StringBuilder();
-        while (scanner.hasNextLine()) refresh.append(scanner.nextLine());
-
-        if (refresh.isEmpty()) {
-            identityFile.delete();
-            identityFile.createNewFile();
-
-
-
-        }
-
-        Request.get("http://170.187.207.133/verify/refresh", Relaying::verify);
-
-    }
 }
