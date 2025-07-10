@@ -2,7 +2,6 @@ package net.altosheeve.soprano.client.RenderMethods;
 
 import net.altosheeve.soprano.client.Core.Rendering;
 import net.altosheeve.soprano.client.Core.Values;
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.client.render.Camera;
 import org.joml.*;
 
@@ -55,7 +54,7 @@ public class Transforms {
         Matrix4f spriteTransform = new Matrix4f();
 
         //execute main sprite transforms
-        spriteTransform.translationRotateScale(directionalVector, Rendering.client.getEntityRenderDispatcher().getRotation(), new Vector3f(scaleX, scaleY, scaleZ));
+        spriteTransform.translationRotateScale(directionalVector, camera.getRotation(), new Vector3f(scaleX, scaleY, scaleZ));
 
         return spriteTransform;
     }
