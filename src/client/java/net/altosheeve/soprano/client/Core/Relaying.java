@@ -83,10 +83,11 @@ public class Relaying {
                 float[] z = TypeGenerators.decodeFloat(message, i);
 
                 i += (int) (z[1] + 1);
-                int threat = message.getBytes(StandardCharsets.UTF_8)[i];
+                int threat = Integer.parseInt(String.valueOf(message.charAt(i)));
 
-                if (!UUID.equals(Rendering.client.player.getUuidAsString())) Waypoint.updateWaypoint(x[0] - .5f, (float) Rendering.client.player.getY(), z[0] - .5f, Waypoint.Type.values()[threat - 2], UUID, true);
+                if (!UUID.equals(Rendering.client.player.getUuidAsString())) Waypoint.updateWaypoint(x[0] - .5f, (float) Rendering.client.player.getY() + 2, z[0] - .5f, Waypoint.Type.values()[threat], UUID, true);
             }
+
         }
 
     }
