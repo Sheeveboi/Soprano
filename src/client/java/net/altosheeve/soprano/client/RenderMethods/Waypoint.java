@@ -17,6 +17,8 @@ public class Waypoint {
         NORMAL,
         SHITTER,
         HITLER,
+        ALERT,
+        PING,
         SNITCH,
         SNITCH_ALERT,
         PERMANENT
