@@ -1,9 +1,10 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.altosheeve.soprano.mixin.client",
+  "package": "net.altosheeve.soprano.client.Mixins",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "HotkeyVisualizer"
   ],
   "injectors": {
     "defaultRequire": 1
