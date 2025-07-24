@@ -18,7 +18,7 @@ public class Hotkeys {
             String[] path = hotbarKey.getBoundKeyTranslationKey().split("\\.");
             String out = path[2];
             if (Objects.equals(path[1], "mouse")) out = "M" + path[2];
-            keys.add(out);
+            keys.add(out.toUpperCase());
         }
     }
 
