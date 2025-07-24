@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InGameHud.class)
 public class HotkeyVisualizer {
 
-    @Inject(at = @At("TAIL"), method = "renderHotbar")
-    private void renderHotbar(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+    @Inject(at = @At("TAIL"), method = "renderMainHud")
+    private void renderMainHud(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
         int w = context.getScaledWindowWidth() / 2;
 
         context.getMatrices().push();
