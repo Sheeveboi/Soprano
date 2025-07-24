@@ -20,7 +20,7 @@ public class HotkeyVisualizer {
         context.getMatrices().push();
         context.getMatrices().translate(0.0F, 0.0F, -90.0F);
 
-        for (int i = 0; i < 9; i++) context.drawText(Rendering.client.textRenderer, Hotkeys.keys.get(i), w - 85 + i * 20,context.getScaledWindowHeight() - 26, 0xffffff, true);
+        for (int i = 0; i < 9; i++) context.drawText(Rendering.client.textRenderer, Hotkeys.keys.get(i), w - 85 + i * 20,context.getScaledWindowHeight() - 24, 0xffffff, true);
 
         context.getMatrices().pop();
     }
