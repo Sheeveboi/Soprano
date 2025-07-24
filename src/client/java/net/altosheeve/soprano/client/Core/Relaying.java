@@ -34,9 +34,7 @@ public class Relaying {
             byte[] original = fullPayload;
             byte[] out = TypeGenerators.combineBuffers(original, leftover);
 
-            if (out.length > UDPClient.packetLength) {
-                leftovers.add(leftover);
-            } else {
+            if (out.length < UDPClient.packetLength) {
                 fullPayload = TypeGenerators.combineBuffers(original, leftover);
                 remove.add(leftover);
             }
