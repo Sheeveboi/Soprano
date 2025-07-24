@@ -23,27 +23,20 @@ public class TypeGenerators {
     }
 
     public static byte[] encodeFloat(float value) {
-
-        int i = Float.floatToIntBits(value);
-        byte[] hexBytes = Integer.toHexString(i).getBytes(StandardCharsets.UTF_8);
-        byte[] length = new byte[]{(byte) hexBytes.length};
-
-        return combineBuffers(length, hexBytes);
+        int intBits = Float.floatToIntBits(value);
+        return new byte[] { (byte) (intBits >> 24), (byte) (intBits >> 16), (byte) (intBits >> 8), (byte) (intBits) };
     }
 
-    public static String decodeUUID(String message, int index) {
-        return message.substring(index, index + 36);
+    public static String decodeUUID(byte[] message, int index) {
+        return new String(message).substring(index, index + 36);
     }
 
-    public static float[] decodeFloat(String message, int index) {
-        int length = message.getBytes(StandardCharsets.UTF_8)[index];
-        long i = Long.parseLong(message.substring(index + 1, index + length + 1), 16);
-        return new float[] {Float.intBitsToFloat((int) i), length};
+    public static float decodeFloat(byte[] message, int index) {
+        return ByteBuffer.wrap(new byte[] {message[index], message[index + 1], message[index + 2], message[index + 3]}).getFloat();
     }
 
-    public static int[] decodeInt(String message, int index) {
-        int length = message.getBytes(StandardCharsets.UTF_8)[index];
-        return new int[] {Integer.parseInt(message.substring(index + 1, index + length + 1)), length};
+    public static int decodeInt(byte[] message, int index) {
+        return ByteBuffer.wrap(new byte[] {message[index], message[index + 1], message[index + 2], message[index + 3]}).getInt();
     }
 
     public static byte[] encodePlayer(float x, float y, float z, UUID UUID) {

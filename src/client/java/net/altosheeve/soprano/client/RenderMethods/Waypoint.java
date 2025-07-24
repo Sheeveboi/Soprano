@@ -2,6 +2,7 @@ package net.altosheeve.soprano.client.RenderMethods;
 
 import net.altosheeve.soprano.client.Core.Rendering;
 import net.altosheeve.soprano.client.Core.Values;
+import net.altosheeve.soprano.client.Networking.TypeGenerators;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.*;
 import net.minecraft.text.Text;
@@ -9,6 +10,7 @@ import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Waypoint {
 
@@ -38,28 +40,62 @@ public class Waypoint {
     public String uuid = "";
     public String username = "";
 
-    public static void updateWaypoint(float x, float y, float z, Type type, String name, boolean overworld) {
+    public static int updateWaypoint(byte[] buffer, int index, boolean intOrFloat) {
+
+        int i = index;
+
+        String UUID = TypeGenerators.decodeUUID(buffer, i);
+
+        float x;
+        float y;
+        float z;
+
+        if (intOrFloat) {
+            i += 36;
+            x = TypeGenerators.decodeFloat(buffer, i);
+
+            i += 4;
+            y = TypeGenerators.decodeFloat(buffer, i);
+
+            i += 4;
+            z = TypeGenerators.decodeFloat(buffer, i);
+        } else {
+            i += 36;
+            x = TypeGenerators.decodeInt(buffer, i);
+
+            i += 4;
+            y = TypeGenerators.decodeInt(buffer, i);
+
+            i += 4;
+            z = TypeGenerators.decodeInt(buffer, i);
+        }
+
+        i += 4;
+        Type type = Type.values()[buffer[i]];
+
         for (Waypoint waypoint : waypoints) {
-            if (Objects.equals(waypoint.uuid, name)) {
+            if (UUID.equals(waypoint.uuid)) {
 
-                if (waypoint.importance > Values.importanceRegistry(type)) return;
+                waypoint.x = x - .5f;
+                waypoint.y = y + .5f;
+                waypoint.z = z - .5f;
 
-                waypoint.type = type;
+                if (waypoint.importance < Values.importanceRegistry(type)) {
 
-                waypoint.x = x;
-                waypoint.y = y;
-                waypoint.z = z;
+                    waypoint.type = type;
 
-                waypoint.importance = Values.importanceRegistry(type);
-                waypoint.decayRate = Values.decayRateRegistry(type);
+                    waypoint.importance = Values.importanceRegistry(type);
+                    waypoint.decayRate = Values.decayRateRegistry(type);
 
-                waypoint.overworld = overworld;
+                }
 
-                return;
+                return i - index;
             }
         }
 
-        waypoints.add(new Waypoint(x, y, z,type, name));
+        waypoints.add(new Waypoint(x - .5f, y + .5f, z - .5f,type, UUID));
+
+        return i - index;
 
     }
 
