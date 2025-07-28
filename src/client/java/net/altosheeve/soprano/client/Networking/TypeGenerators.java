@@ -1,8 +1,10 @@
 package net.altosheeve.soprano.client.Networking;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.UUID;
 
 public class TypeGenerators {
@@ -27,18 +29,6 @@ public class TypeGenerators {
         return new byte[] { (byte) (intBits >> 24), (byte) (intBits >> 16), (byte) (intBits >> 8), (byte) (intBits) };
     }
 
-    public static String decodeUUID(byte[] message, int index) {
-        return new String(message).substring(index, index + 36);
-    }
-
-    public static float decodeFloat(byte[] message, int index) {
-        return ByteBuffer.wrap(new byte[] {message[index], message[index + 1], message[index + 2], message[index + 3]}).getFloat();
-    }
-
-    public static int decodeInt(byte[] message, int index) {
-        return ByteBuffer.wrap(new byte[] {message[index], message[index + 1], message[index + 2], message[index + 3]}).getInt();
-    }
-
     public static byte[] encodePlayer(float x, float y, float z, UUID UUID) {
 
         byte[] UUIDBytes = UUID.toString().getBytes();
@@ -47,10 +37,34 @@ public class TypeGenerators {
         byte[] yBytes = encodeFloat(y);
         byte[] zBytes = encodeFloat(z);
 
-        byte[] playerIdentifier = new byte[]{0x1};
+        return combineBuffers(UUIDBytes, xBytes, yBytes, zBytes);
 
-        return combineBuffers(playerIdentifier, UUIDBytes, xBytes, yBytes, zBytes);
+    }
 
+    public static String decodeUUID(Iterator<Byte> buffer) {
+
+        StringBuilder out = new StringBuilder();
+        for (int i = 0; i < 35 && buffer.hasNext(); i++) out.append((char) buffer.next().byteValue());
+
+        return out.toString();
+    }
+
+    public static float decodeFloat(Iterator<Byte> buffer) {
+        byte first  = buffer.next();
+        byte second = buffer.next();
+        byte third  = buffer.next();
+        byte fourth = buffer.next();
+
+        return ByteBuffer.wrap(new byte[] { first, second, third, fourth }).getFloat();
+    }
+
+    public static float decodeInt(Iterator<Byte> buffer) {
+        byte first  = buffer.next();
+        byte second = buffer.next();
+        byte third  = buffer.next();
+        byte fourth = buffer.next();
+
+        return ByteBuffer.wrap(new byte[] { first, second, third, fourth }).getInt();
     }
 
 }
