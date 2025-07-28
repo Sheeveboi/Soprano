@@ -44,7 +44,7 @@ public class TypeGenerators {
     public static String decodeUUID(Iterator<Byte> buffer) {
 
         StringBuilder out = new StringBuilder();
-        for (int i = 0; i < 35 && buffer.hasNext(); i++) out.append((char) buffer.next().byteValue());
+        for (int i = 0; i < 36 && buffer.hasNext(); i++) out.append((char) buffer.next().byteValue());
 
         return out.toString();
     }

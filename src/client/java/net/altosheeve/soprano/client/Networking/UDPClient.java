@@ -6,9 +6,7 @@ import net.altosheeve.soprano.client.Core.Relaying;
 import java.io.IOException;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class UDPClient {
@@ -51,7 +49,7 @@ public class UDPClient {
 
                         ArrayList<Byte> body = new ArrayList<>();
 
-                        for (int i = 0; i < length - 1 && bytes.hasNext(); i++) body.add(bytes.next());
+                        for (int i = 0; i < length && bytes.hasNext(); i++) body.add(bytes.next());
 
                         this.cb.cb(new UDPObject(identifier, Bytes.toArray(body)));
                     }

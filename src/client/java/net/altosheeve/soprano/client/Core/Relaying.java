@@ -57,9 +57,9 @@ public class Relaying {
             z = TypeGenerators.decodeInt(buffer);
         }
 
-        System.out.println(UUID);
+        int threat = buffer.next();
 
-        Waypoint.updateWaypoint(x, y, z, Waypoint.Type.values()[buffer.next()], UUID);
+        Waypoint.updateWaypoint(x, y, z, Waypoint.Type.values()[threat], UUID);
 
     }
 
@@ -89,24 +89,17 @@ public class Relaying {
 
         startStream();
 
-        UDPObject send1 = new UDPObject((byte) 0x1,
-                TypeGenerators.encodePlayer(
-                        (float) 500,
-                        (float) 123,
-                        (float) 5,
-                        UUID.randomUUID()));
-
-        UDPObject send2 = new UDPObject((byte) 0x1,
-                TypeGenerators.encodePlayer(
-                        (float) 1,
-                        (float) 2,
-                        (float) 800,
-                        UUID.randomUUID()));
-
         while (true) {
 
-            UDPClient.queueObject(send1);
-            UDPClient.queueObject(send2);
+            for (int i = 0; i < 100; i++) {
+                UDPObject send1 = new UDPObject((byte) 0x1,
+                        TypeGenerators.encodePlayer(
+                                (float) 1,
+                                (float) 1,
+                                (float) 1,
+                                UUID.randomUUID()));
+                UDPClient.queueObject(send1);
+            }
 
             UDPClient.pushQueue();
             

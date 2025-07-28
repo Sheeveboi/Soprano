@@ -13,6 +13,6 @@ public class UDPObject {
         this.identifier = identifier;
 
         this.data = new ArrayList<>(Bytes.asList(data));
-        this.length = data.length + 2;
+        this.length = data.length;
     }
 }
