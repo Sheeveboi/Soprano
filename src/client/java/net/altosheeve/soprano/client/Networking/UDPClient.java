@@ -1,10 +1,15 @@
 package net.altosheeve.soprano.client.Networking;
 
+import com.google.common.primitives.Bytes;
 import net.altosheeve.soprano.client.Core.Relaying;
 
 import java.io.IOException;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.function.Consumer;
 
 public class UDPClient {
 
@@ -14,8 +19,10 @@ public class UDPClient {
 
     public static final int packetLength = 1024;
 
+    private static byte[] out = new byte[]{};
+
     public interface MessageCallback {
-        void cb(byte[] message);
+        void cb(UDPObject udpObject);
     }
 
     public static class ListeningThread extends Thread {
@@ -32,8 +39,24 @@ public class UDPClient {
                 DatagramPacket packet = new DatagramPacket(receive, packetLength);
                 try {
                     this.socket.receive(packet);
-                    //System.out.println(Arrays.toString(receive));
-                    this.cb.cb(receive);
+
+                    Iterator<Byte> bytes = Bytes.asList(receive).iterator();
+
+                    while (bytes.hasNext()) {
+                        int identifier = bytes.next();
+
+                        if (identifier == 0) break;
+
+                        int length = bytes.next();
+
+                        ArrayList<Byte> body = new ArrayList<>();
+
+                        for (int i = 0; i < length - 1 && bytes.hasNext(); i++) body.add(bytes.next());
+
+                        this.cb.cb(new UDPObject(identifier, Bytes.toArray(body)));
+                    }
+
+
                 } catch (IOException e) {
                     System.out.println("error in receive, attempting reconnect");
                     break;
@@ -68,6 +91,26 @@ public class UDPClient {
 
         DatagramPacket packet = new DatagramPacket(out, packetLength, ip, port);
         socket.send(packet);
+    }
+
+    public static void queueObject(UDPObject data) throws IOException {
+        byte[] original = out;
+
+        byte[] head = new byte[]{(byte) data.identifier, (byte) data.length};
+        byte[] combine = TypeGenerators.combineBuffers(head, Bytes.toArray(data.data));
+
+        if (out.length + combine.length < packetLength) {
+            out = TypeGenerators.combineBuffers(original, combine);
+            return;
+        }
+
+        sendData(out);
+        out = combine;
+    }
+
+    public static void pushQueue() throws IOException {
+        sendData(out);
+        out = new byte[]{};
     }
 
     public static void listen(MessageCallback cb) {

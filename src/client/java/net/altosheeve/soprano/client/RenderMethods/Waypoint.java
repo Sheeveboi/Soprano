@@ -40,45 +40,14 @@ public class Waypoint {
     public String uuid = "";
     public String username = "";
 
-    public static int updateWaypoint(byte[] buffer, int index, boolean intOrFloat) {
-
-        int i = index;
-
-        String UUID = TypeGenerators.decodeUUID(buffer, i);
-
-        float x;
-        float y;
-        float z;
-
-        if (intOrFloat) {
-            i += 36;
-            x = TypeGenerators.decodeFloat(buffer, i);
-
-            i += 4;
-            y = TypeGenerators.decodeFloat(buffer, i);
-
-            i += 4;
-            z = TypeGenerators.decodeFloat(buffer, i);
-        } else {
-            i += 36;
-            x = TypeGenerators.decodeInt(buffer, i);
-
-            i += 4;
-            y = TypeGenerators.decodeInt(buffer, i);
-
-            i += 4;
-            z = TypeGenerators.decodeInt(buffer, i);
-        }
-
-        i += 4;
-        Type type = Type.values()[buffer[i]];
+    public static void updateWaypoint(float x, float y, float z, Type type, String UUID) {
 
         for (Waypoint waypoint : waypoints) {
             if (UUID.equals(waypoint.uuid)) {
 
-                waypoint.x = x - .5f;
-                waypoint.y = y + .5f;
-                waypoint.z = z - .5f;
+                waypoint.x = x;
+                waypoint.y = y;
+                waypoint.z = z;
 
                 if (waypoint.importance < Values.importanceRegistry(type)) {
 
@@ -89,13 +58,11 @@ public class Waypoint {
 
                 }
 
-                return i - index;
+                return;
             }
         }
 
-        waypoints.add(new Waypoint(x - .5f, y + .5f, z - .5f,type, UUID));
-
-        return i - index;
+        waypoints.add(new Waypoint(x, y, z,type, UUID));
 
     }
 
@@ -252,11 +219,11 @@ public class Waypoint {
         String distanceString = String.format("[%.2gm]", dist);
 
         float distanceStringWidth = -Rendering.client.textRenderer.getWidth(distanceString) / 2f;
-        float usernameStringWidth = -Rendering.client.textRenderer.getWidth(this.username) / 2f;
+        float usernameStringWidth = -Rendering.client.textRenderer.getWidth(this.uuid) / 2f;
 
         Matrix4f spriteTransform = Transforms.getSpriteTransform(this.x, this.y, this.z, scale, -scale, scale);
 
         Rendering.client.textRenderer.draw(Text.literal(distanceString), distanceStringWidth, 5, 0xaaaaaa, true, spriteTransform, provider, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
-        Rendering.client.textRenderer.draw(Text.literal(username), usernameStringWidth, 5, 0xaaaaaa, true, spriteTransform, provider, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
+        Rendering.client.textRenderer.draw(Text.literal(this.uuid), usernameStringWidth, 15, 0xaaaaaa, true, spriteTransform, provider, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
     }
 }
