@@ -4,7 +4,7 @@
   "package": "net.altosheeve.soprano.client.Mixins",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "HotkeyVisualizer"
+    "HudMixin"
   ],
   "injectors": {
     "defaultRequire": 1
