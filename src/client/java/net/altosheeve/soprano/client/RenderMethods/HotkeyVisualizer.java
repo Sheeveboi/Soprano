@@ -1,20 +1,13 @@
-package net.altosheeve.soprano.client.Mixins;
+package net.altosheeve.soprano.client.RenderMethods;
 
 import net.altosheeve.soprano.client.BetterGUI.Hotkeys;
 import net.altosheeve.soprano.client.Core.Rendering;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
-import org.spongepowered.asm.mixin.Mixin;
-import net.minecraft.client.gui.hud.InGameHud;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(InGameHud.class)
 public class HotkeyVisualizer {
-
-    @Inject(at = @At("TAIL"), method = "renderMainHud")
-    private void renderMainHud(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+    public static void draw(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
         int w = context.getScaledWindowWidth() / 2;
 
         context.getMatrices().push();
@@ -25,4 +18,3 @@ public class HotkeyVisualizer {
         context.getMatrices().pop();
     }
 }
-
