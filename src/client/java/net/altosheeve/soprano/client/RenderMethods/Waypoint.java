@@ -27,6 +27,7 @@ public class Waypoint {
     }
 
     public static ArrayList<Waypoint> waypoints = new ArrayList<>();
+    public static Map<String, String> uuidToUsernameCache = new HashMap<>();
 
     public float x;
     public float y;
@@ -40,7 +41,7 @@ public class Waypoint {
     public String uuid = "";
     public String username = "";
 
-    public static void updateWaypoint(float x, float y, float z, Type type, String UUID) {
+    public static void updateWaypoint(float x, float y, float z, Type type, String UUID, String Username) {
 
         for (Waypoint waypoint : waypoints) {
             if (UUID.equals(waypoint.uuid)) {
@@ -48,6 +49,8 @@ public class Waypoint {
                 waypoint.x = x;
                 waypoint.y = y;
                 waypoint.z = z;
+
+                waypoint.username = Username;
 
                 if (waypoint.importance < Values.importanceRegistry(type)) {
 
@@ -216,14 +219,15 @@ public class Waypoint {
         float scale = Values.textSizeRegistry(this.type);
         float dist = Transforms.distanceValue(this.x, this.y, this.z);
 
-        String distanceString = String.format("[%.2gm]", dist);
+        DecimalFormat df = new DecimalFormat("#.##");
+        String distanceString = "[" + df.format(dist) + "m]";
 
         float distanceStringWidth = -Rendering.client.textRenderer.getWidth(distanceString) / 2f;
-        float usernameStringWidth = -Rendering.client.textRenderer.getWidth(this.uuid) / 2f;
+        float usernameStringWidth = -Rendering.client.textRenderer.getWidth(this.username) / 2f;
 
         Matrix4f spriteTransform = Transforms.getSpriteTransform(this.x, this.y, this.z, scale, -scale, scale);
 
-        Rendering.client.textRenderer.draw(Text.literal(distanceString), distanceStringWidth, 5, 0xaaaaaa, true, spriteTransform, provider, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
-        Rendering.client.textRenderer.draw(Text.literal(this.uuid), usernameStringWidth, 15, 0xaaaaaa, true, spriteTransform, provider, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
+        Rendering.client.textRenderer.draw(Text.literal(distanceString), distanceStringWidth, 5, 0xffffff, true, spriteTransform, provider, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
+        Rendering.client.textRenderer.draw(Text.literal(this.username), usernameStringWidth, 15, 0xffffff, true, spriteTransform, provider, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
     }
 }
