@@ -37,7 +37,10 @@ public class TypeGenerators {
         byte[] yBytes = encodeFloat(y);
         byte[] zBytes = encodeFloat(z);
 
-        return combineBuffers(UUIDBytes, xBytes, yBytes, zBytes);
+        byte[] usernameLength = new byte[]{(byte) username.length()};
+        byte[] usernameBytes = username.getBytes();
+
+        return combineBuffers(UUIDBytes, usernameLength, usernameBytes, xBytes, yBytes, zBytes);
 
     }
 
