@@ -15,7 +15,11 @@ public class Relaying {
     public static int port = 443;
 
     public static void relayInfo() throws IOException {
-        if (Rendering.client.world == null) return;
+        if (Rendering.client.world == null) {
+            UDPClient.pushQueue();
+            return;
+        }
+
         for (Waypoint waypoint : Waypoint.waypoints) waypoint.importance -= waypoint.decayRate;
 
         for (Entity entity : Rendering.client.world.getEntities()) {
