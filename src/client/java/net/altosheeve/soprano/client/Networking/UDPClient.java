@@ -2,6 +2,7 @@ package net.altosheeve.soprano.client.Networking;
 
 import com.google.common.primitives.Bytes;
 import net.altosheeve.soprano.client.Core.Relaying;
+import net.altosheeve.soprano.client.RenderMethods.DebugInfo;
 
 import java.io.IOException;
 import java.net.*;
@@ -26,39 +27,44 @@ public class UDPClient {
     public static class ListeningThread extends Thread {
         private final MessageCallback cb;
         private final DatagramSocket socket;
+
         public ListeningThread(MessageCallback cb, DatagramSocket socket) {
             this.cb = cb;
             this.socket = socket;
         }
+
         public void run() {
 
             while (true) {
                 byte[] receive = new byte[packetLength];
                 DatagramPacket packet = new DatagramPacket(receive, packetLength);
+
+                long time = System.nanoTime();
                 try {
                     this.socket.receive(packet);
-
-                    Iterator<Byte> bytes = Bytes.asList(receive).iterator();
-
-                    while (bytes.hasNext()) {
-                        int identifier = bytes.next();
-
-                        if (identifier == 0) break;
-
-                        int length = bytes.next();
-
-                        ArrayList<Byte> body = new ArrayList<>();
-
-                        for (int i = 0; i < length && bytes.hasNext(); i++) body.add(bytes.next());
-
-                        this.cb.cb(new UDPObject(identifier, Bytes.toArray(body)));
-                    }
-
-
                 } catch (IOException e) {
-                    System.out.println("error in receive, attempting reconnect");
                     break;
                 }
+
+                Iterator<Byte> bytes = Bytes.asList(receive).iterator();
+
+                DebugInfo.sinceLast = (float) (time - System.nanoTime());
+                time = System.nanoTime();
+
+                while (bytes.hasNext()) {
+                    int identifier = bytes.next();
+
+                    if (identifier == 0) break;
+
+                    int length = bytes.next();
+
+                    ArrayList<Byte> body = new ArrayList<>();
+
+                    for (int i = 0; i < length && bytes.hasNext(); i++) body.add(bytes.next());
+
+                    this.cb.cb(new UDPObject(identifier, Bytes.toArray(body)));
+                }
+
             }
 
             while (true) {
@@ -72,7 +78,6 @@ public class UDPClient {
                     System.out.println("reconnect failed with " + tries + " tries");
                 }
             }
-
         }
     }
 
