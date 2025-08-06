@@ -52,10 +52,23 @@ public class TypeGenerators {
         return out.toString();
     }
 
+    public static String decodeString(Iterator<Byte> buffer) {
+        int length = buffer.next();
+
+        StringBuilder out = new StringBuilder();
+        for (int i = 0; i < length && buffer.hasNext(); i++) out.append((char) buffer.next().byteValue());
+
+        return out.toString();
+    }
+
     public static float decodeFloat(Iterator<Byte> buffer) {
+        if (!buffer.hasNext()) return 0;
         byte first  = buffer.next();
+        if (!buffer.hasNext()) return 0;
         byte second = buffer.next();
+        if (!buffer.hasNext()) return 0;
         byte third  = buffer.next();
+        if (!buffer.hasNext()) return 0;
         byte fourth = buffer.next();
 
         return ByteBuffer.wrap(new byte[] { first, second, third, fourth }).getFloat();
