@@ -62,8 +62,8 @@ public class Values {
     public static float normalTextSize = .005f;
     public static float shitterTextSize = .0055f;
     public static float hitlerTextSize = .0055f;
-    public static float snitchTextSize = .002f;
-    public static float snitchAlertTextSize = .005f;
+    public static float snitchTextSize = .004f;
+    public static float snitchAlertTextSize = .006f;
     public static float pingTextSize = .004f;
     public static float alertTextSize = .005f;
     public static float permanentTextSize = .004f;
