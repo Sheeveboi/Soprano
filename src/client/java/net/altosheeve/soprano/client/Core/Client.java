@@ -1,15 +1,16 @@
 package net.altosheeve.soprano.client.Core;
 
+import net.altosheeve.soprano.client.BetterGUI.Hotkeys;
 import net.altosheeve.soprano.client.Nodes.Navigation;
-import net.altosheeve.soprano.client.Nodes.NodeCreation;
-import net.altosheeve.soprano.client.Tuba.Execution;
-import net.altosheeve.soprano.client.Tuba.Values;
+import net.altosheeve.soprano.client.RenderMethods.Waypoint;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Client implements ClientModInitializer {
 
@@ -62,10 +63,12 @@ public class Client implements ClientModInitializer {
         try {
             Relaying.startStream();
         } catch (IOException e) {
+            System.out.println("whatT???");
             throw new RuntimeException(e);
         }
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (Hotkeys.keys.isEmpty() && client.options != null) Hotkeys.gatherHotkeys();
             try {
                 Keys.handleKeys();
                 tick ++;
@@ -82,6 +85,6 @@ public class Client implements ClientModInitializer {
             }
         });
 
-        WorldRenderEvents.LAST.register((Rendering::render3d));
+        WorldRenderEvents.LAST.register(Rendering::render3d);
     }
 }
