@@ -75,10 +75,17 @@ public class TypeGenerators {
     }
 
     public static float decodeInt(Iterator<Byte> buffer) {
+        if (!buffer.hasNext()) return 0;
         byte first  = buffer.next();
+        if (!buffer.hasNext()) return 0;
         byte second = buffer.next();
+        if (!buffer.hasNext()) return 0;
         byte third  = buffer.next();
+        if (!buffer.hasNext()) return 0;
         byte fourth = buffer.next();
+        if (!buffer.hasNext()) return 0;
+
+        //i cant be fucked honestly
 
         return ByteBuffer.wrap(new byte[] { first, second, third, fourth }).getInt();
     }
