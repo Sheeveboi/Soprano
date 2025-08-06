@@ -30,7 +30,8 @@ public class Relaying {
                                 (float) entity.getX() - .5f,
                                 (float) entity.getY() + 1.5f,
                                 (float) entity.getZ() - .5f,
-                                entity.getUuid()));
+                                entity.getUuid(),
+                                entity.getName().getString()));
 
                 UDPClient.queueObject(send);
 
@@ -41,9 +42,17 @@ public class Relaying {
     }
 
     public static void gatherTelemetry(UDPObject udpObject) {
+
+        if (Rendering.client.player == null) return;
+
         Iterator<Byte> buffer = udpObject.data.iterator();
 
+        if (!buffer.hasNext()) return;
+
         String UUID = TypeGenerators.decodeUUID(buffer);
+
+        if (!buffer.hasNext()) return;
+        String username = TypeGenerators.decodeString(buffer);
 
         float x = 0;
         float y = 0;
@@ -61,9 +70,11 @@ public class Relaying {
             z = TypeGenerators.decodeInt(buffer);
         }
 
+        if (!buffer.hasNext()) return;
+
         int threat = buffer.next();
 
-        Waypoint.updateWaypoint(x, y, z, Waypoint.Type.values()[threat], UUID);
+        Waypoint.updateWaypoint(x, (float) Rendering.client.player.getY() + 1.5f, z, Waypoint.Type.values()[threat], UUID, username);
 
     }
 
