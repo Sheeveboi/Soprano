@@ -60,6 +60,8 @@ public class Waypoint {
                 waypoint.importance = Values.importanceRegistry(type);
                 waypoint.decayRate = Values.decayRateRegistry(type);
 
+                return;
+
             }
         }
 
