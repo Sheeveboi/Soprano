@@ -37,9 +37,9 @@ public class Values {
 
     public static float waypointDecayRate = .001f;
     public static float goodGuyDecayRate = .0001f;
-    public static float normalDecayRate = .0001f;
-    public static float shitterDecayRate = .00001f;
-    public static float hitlerDecayRate = .000001f;
+    public static float normalDecayRate = .001f;
+    public static float shitterDecayRate = .00005f;
+    public static float hitlerDecayRate = .00005f;
     public static float snitchDecayRate = .0001f;
     public static float snitchAlertDecayRate = .0001f;
     public static float pingDecayRate = .001f;
