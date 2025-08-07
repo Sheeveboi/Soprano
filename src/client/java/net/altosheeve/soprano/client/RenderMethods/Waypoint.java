@@ -44,6 +44,8 @@ public class Waypoint {
 
     public static void updateWaypoint(float x, float y, float z, Type type, String UUID, String Username) {
 
+        if (UUID.toString().equals(Rendering.client.player.getUuidAsString())) return;
+
         for (Waypoint waypoint : waypoints) {
             if (UUID.equals(waypoint.uuid)) {
 
