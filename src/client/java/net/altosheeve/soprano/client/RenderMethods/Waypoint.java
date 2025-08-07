@@ -2,15 +2,16 @@ package net.altosheeve.soprano.client.RenderMethods;
 
 import net.altosheeve.soprano.client.Core.Rendering;
 import net.altosheeve.soprano.client.Core.Values;
+import net.altosheeve.soprano.client.Networking.Request;
 import net.altosheeve.soprano.client.Networking.TypeGenerators;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.*;
 import net.minecraft.text.Text;
 import org.joml.Matrix4f;
+import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.UUID;
+import java.text.DecimalFormat;
+import java.util.*;
 
 public class Waypoint {
 
@@ -44,24 +45,18 @@ public class Waypoint {
     public static void updateWaypoint(float x, float y, float z, Type type, String UUID, String Username) {
 
         for (Waypoint waypoint : waypoints) {
-            if (UUID.equals(waypoint.uuid)) {
+            if (UUID.equals(waypoint.uuid) && waypoint.importance < Values.importanceRegistry(type)) {
 
+                waypoint.username = Username;
                 waypoint.x = x;
                 waypoint.y = y;
                 waypoint.z = z;
 
-                waypoint.username = Username;
+                waypoint.type = type;
 
-                if (waypoint.importance < Values.importanceRegistry(type)) {
+                waypoint.importance = Values.importanceRegistry(type);
+                waypoint.decayRate = Values.decayRateRegistry(type);
 
-                    waypoint.type = type;
-
-                    waypoint.importance = Values.importanceRegistry(type);
-                    waypoint.decayRate = Values.decayRateRegistry(type);
-
-                }
-
-                return;
             }
         }
 
