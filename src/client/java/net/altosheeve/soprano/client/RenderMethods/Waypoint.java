@@ -45,7 +45,10 @@ public class Waypoint {
     public static void updateWaypoint(float x, float y, float z, Type type, String UUID, String Username) {
 
         for (Waypoint waypoint : waypoints) {
-            if (UUID.equals(waypoint.uuid) && waypoint.importance < Values.importanceRegistry(type)) {
+            if (UUID.equals(waypoint.uuid)) {
+
+                if (waypoint.importance > Values.importanceRegistry(type)) return;
+                if (waypoint.type.ordinal() < type.ordinal()) return;
 
                 waypoint.username = Username;
                 waypoint.x = x;
