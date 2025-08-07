@@ -222,7 +222,7 @@ public class Waypoint {
 
         Matrix4f spriteTransform = Transforms.getSpriteTransform(this.x, this.y, this.z, scale, -scale, scale);
 
-        Rendering.client.textRenderer.draw(Text.literal(distanceString), distanceStringWidth, 5, 0xffffff, true, spriteTransform, provider, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
-        Rendering.client.textRenderer.draw(Text.literal(this.username), usernameStringWidth, 15, 0xffffff, true, spriteTransform, provider, TextRenderer.TextLayerType.NORMAL, 0, 15728880);
+        Rendering.client.textRenderer.draw(Text.literal(distanceString), distanceStringWidth, 5, 0xffffff, true, spriteTransform, provider, TextRenderer.TextLayerType.SEE_THROUGH, 0, 15728880);
+        Rendering.client.textRenderer.draw(Text.literal(this.username), usernameStringWidth, 15, 0xffffff, true, spriteTransform, provider, TextRenderer.TextLayerType.SEE_THROUGH, 0, 15728880);
     }
 }
