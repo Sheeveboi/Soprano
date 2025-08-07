@@ -20,7 +20,7 @@ public class Relaying {
             return;
         }
 
-        for (Waypoint waypoint : Waypoint.waypoints) waypoint.importance -= waypoint.decayRate;
+        for (int i = 0; i < Waypoint.waypoints.size(); i++) Waypoint.waypoints.get(i).importance -= Waypoint.waypoints.get(i).decayRate;
 
         for (Entity entity : Rendering.client.world.getEntities()) {
             if (entity.isPlayer()) {
