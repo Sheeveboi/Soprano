@@ -89,9 +89,10 @@ public class Rendering {
 
             for (Waypoint waypoint : new ArrayList<>(Waypoint.waypoints)) {
                 waypoint.drawPoint(waypointBuffer);
-                waypoint.drawText(textBuffer);
                 if (waypoint.importance <= 0) Waypoint.waypoints.remove(waypoint);
             }
+
+            Waypoint.drawText(textBuffer);
 
             BufferRenderer.drawWithGlobalProgram(waypointBuffer.end());
             textBuffer.draw();

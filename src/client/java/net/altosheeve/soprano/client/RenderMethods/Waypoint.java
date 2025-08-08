@@ -44,7 +44,7 @@ public class Waypoint {
 
     public static void updateWaypoint(float x, float y, float z, Type type, String UUID, String Username) {
 
-        if (UUID.toString().equals(Rendering.client.player.getUuidAsString())) return;
+        if (Rendering.client.player == null || UUID.toString().equals(Rendering.client.player.getUuidAsString())) return;
 
         for (Waypoint waypoint : waypoints) {
             if (UUID.equals(waypoint.uuid)) {
@@ -67,7 +67,7 @@ public class Waypoint {
             }
         }
 
-        waypoints.add(new Waypoint(x, y, z,type, UUID));
+        waypoints.add(new Waypoint(x, y, z,type, UUID, Username));
 
     }
 
@@ -91,7 +91,7 @@ public class Waypoint {
         this.decayRate = 0;
     }
 
-    public Waypoint(float x, float y, float z, Type type, String name) {
+    public Waypoint(float x, float y, float z, Type type, String uuid, String username) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -99,7 +99,8 @@ public class Waypoint {
         this.type = type;
         this.importance = Values.importanceRegistry(type);
         this.decayRate = Values.decayRateRegistry(type);;
-        this.uuid = name;
+        this.uuid = uuid;
+        this.username = username;
     }
 
     public void drawGoodGuy(BufferBuilder buffer, Matrix4f spriteTransform) {
@@ -215,21 +216,32 @@ public class Waypoint {
 
     }
 
-    public void drawText(VertexConsumerProvider.Immediate provider) {
-        if (Transforms.facingValue(this.x, this.y, this.z) <= 1 - Values.focusThresholdRegistry(this.type)) return;
+    public static void drawText(VertexConsumerProvider.Immediate provider) {
 
-        float scale = Values.textSizeRegistry(this.type);
-        float dist = Transforms.distanceValue(this.x, this.y, this.z);
+        waypoints.sort((a, b) -> Float.compare(Transforms.facingValue(b.x, b.y, b.z), Transforms.facingValue(a.x, a.y, a.z)));
 
-        DecimalFormat df = new DecimalFormat("#.##");
-        String distanceString = "[" + df.format(dist) + "m]";
+        float scale = Values.textSizeRegistry(waypoints.getFirst().type);
+        Matrix4f spriteTransform = Transforms.getSpriteTransform(waypoints.getFirst().x, waypoints.getFirst().y, waypoints.getFirst().z, scale, -scale, scale);
 
-        float distanceStringWidth = -Rendering.client.textRenderer.getWidth(distanceString) / 2f;
-        float usernameStringWidth = -Rendering.client.textRenderer.getWidth(this.username) / 2f;
+        int y = 5;
 
-        Matrix4f spriteTransform = Transforms.getSpriteTransform(this.x, this.y, this.z, scale, -scale, scale);
+        for (Waypoint waypoint : waypoints) {
 
-        Rendering.client.textRenderer.draw(Text.literal(distanceString), distanceStringWidth, 5, 0xffffff, true, spriteTransform, provider, TextRenderer.TextLayerType.SEE_THROUGH, 0, 15728880);
-        Rendering.client.textRenderer.draw(Text.literal(this.username), usernameStringWidth, 15, 0xffffff, true, spriteTransform, provider, TextRenderer.TextLayerType.SEE_THROUGH, 0, 15728880);
+            if (Transforms.facingValue(waypoint.x, waypoint.y, waypoint.z) <= 1 - Values.focusThresholdRegistry(waypoint.type)) break;
+
+            System.out.println(waypoint.username);
+
+            float dist = Transforms.distanceValue(waypoint.x, waypoint.y, waypoint.z);
+
+            StringBuilder waypointInfo = new StringBuilder();
+            DecimalFormat df = new DecimalFormat("#.##");
+            waypointInfo.append(waypoint.username).append(" [").append(df.format(dist)).append("m]");
+
+            float distanceStringWidth = -Rendering.client.textRenderer.getWidth(waypointInfo.toString()) / 2f;
+
+            Rendering.client.textRenderer.draw(Text.literal(waypointInfo.toString()), distanceStringWidth, y, 0xffffff, true, spriteTransform, provider, TextRenderer.TextLayerType.SEE_THROUGH, 0, 15728880);
+
+            y += 10;
+        }
     }
 }
