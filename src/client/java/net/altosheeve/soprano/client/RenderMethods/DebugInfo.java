@@ -13,8 +13,8 @@ public class DebugInfo {
     public static float sinceLast = 0;
 
     public static void draw(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
-        context.drawText(Rendering.client.textRenderer, "Average Latency  : " + avgLatency + "ms", 5,20, 0xffffff, true);
-        context.drawText(Rendering.client.textRenderer, "Immediate Latency : " + immediateLatency + "ms", 5,35, 0xffffff, true);
-        context.drawText(Rendering.client.textRenderer, "Last Packet      : " + sinceLast + "ms", 5,50, 0xffffff, true);
+        //context.drawText(Rendering.client.textRenderer, "Average Latency  : " + avgLatency + "ms", 5,20, 0xffffff, true);
+        //context.drawText(Rendering.client.textRenderer, "Immediate Latency : " + immediateLatency + "ms", 5,35, 0xffffff, true);
+        context.drawText(Rendering.client.textRenderer, "Last Packet : " + sinceLast + "ms", 2,10, 0xffffff, true);
     }
 }
