@@ -218,18 +218,20 @@ public class Waypoint {
 
     public static void drawText(VertexConsumerProvider.Immediate provider) {
 
-        waypoints.sort((a, b) -> Float.compare(Transforms.facingValue(b.x, b.y, b.z), Transforms.facingValue(a.x, a.y, a.z)));
+        if (waypoints.isEmpty()) return;
 
-        float scale = Values.textSizeRegistry(waypoints.getFirst().type);
-        Matrix4f spriteTransform = Transforms.getSpriteTransform(waypoints.getFirst().x, waypoints.getFirst().y, waypoints.getFirst().z, scale, -scale, scale);
+        ArrayList<Waypoint> waypointsCopy = new ArrayList<>(waypoints);
+
+        waypointsCopy.sort((a, b) -> Float.compare(Transforms.facingValue(b.x, b.y, b.z), Transforms.facingValue(a.x, a.y, a.z)));
+
+        float scale = Values.textSizeRegistry(waypointsCopy.getFirst().type);
+        Matrix4f spriteTransform = Transforms.getSpriteTransform(waypointsCopy.getFirst().x, waypointsCopy.getFirst().y, waypointsCopy.getFirst().z, scale, -scale, scale);
 
         int y = 5;
 
-        for (Waypoint waypoint : waypoints) {
+        for (Waypoint waypoint : waypointsCopy) {
 
             if (Transforms.facingValue(waypoint.x, waypoint.y, waypoint.z) <= 1 - Values.focusThresholdRegistry(waypoint.type)) break;
-
-            System.out.println(waypoint.username);
 
             float dist = Transforms.distanceValue(waypoint.x, waypoint.y, waypoint.z);
 
