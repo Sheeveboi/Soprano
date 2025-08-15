@@ -4,7 +4,8 @@
   "package": "net.altosheeve.soprano.client.Mixins",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "HudMixin"
+    "HudMixin",
+    "TitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
