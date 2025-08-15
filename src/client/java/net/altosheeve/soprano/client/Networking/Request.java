@@ -10,6 +10,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +54,16 @@ public class Request extends Thread {
         future.start();
     }
 
+    public static HttpResponse<String> get(String url) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .timeout(Duration.ofSeconds(20))
+                .GET()
+                .build();
+
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
     public static void get(String url, String headers, RequestCallback cb) {
         HttpRequest.Builder request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -80,6 +91,16 @@ public class Request extends Thread {
         future.start();
     }
 
+    public static HttpResponse<String> post(String url) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .timeout(Duration.ofSeconds(20))
+                .POST(HttpRequest.BodyPublishers.ofString(""))
+                .build();
+
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
     public static void post(String url, String headers, RequestCallback cb) {
         HttpRequest.Builder request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -101,7 +122,8 @@ public class Request extends Thread {
     public static void post(String url, String headers, String body, RequestCallback cb) {
         HttpRequest.Builder request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .timeout(Duration.ofSeconds(20));
+                .timeout(Duration.ofSeconds(20))
+                .header("Content-Length", String.valueOf(body.length()));
 
         JsonParser parser = new JsonParser();
         JsonObject h = parser.parse(headers).getAsJsonObject();
@@ -116,6 +138,48 @@ public class Request extends Thread {
 
         RequestFuture future = new RequestFuture(request.build(), cb);
         future.start();
+    }
+
+    public static void post(String url, String headers, String body, String username, String password, RequestCallback cb) {
+        HttpRequest.Builder request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .timeout(Duration.ofSeconds(20))
+                .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes()))
+                .header("Content-Length", String.valueOf(body.length()));
+
+        JsonParser parser = new JsonParser();
+        JsonObject h = parser.parse(headers).getAsJsonObject();
+
+        for (Map.Entry<String, JsonElement> entry : h.entrySet()) {
+            request.header(entry.getKey(),entry.getValue().getAsString());
+        }
+
+        JsonObject b = parser.parse(body).getAsJsonObject();
+        request.POST(HttpRequest.BodyPublishers.ofString(b.toString()));
+        //yes this is stupid but you cant trust third party json parsers for shit these days
+
+        RequestFuture future = new RequestFuture(request.build(), cb);
+        future.start();
+    }
+
+    public static HttpResponse<String> post(String url, String headers, String body, String username, String password) throws IOException, InterruptedException {
+
+        HttpRequest.Builder request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .timeout(Duration.ofSeconds(20))
+                .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes()));
+
+        JsonParser parser = new JsonParser();
+        JsonObject h = parser.parse(headers).getAsJsonObject();
+
+        for (Map.Entry<String, JsonElement> entry : h.entrySet()) {
+            request.header(entry.getKey(),entry.getValue().getAsString());
+        }
+
+        request.POST(HttpRequest.BodyPublishers.ofString(body));
+        //yes this is stupid but you cant trust third party json parsers for shit these days
+
+        return client.send(request.build(), HttpResponse.BodyHandlers.ofString());
     }
 
 }
