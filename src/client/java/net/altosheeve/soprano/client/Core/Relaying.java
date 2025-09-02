@@ -25,13 +25,18 @@ public class Relaying {
         for (Entity entity : Rendering.client.world.getEntities()) {
             if (entity.isPlayer()) {
 
+                String username = entity.getName().getString();
+
+                if (username == null)   username = "unknown";
+                if (username.isEmpty()) username = "unknown";
+
                 UDPObject send = new UDPObject((byte) 0x1,
                         TypeGenerators.encodePlayer(
                                 (float) entity.getX() - .5f,
                                 (float) entity.getY() + 1.5f,
                                 (float) entity.getZ() - .5f,
                                 entity.getUuid(),
-                                entity.getName().getString()));
+                                username));
 
                 UDPClient.queueObject(send);
 
