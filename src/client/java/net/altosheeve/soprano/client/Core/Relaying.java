@@ -29,16 +29,15 @@ public class Relaying {
                 String username = entity.getName().getString();
 
                 for (byte c : username.getBytes(StandardCharsets.UTF_8)) {
-                    System.out.println(c);
+
                     if (c < 0x30 || c > 0x7E) {
                         username = "unknown";
                         break;
                     }
+
                 }
 
                 if (username.isEmpty()) username = "unknown";
-
-                System.out.println(username);
 
                 UDPObject send = new UDPObject((byte) 0x1,
                         TypeGenerators.encodePlayer(
