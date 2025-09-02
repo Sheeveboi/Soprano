@@ -7,6 +7,7 @@ import net.altosheeve.soprano.client.RenderMethods.Waypoint;
 import net.minecraft.entity.Entity;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Relaying {
@@ -27,8 +28,17 @@ public class Relaying {
 
                 String username = entity.getName().getString();
 
-                if (username == null)   username = "unknown";
+                for (byte c : username.getBytes(StandardCharsets.UTF_8)) {
+                    System.out.println(c);
+                    if (c < 0x30 || c > 0x7E) {
+                        username = "unknown";
+                        break;
+                    }
+                }
+
                 if (username.isEmpty()) username = "unknown";
+
+                System.out.println(username);
 
                 UDPObject send = new UDPObject((byte) 0x1,
                         TypeGenerators.encodePlayer(
@@ -53,7 +63,6 @@ public class Relaying {
         Iterator<Byte> buffer = udpObject.data.iterator();
 
         if (!buffer.hasNext()) return;
-
         String UUID = TypeGenerators.decodeUUID(buffer);
 
         if (!buffer.hasNext()) return;
@@ -109,17 +118,15 @@ public class Relaying {
 
         startStream();
 
-        while (true) {
+        UDPObject send1 = new UDPObject((byte) 0x1,
+                TypeGenerators.encodePlayer(
+                        (float) 1,
+                        (float) 1,
+                        (float) 1,
+                        UUID.randomUUID(), "test"));
 
-            for (int i = 0; i < 100; i++) {
-                UDPObject send1 = new UDPObject((byte) 0x1,
-                        TypeGenerators.encodePlayer(
-                                (float) 1,
-                                (float) 1,
-                                (float) 1,
-                                UUID.randomUUID()));
-                UDPClient.queueObject(send1);
-            }
+        while (true) {
+            UDPClient.queueObject(send1);
 
             UDPClient.pushQueue();
             
