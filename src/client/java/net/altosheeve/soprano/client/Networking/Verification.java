@@ -176,70 +176,76 @@ public class Verification {
 
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-
-            System.out.println("test");
-
-            System.out.println(exchange.getRequestURI());
-
-            Map<String, String> parameters;
             try {
-                parameters = decodeURI(exchange.getRequestURI().toString());
-            } catch (URISyntaxException e) {
-                System.out.println("error in verification (URI Decoding error)");
-                return;
-            }
+                System.out.println(exchange.getRequestURI());
 
-            if (!parameters.containsKey("code")) {
-                System.out.println("error in verification (No OAuth2 Code)");
-                return;
-            }
+                Map<String, String> parameters;
+                try {
+                    parameters = decodeURI(exchange.getRequestURI().toString());
+                } catch (URISyntaxException e) {
+                    System.out.println("error in verification (URI Decoding error)");
+                    return;
+                }
 
-            String code = parameters.get("code");
+                if (!parameters.containsKey("code")) {
+                    System.out.println("error in verification (No OAuth2 Code)");
+                    return;
+                }
 
-            System.out.println(code);
+                String code = parameters.get("code");
 
-            String data = "code=%s&grant_type=authorization_code&redirect_uri=%s".formatted(URLEncoder.encode(code), URLEncoder.encode("http://localhost:5000"));
+                System.out.println(code);
+                System.out.println("Sanity check");
 
-            HttpResponse<String> response;
-            try {
-                response = Request.post(endpoint + "/oauth2/token", headers, data, id, secret);
-            } catch (InterruptedException e) {
-                System.out.println("error in verification (post error)");
-                throw new RuntimeException(e);
-            }
+                String data = "code=%s&grant_type=authorization_code&redirect_uri=%s".formatted(URLEncoder.encode(code), URLEncoder.encode("http://localhost:5000"));
 
-            System.out.println(response.headers());
-            System.out.println(response.body());
+                HttpResponse<String> response;
+                try {
+                    response = Request.post(endpoint + "/oauth2/token", headers, data, id, secret);
+                } catch (InterruptedException e) {
+                    System.out.println("error in verification (post error)");
+                    throw new RuntimeException(e);
+                }
 
-            JSONObject json = new JSONObject(response.body());
+                System.out.println(response.body().toString());
 
-            if (!json.has("access_token")) {
-                System.out.println("error in verification (no access token)");
-                return;
-            }
-            if (!json.has("refresh_token")) {
-                System.out.println("error in verification (no refresh token)");
-                return;
-            }
+                JSONObject json;
+                json = new JSONObject(response.body());
 
-            if (!tokenFile.exists()) tokenFile.createNewFile();
-            String writeToFile = """
-                    {
-                        "access_token" : %s,
-                        "refresh_token" : %s
-                    }
-                    """;
-            FileWriter writer = new FileWriter(tokenFile);
-            writer.write(writeToFile.formatted(json.getString("access_token"), json.getString("refresh_token")));
-            writer.close();
+                System.out.println("created json object");
 
-            exchange.sendResponseHeaders(200, 0);
-            server.stop(0);
+                if (!json.has("access_token")) {
+                    System.out.println("error in verification (no access token)");
+                    return;
+                }
+                if (!json.has("refresh_token")) {
+                    System.out.println("error in verification (no refresh token)");
+                    return;
+                }
 
-            try {
+                boolean enable = false;
+                if (!tokenFile.exists()) enable = tokenFile.createNewFile();
+                if (!enable) System.out.println("unable to create file");
+                System.out.println("writing file");
+
+                String writeToFile = """
+                        {
+                            "access_token" : %s,
+                            "refresh_token" : %s
+                        }
+                        """;
+                FileWriter writer = new FileWriter(tokenFile);
+                writer.write(writeToFile.formatted(json.getString("access_token"), json.getString("refresh_token")));
+                writer.close();
+
                 System.out.println("running");
                 setToken();
-            } catch (InterruptedException | URISyntaxException e) {
+
+                exchange.sendResponseHeaders(200, 0);
+                server.stop(0);
+            } catch (RuntimeException | URISyntaxException | InterruptedException e) {
+                System.out.println("there was some sort of error");
+                System.out.println(e);
                 throw new RuntimeException(e);
             }
         }
