@@ -67,10 +67,15 @@ public class Verification {
 
         @Override
         public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+
             super.render(context, mouseX, mouseY, delta);
+
             Text text = Text.of("You are currently not verified by OPPWATCH_ servers!");
+
             int w = Rendering.client.textRenderer.getWidth(text);
             context.drawText(Rendering.client.textRenderer, text, (width / 2) - (w / 2), height / 2 - 5, 0xffffff, true);
+
+            if (verified) Rendering.client.setScreen(parentScreen);
         }
     }
 
@@ -135,7 +140,7 @@ public class Verification {
 
         verified = true;
 
-        if (parentScreen != null) Rendering.client.setScreen(parentScreen);
+        if (parentScreen != null) MinecraftClient.getInstance().setScreen(parentScreen);
     }
 
     public static boolean isVerified() { return verified; }
