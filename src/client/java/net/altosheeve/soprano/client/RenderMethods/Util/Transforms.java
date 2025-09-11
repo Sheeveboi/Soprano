@@ -1,7 +1,8 @@
-package net.altosheeve.soprano.client.RenderMethods;
+package net.altosheeve.soprano.client.RenderMethods.Util;
 
 import net.altosheeve.soprano.client.Core.Rendering;
 import net.altosheeve.soprano.client.Core.Values;
+import net.altosheeve.soprano.client.RenderMethods.Waypoint;
 import net.minecraft.client.render.Camera;
 import org.joml.*;
 

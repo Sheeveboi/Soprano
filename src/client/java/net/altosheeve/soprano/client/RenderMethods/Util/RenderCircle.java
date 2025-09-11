@@ -1,4 +1,4 @@
-package net.altosheeve.soprano.client.RenderMethods;
+package net.altosheeve.soprano.client.RenderMethods.Util;
 
 import net.minecraft.client.render.BufferBuilder;
 import org.joml.Matrix4f;
