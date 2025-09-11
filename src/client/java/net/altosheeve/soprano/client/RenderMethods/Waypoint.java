@@ -2,13 +2,13 @@ package net.altosheeve.soprano.client.RenderMethods;
 
 import net.altosheeve.soprano.client.Core.Rendering;
 import net.altosheeve.soprano.client.Core.Values;
-import net.altosheeve.soprano.client.Networking.Request;
-import net.altosheeve.soprano.client.Networking.TypeGenerators;
+import net.altosheeve.soprano.client.RenderMethods.Util.RenderBox;
+import net.altosheeve.soprano.client.RenderMethods.Util.RenderCircle;
+import net.altosheeve.soprano.client.RenderMethods.Util.Transforms;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.*;
 import net.minecraft.text.Text;
 import org.joml.Matrix4f;
-import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.*;
