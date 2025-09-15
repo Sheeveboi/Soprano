@@ -2,7 +2,10 @@ package net.altosheeve.soprano.client.Core;
 
 import net.altosheeve.soprano.client.BetterGUI.Hotkeys;
 import net.altosheeve.soprano.client.Nodes.Navigation;
+import net.altosheeve.soprano.client.Nodes.NodeCreation;
 import net.altosheeve.soprano.client.RenderMethods.Waypoint;
+import net.altosheeve.soprano.client.Tuba.Encoding;
+import net.altosheeve.soprano.client.Tuba.Execution;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
