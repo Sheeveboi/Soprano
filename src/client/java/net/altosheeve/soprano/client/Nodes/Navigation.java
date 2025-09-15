@@ -16,7 +16,7 @@ public class Navigation {
     public static Node currentNode;
     public static Node targetNode;
     public static double velocityThreshold;
-    public static double doorThreshold;
+    public static double interactionThreshold;
     public static int tick;
 
     public static Handler handler;
@@ -65,7 +65,7 @@ public class Navigation {
 
         double velocity = player.getVelocity().length();
 
-        if (player.getPos().distanceTo(new Vec3d(targetNode.x + .5, targetNode.y + .5, targetNode.z + .5)) < doorThreshold) {
+        if (player.getPos().distanceTo(new Vec3d(targetNode.x + .5, targetNode.y + .5, targetNode.z + .5)) < interactionThreshold) {
             client.options.useKey.setPressed(true);
         } else {
             client.options.useKey.setPressed(false);
