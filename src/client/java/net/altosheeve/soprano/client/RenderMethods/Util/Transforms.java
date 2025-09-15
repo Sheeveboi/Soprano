@@ -71,4 +71,16 @@ public class Transforms {
 
     }
 
+    public static Matrix4f getMapTransform(float x, float y, float scale) {
+
+        Matrix4f mapTransform = new Matrix4f();
+
+        Vector3f panVector = new Vector3f(x, y, 0);
+
+        mapTransform.translation(panVector);
+        mapTransform.scale(scale, scale, 0);
+
+        return mapTransform;
+    }
+
 }
