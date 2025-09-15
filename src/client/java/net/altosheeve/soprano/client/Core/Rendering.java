@@ -1,17 +1,18 @@
 package net.altosheeve.soprano.client.Core;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.altosheeve.soprano.client.Networking.TypeGenerators;
 import net.altosheeve.soprano.client.Nodes.Navigation;
 import net.altosheeve.soprano.client.Nodes.Node;
-import net.altosheeve.soprano.client.RenderMethods.Transforms;
+import net.altosheeve.soprano.client.RenderMethods.CivMap;
 import net.altosheeve.soprano.client.RenderMethods.Waypoint;
+import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
@@ -98,6 +99,7 @@ public class Rendering {
             textBuffer.draw();
 
         }
+
         //reset rendering system
         RenderSystem.enableDepthTest();
         RenderSystem.depthMask(true);
@@ -107,4 +109,22 @@ public class Rendering {
         modelViewStack.popMatrix();
     }
 
+    public static void render2d(DrawContext context, RenderTickCounter renderTickCounter) {
+
+        Matrix4f viewMatrix = context.getMatrices().peek().getPositionMatrix();
+
+        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+        if (CivMap.renderMap) {
+
+            BufferBuilder mapBuffer = RenderSystem.renderThreadTesselator().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+
+            CivMap.draw(mapBuffer, viewMatrix);
+
+            BufferRenderer.drawWithGlobalProgram(mapBuffer.end());
+
+        }
+
+    }
 }
