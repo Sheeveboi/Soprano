@@ -2,6 +2,7 @@ package net.altosheeve.soprano.client.Core;
 
 import net.altosheeve.soprano.client.Nodes.NodeCreation;
 import net.altosheeve.soprano.client.Nodes.Screens.EditNodeScreen;
+import net.altosheeve.soprano.client.RenderMethods.CivMap;
 import net.altosheeve.soprano.client.Tuba.Execution;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
@@ -19,10 +20,11 @@ public class Keys {
     public static KeyBinding connectNode;
     public static KeyBinding selectNode;
     public static KeyBinding enableExec;
-    public static KeyBinding testKey;
+    public static KeyBinding loadTestProgram;
+    public static KeyBinding mapKey;
 
     public static void registerKeys() {
-        /*nodeScreen = KeyBindingHelper.registerKeyBinding(
+        nodeScreen = KeyBindingHelper.registerKeyBinding(
                 new KeyBinding(
                         "Add / Edit node",
                         InputUtil.Type.KEYSYM,
@@ -56,23 +58,36 @@ public class Keys {
                         "Soprano"
                 )
         );
-        testKey = KeyBindingHelper.registerKeyBinding(
+
+        mapKey = KeyBindingHelper.registerKeyBinding(
                 new KeyBinding(
-                        "Test Key",
+                        "Map Key",
                         InputUtil.Type.KEYSYM,
                         GLFW.GLFW_KEY_SEMICOLON,
                         "Soprano"
                 )
-        );*/
-        //public release isnt ready for true tuba yet
+        );
+
+        loadTestProgram = KeyBindingHelper.registerKeyBinding(
+                new KeyBinding(
+                        "Load Test Program",
+                        InputUtil.Type.KEYSYM,
+                        GLFW.GLFW_KEY_EQUAL,
+                        "Soprano"
+                )
+        );
     }
 
     public static void handleKeys() throws IOException {
-        /*while(nodeScreen.wasPressed()) MinecraftClient.getInstance().setScreen(new EditNodeScreen(Text.of("test")));
+
+        while(mapKey.wasPressed()) MinecraftClient.getInstance().setScreen(new CivMap(Text.of("Civ Map")));
+        while(nodeScreen.wasPressed()) MinecraftClient.getInstance().setScreen(new EditNodeScreen(Text.of("Civ Map")));
+
         while(connectNode.wasPressed()) NodeCreation.connectNode();
         while(selectNode.wasPressed()) NodeCreation.selectNode();
         while(enableExec.wasPressed()) Execution.toggle();
-        while(testKey.wasPressed()) {
+        while(loadTestProgram.wasPressed()) Execution.setProgram(TestProgram.getProgram());
+        /*while(testKey.wasPressed()) {
             MinecraftClient client = MinecraftClient.getInstance();
             ClientPlayerEntity player = client.player;
             assert player != null;
