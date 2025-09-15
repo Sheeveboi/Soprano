@@ -255,11 +255,15 @@ public class Navigation {
             boolean deadEnd = true;
 
             for (int i : sorted) {
+                Node instance = nodes.get(i);
                 if (!searched.contains(i)) {
-                    searched.add(i);
-                    out.add(i);
-                    testNode = nodes.get(i);
-                    deadEnd = false;
+                    if (instance.type != Node.NodeType.INTERACTABLE || instance == targetNode) {
+                        searched.add(i);
+                        out.add(i);
+                        testNode = instance;
+                        deadEnd = false;
+                        break;
+                    }
                 }
             }
 
