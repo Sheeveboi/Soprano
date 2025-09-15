@@ -1,15 +1,16 @@
 package net.altosheeve.soprano.client.Nodes;
 
+import net.altosheeve.soprano.client.Core.Rendering;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.render.Camera;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Vector3f;
 
-import java.io.IOException;
 import java.util.*;
+
+import static java.lang.Math.abs;
 
 public class Navigation {
     public static ArrayList<Node> nodes = new ArrayList<>();
