@@ -26,7 +26,7 @@ public class Transforms {
         float yawRad = (float) (((Rendering.client.player.getYaw() + 90) * Math.PI) / 180);
 
         Vector3f directionalVector = new Vector3f(x + .5f, y - .5f, z + .5f);
-        Vector3f playerPos         = new Vector3f((float) camera.getPos().x, (float) camera.getPos().y, (float) camera.getPos().z);
+        Vector3f playerPos         = camera.getPos().toVector3f();
         Vector3f cameraVector      = new Vector3f((float) (Math.sin(pitchRad) * Math.cos(yawRad)), (float) Math.cos(pitchRad),  (float) (Math.sin(pitchRad) * Math.sin(yawRad)));
 
         directionalVector.sub(playerPos).normalize();
@@ -38,7 +38,7 @@ public class Transforms {
         Camera camera = Rendering.client.gameRenderer.getCamera();
 
         Vector3f directionalVector = new Vector3f(x + .5f, y - .5f, z + .5f);
-        Vector3f playerPos         = new Vector3f((float) camera.getPos().x, (float) camera.getPos().y, (float) camera.getPos().z);
+        Vector3f playerPos         = camera.getPos().toVector3f();
 
         //get vector of player to waypoint
         directionalVector.sub(playerPos);
