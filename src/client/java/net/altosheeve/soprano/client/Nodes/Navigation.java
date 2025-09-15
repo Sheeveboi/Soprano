@@ -48,8 +48,6 @@ public class Navigation {
 
         double velocity = player.getVelocity().length();
 
-        System.out.println(velocity);
-
         client.options.useKey.setPressed(false);
         client.options.jumpKey.setPressed(false);
 
@@ -130,9 +128,6 @@ public class Navigation {
             float yaw = (float) Math.atan2(dz, dx);
 
             boolean direction = player.getYaw() - yaw < 0;
-
-            client.options.rightKey.setPressed(false);
-            client.options.leftKey.setPressed(false);
 
             if (direction) client.options.rightKey.setPressed(true);
             else client.options.leftKey.setPressed(true);
