@@ -29,6 +29,12 @@ public class TypeGenerators {
         return new byte[] { (byte) (intBits >> 24), (byte) (intBits >> 16), (byte) (intBits >> 8), (byte) (intBits) };
     }
 
+    public static byte[] encodeInt(int value) {
+        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+        buffer.putInt(value);
+        return buffer.array();
+    }
+
     public static byte[] encodePlayer(float x, float y, float z, UUID UUID, String username) {
 
         byte[] UUIDBytes = UUID.toString().getBytes();
