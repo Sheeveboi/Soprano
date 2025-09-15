@@ -1,14 +1,15 @@
 package net.altosheeve.soprano.client.Tuba;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public class Values {
-    public static int _PARSE_INT(BasicInstructions instructions) {
+public class Encoding {
+    public static int _PARSE_INT(BasicFunctions instructions) {
         instructions.itter();
         return instructions.translateProgramPointer();
     }
 
-    public static String _PARSE_STRING(BasicInstructions instructions) {
+    public static String _PARSE_STRING(BasicFunctions instructions) {
         int size = _PARSE_INT(instructions);
         StringBuilder out = new StringBuilder();
         for (int i = 0 ; i < size; i++) {
