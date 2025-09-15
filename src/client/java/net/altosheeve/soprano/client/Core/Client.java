@@ -19,46 +19,10 @@ public class Client implements ClientModInitializer {
     public void onInitializeClient() {
         Keys.registerKeys();
 
-        /*try { NodeCreation.loadNodes(); }
+        try { NodeCreation.loadNodes(); }
         catch (IOException e) { throw new RuntimeException(e); }
 
-        ArrayList<Byte> testProgram = new ArrayList<>();
-        testProgram.add((byte) 0x0); //calibrate
-        testProgram.addAll(Values._ENCODE_STRING("test 1"));
-        testProgram.add((byte) 2); //set tolerance
-        testProgram.add((byte) 10);
-
-        testProgram.add((byte) 0x2); //path to
-        testProgram.addAll(Values._ENCODE_STRING("test iroad 3"));
-        testProgram.add((byte) 7); //set tolerance
-        testProgram.add((byte) 10);
-
-        testProgram.add((byte) 0x2); //path to
-        testProgram.addAll(Values._ENCODE_STRING("test iroad 4"));
-        testProgram.add((byte) 8); //set tolerance
-        testProgram.add((byte) 10);
-
-        testProgram.add((byte) 0x2); //path to
-        testProgram.addAll(Values._ENCODE_STRING("test iroad 5"));
-        testProgram.add((byte) 8); //set tolerance
-        testProgram.add((byte) 10);
-
-        testProgram.add((byte) 0x2); //path to
-        testProgram.addAll(Values._ENCODE_STRING("test iroad 6"));
-        testProgram.add((byte) 8); //set tolerance
-        testProgram.add((byte) 10);
-
-        testProgram.add((byte) 0x2); //path to
-        testProgram.addAll(Values._ENCODE_STRING("test iroad 3"));
-        testProgram.add((byte) 8); //set tolerance
-        testProgram.add((byte) 10);
-
-        testProgram.add((byte) 0x2); //path to
-        testProgram.addAll(Values._ENCODE_STRING("test 1"));
-        testProgram.add((byte) 8); //set tolerance
-        testProgram.add((byte) 10);
-
-        Execution.setProgram(testProgram);*/
+        Execution.setProgram(TestProgram.getProgram());
 
         try {
             Relaying.startStream();
@@ -77,7 +41,7 @@ public class Client implements ClientModInitializer {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            //Execution.execute();
+            Execution.execute();
             try {
                 Relaying.relayInfo();
             } catch (IOException e) {
