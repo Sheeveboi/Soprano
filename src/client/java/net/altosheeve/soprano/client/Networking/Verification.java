@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -64,6 +65,7 @@ public class Verification {
             verifyButton.setPosition(width / 2 - 75, height / 2 + 15);
 
             addDrawableChild(verifyButton);
+
         }
 
         @Override
@@ -128,7 +130,8 @@ public class Verification {
         refreshToken = refreshJson.getString("refresh_token");
 
         System.out.println("sending verification request");
-        HttpResponse<String> verificationResponse = Request.get("http://" + Relaying.host + "/verify?token=%s".formatted(URLEncoder.encode(accessToken)));
+
+        HttpResponse<String> verificationResponse = Request.get("http://" + Relaying.host + "/verify?token=%s".formatted(accessToken));
 
         Map<String, String> verificationQuery = decodeURI(verificationResponse.uri().toString());
 
@@ -250,5 +253,4 @@ public class Verification {
             }
         }
     }
-
 }
