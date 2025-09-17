@@ -35,37 +35,137 @@ public class CivKernel extends BasicFunctions {
 
         Node targetNode = testing.get();
 
-        boolean left = player.getX() < targetNode.x;
-        boolean forward = player.getZ() < targetNode.z;
-
         player.setYaw(0);
 
+        ArrayList<Double> xAveragingBuffer = new ArrayList<>();
+        ArrayList<Double> zAveragingBuffer = new ArrayList<>();
+
+        AtomicBoolean xOscillating = new AtomicBoolean(false);
+        AtomicBoolean zOscillating = new AtomicBoolean(false);
+
+        int filterCutoff = 10;
+
+        final int[] xCorrectionAttempts = {10};
+        final int[] zCorrectionAttempts = {10};
+
         this.addRequest(new Request(() -> {
-            boolean xFufilled = Math.abs(player.getX() - targetNode.x - .5) < tolerance;
-            boolean zFufilled = Math.abs(player.getZ() - targetNode.z - .5) < tolerance;
+
+            Navigation.resetControls();
+
+            xAveragingBuffer.add(player.getVelocity().x);
+            zAveragingBuffer.add(player.getVelocity().z);
+
+            if (xAveragingBuffer.size() > filterCutoff) xAveragingBuffer.removeFirst();
+            if (zAveragingBuffer.size() > filterCutoff) zAveragingBuffer.removeFirst();
+
+            double xAveragingSum = 0;
+            for (double velocity : xAveragingBuffer) xAveragingSum += velocity;
+            xAveragingSum /= xAveragingBuffer.size();
+
+            double zAveragingSum = 0;
+            for (double velocity : zAveragingBuffer) zAveragingSum += velocity;
+            zAveragingSum /= zAveragingBuffer.size();
+
+            if (Math.abs(xAveragingSum) <= .01 &&
+                    xAveragingBuffer.size() == filterCutoff &&
+                    xAveragingBuffer.get((int) Math.floor((double) xAveragingBuffer.size() / 2)) > .01) xOscillating.set(true);
+            if (Math.abs(zAveragingSum) <= .01 &&
+                    zAveragingBuffer.size() == filterCutoff &&
+                    zAveragingBuffer.get((int) Math.floor((double) zAveragingBuffer.size() / 2)) > .01) zOscillating.set(true);
+
+            System.out.println((player.getX() - (targetNode.x + .5)));
+            System.out.println((player.getZ() - (targetNode.z + .5)));
+
+            boolean left = player.getX() < targetNode.x + .5;
+            boolean forward = player.getZ() < targetNode.z + .5;
+
+            boolean xFufilled = Math.abs((player.getX() - (targetNode.x + .5))) < tolerance;
+            boolean zFufilled = Math.abs((player.getZ() - (targetNode.z + .5))) < tolerance;
 
             if (!zFufilled) {
+
                 if (forward) client.options.forwardKey.setPressed(true);
                 else client.options.backKey.setPressed(true);
+
+                if (zOscillating.get()) {
+
+                    client.options.forwardKey.setPressed(false);
+                    client.options.backKey.setPressed(false);
+
+                    if ((Navigation.tick % 20) == 0 && zCorrectionAttempts[0] > 0) {
+
+                        zCorrectionAttempts[0] --;
+
+                        if (forward) client.options.forwardKey.setPressed(true);
+                        else client.options.backKey.setPressed(true);
+
+                    }
+
+                    if (zCorrectionAttempts[0] == 0) zFufilled = true;
+
+                }
+
             }
 
-            if (zFufilled && !xFufilled) {
-                client.options.forwardKey.setPressed(false);
-                client.options.backKey.setPressed(false);
+            if (!xFufilled) {
 
                 if (left) client.options.leftKey.setPressed(true);
                 else client.options.rightKey.setPressed(true);
+
+                if (xOscillating.get()) {
+
+                    client.options.leftKey.setPressed(false);
+                    client.options.rightKey.setPressed(false);
+
+                    if ((Navigation.tick % filterCutoff) == 0 && xCorrectionAttempts[0] > 0) {
+
+                        xCorrectionAttempts[0] --;
+
+                        if (left) client.options.leftKey.setPressed(true);
+                        else client.options.rightKey.setPressed(true);
+
+                    }
+
+                    if (xCorrectionAttempts[0] == 0) xFufilled = true;
+
+                }
             }
 
             client.options.sneakKey.setPressed(true);
+
             if (xFufilled && zFufilled) {
-                client.options.sneakKey.setPressed(false);
-                client.options.leftKey.setPressed(false);
-                client.options.rightKey.setPressed(false);
-                Navigation.currentNode = targetNode;
+
+                if (Navigation.tick % filterCutoff == 0) {
+
+                    Navigation.resetControls();
+                    Navigation.currentNode = targetNode;
+
+                    double dx = player.getX() - targetNode.x - .5;
+                    double dy = player.getY() - targetNode.y - 1.5;
+                    double dz = player.getZ() - targetNode.z - .5;
+
+                    double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+                    dx /= dist;
+                    dy /= dist;
+                    dz /= dist;
+
+                    float pitch = (float) Math.asin(-dy);
+                    float yaw = (float) Math.atan2(dz, dx);
+
+                    pitch = (float) (pitch * 180.0 / Math.PI);
+                    yaw = (float) (yaw * 180.0 / Math.PI);
+
+                    yaw += 90;
+
+                    player.setPitch(pitch);
+                    player.setYaw(yaw);
+
+                    return true;
+                }
             }
 
-            return xFufilled && zFufilled;
+            return false;
         }));
     }
 
