@@ -77,16 +77,23 @@ public class Encoding {
     }
 
     public static ArrayList<Byte> _ENCODE_STRING(String string) {
-        ArrayList<Byte> out = new ArrayList<>();
-        out.add((byte) string.length());
-        for (char c : string.toCharArray()) out.add((byte) c);
+
+        ArrayList<Byte> out = new ArrayList<>(); //instantiate out
+
+        out.add((byte) 1); //mark as string
+        out.add((byte) string.length()); //encode length of string
+
+        for (char c : string.toCharArray()) out.add((byte) c); //encode body of string
+
         return out;
     }
 
-    public static ArrayList<Byte> _ENCODE_STATIC_INTEGER(int value) {
-        ArrayList<Byte> out = new ArrayList<>();
-        out.add((byte) 0);
-        out.add((byte) value);
+    public static ArrayList<Byte> _ENCODE_INTEGER(int value) {
+        ArrayList<Byte> out = new ArrayList<>(); //instantiate out
+
+        out.add((byte) 0); //mark as integer
+        out.add((byte) value); //encode value
+
         return out;
     }
 }
