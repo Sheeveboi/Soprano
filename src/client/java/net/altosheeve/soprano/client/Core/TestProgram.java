@@ -7,56 +7,34 @@ import java.util.ArrayList;
 public class TestProgram {
     public static ArrayList<Byte> getProgram() {
         ArrayList<Byte> testProgram = new ArrayList<>();
-        testProgram.add((byte) 0x0); //calibrate
+
+        testProgram.add((byte) 0x19); //_PUT_ALL
+        testProgram.addAll(Encoding._ENCODE_STATIC_INTEGER(0)); //registery zero
+
+        testProgram.addAll(Encoding._ENCODE_STATIC_INTEGER(Encoding._ENCODE_STRING("test 1").size()));
         testProgram.addAll(Encoding._ENCODE_STRING("test 1"));
-        testProgram.add((byte) 2); //set tolerance
-        testProgram.add((byte) 10);
 
-        /*testProgram.add((byte) 0x2); //path to
-        testProgram.addAll(Encoding._ENCODE_STRING("chest 1"));
-        testProgram.add((byte) 7); //set tolerance
-        testProgram.add((byte) 10);
+        testProgram.add((byte) 0x0);
+        testProgram.add((byte) 1); //dynamic value
+        testProgram.addAll(Encoding._ENCODE_STATIC_INTEGER(0));
 
-        testProgram.add((byte) 0x11); //take last item in chest
-        testProgram.add((byte) 53);
+        //tolerance
+        testProgram.addAll(Encoding._ENCODE_STATIC_INTEGER(2));
+        testProgram.addAll(Encoding._ENCODE_STATIC_INTEGER(100));
 
-        testProgram.add((byte) 0x12); //take inclusive oak logs
-        testProgram.addAll(Encoding._ENCODE_STRING("Oak Log"));
-        testProgram.add((byte) 0);
+        testProgram.add((byte) 0x17); //wait five seconds
+        testProgram.addAll(Encoding._ENCODE_STATIC_INTEGER(20 * 5));
 
-        testProgram.add((byte) 0x12); //put inclusive oak logs
-        testProgram.addAll(Encoding._ENCODE_STRING("Oak Log"));
+
+        int pt = Encoding._ENCODE_STRING("test 1").size() + 1;
+        testProgram.add((byte) 0x19); //_PUT_ALL
+        testProgram.addAll(Encoding._ENCODE_STATIC_INTEGER(pt));
+        testProgram.addAll(Encoding._ENCODE_STATIC_INTEGER(Encoding._ENCODE_STRING("this is a test variable").size()));
+        testProgram.addAll(Encoding._ENCODE_STRING("this is a test variable"));
+
+        testProgram.add((byte) 0x20);
         testProgram.add((byte) 1);
-
-        testProgram.add((byte) 0x9); //leave chest*/
-
-        testProgram.add((byte) 0x2); //path to
-        testProgram.addAll(Encoding._ENCODE_STRING("barrel 1"));
-        testProgram.add((byte) 7); //set tolerance
-        testProgram.add((byte) 10);
-
-        testProgram.add((byte) 0x14); //swap around stuff test
-        testProgram.add((byte) 0); //swap around stuff test
-        testProgram.add((byte) 28); //swap around stuff test
-
-        testProgram.add((byte) 0x14); //swap around stuff test
-        testProgram.add((byte) 1); //swap around stuff test
-        testProgram.add((byte) 29); //swap around stuff test
-
-        testProgram.add((byte) 0x14); //swap around stuff test
-        testProgram.add((byte) 2); //swap around stuff test
-        testProgram.add((byte) 30); //swap around stuff test
-
-        /*testProgram.add((byte) 0x15); //swap around stuff test
-        testProgram.addAll(Encoding._ENCODE_STRING("Baked Potato")); //swap around stuff test
-        testProgram.add((byte) 0); //to inventory
-        testProgram.add((byte) 31); //swap around stuff test
-
-        testProgram.add((byte) 0x15); //swap around stuff test
-        testProgram.addAll(Encoding._ENCODE_STRING("Baked Potato")); //swap around stuff test
-        testProgram.add((byte) 1); //from inventory
-        testProgram.add((byte) 0); //swap around stuff test*/
-
+        testProgram.addAll(Encoding._ENCODE_STATIC_INTEGER(pt));
 
         return testProgram;
     }
