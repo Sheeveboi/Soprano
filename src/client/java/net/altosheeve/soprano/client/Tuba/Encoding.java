@@ -24,9 +24,13 @@ public class Encoding {
 
         //if value is dynamic
         else {
-            instructions.itter();
-            int registery = instructions.translateProgramPointer();
-            return instructions.memory.get((byte) registery);
+
+            //get location of value in memory. we can add + 1 to skip the integer mark
+            int registry = Encoding._PARSE_INTEGER(instructions) + 1;
+
+            //decode value from memory
+            return instructions.memory.get((byte) registry);
+
         }
     }
 
