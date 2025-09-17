@@ -4,16 +4,25 @@ import java.util.ArrayList;
 
 public class Encoding {
 
-    public static int _PARSE_INT(BasicFunctions instructions) {
-        instructions.itter();
+    public static int _PARSE_INTEGER(BasicFunctions instructions) {
 
+        //get static or dynamic
+        instructions.itter();
         int staticOrDynamic = instructions.translateProgramPointer();
 
+        //if value is static
         if (staticOrDynamic == 0) {
+
+            //skip integer mark
+            instructions.itter();
+
+            //decode value
             instructions.itter();
             return instructions.translateProgramPointer();
+
         }
 
+        //if value is dynamic
         else {
             instructions.itter();
             int registery = instructions.translateProgramPointer();
@@ -23,15 +32,21 @@ public class Encoding {
 
     public static String _PARSE_STRING(BasicFunctions instructions) {
 
-
+        //get static or dynamic
         instructions.itter();
-
         int staticOrDynamic = instructions.translateProgramPointer();
 
+        //if value is static
         if (staticOrDynamic == 0) {
+
+            //skip string mark
             instructions.itter();
 
+            //get length
+            instructions.itter();
             int length = instructions.translateProgramPointer();
+
+            //decode body
             StringBuilder out = new StringBuilder();
             for (int i = 0 ; i < length; i++) {
                 instructions.itter();
@@ -39,15 +54,21 @@ public class Encoding {
             }
             return out.toString();
         }
+
+        //if value is dynamic
         else {
-            int registry = Encoding._PARSE_INT(instructions);
 
+            //get location of dynamic value in memory. we can add + 1 to the pointer to skip the string mark
+            int registry = Encoding._PARSE_INTEGER(instructions) + 1;
+
+            //get length from memory
             int length = instructions.memory.get((byte) registry);
+
+            //decode body from memory
             StringBuilder out = new StringBuilder();
-
             for (int i = 0; i < length; i++) out.append((char) instructions.memory.get((byte) (registry + 1 + i)).byteValue());
-
             return out.toString();
+
         }
     }
 
