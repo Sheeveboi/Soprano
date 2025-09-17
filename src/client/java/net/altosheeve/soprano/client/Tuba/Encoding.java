@@ -86,14 +86,17 @@ public class Encoding {
         for (char c : string.toCharArray()) out.add((byte) c); //encode body of string
 
         return out;
+
     }
 
     public static ArrayList<Byte> _ENCODE_INTEGER(int value) {
+
         ArrayList<Byte> out = new ArrayList<>(); //instantiate out
 
         out.add((byte) 0); //mark as integer
         out.add((byte) value); //encode value
 
         return out;
+
     }
 }

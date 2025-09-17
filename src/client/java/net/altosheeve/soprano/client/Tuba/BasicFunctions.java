@@ -17,55 +17,69 @@ public abstract class BasicFunctions {
     protected Map<Byte, Cb> instructionMap = new HashMap<>();// this map dictates the Java functions the TBM will execute when the translateInstruction() function is called
     protected Map<Cb, Byte> instructionRegister = new HashMap<>(); //this map allows implementations of this class to reference how its instructions are mapped
     private ArrayList<Request> requests = new ArrayList<>();// list of concurrent requests being executed alongside the main program
-
     protected Map<Byte, Byte> memory = new HashMap<>(); //general memory for programs to use
-    protected int programPointer = 0;// tells where the TBM is in the program memory
-    protected byte readByte = 0b0;
-    protected byte writeByte = 0b0;
 
+    protected int programPointer = 0; // tells where the TBM is in the program memory
+
+    // tells the TBM if the program has finished executing or not
     public boolean finished() {
         return (TBMinstructionPointers.isEmpty() || this.programPointer > TBMinstructionPointers.size() - 1) &&
                 this.requests.isEmpty();
-    }// tells the TBM if the program has finished executing or not
+    }
 
+    // tells the TBM if there are concurrent requests to be run after the main thread is finished with its current program iteration
     public boolean hasRequests() {
         return !this.requests.isEmpty();
-    }// tells the TBM if there are concurrent requests to be run after the main thread is finished with its current program iteration
+    }
 
+    // runs all concurrent requests
     protected void fulfillRequests() {
         while (!this.requests.isEmpty() && this.requests.get(0).exec()) { this.requests.remove(0); }
-    }// runs all concurrent requests
+    }
+
+    //stops TBM for instructions that need to halt the main program
     protected void addRequest(Request request) { this.requests.add(request); }
 
+    // allows implementations of this class to register custom bytecodes or override current ones within a programs memory to a callback function
     protected void registerInstruction(byte code, Cb cb) {
         instructionMap.put(code, cb);
         instructionRegister.put(cb, code);
-    }// allows implementations of this class to register custom bytecodes or override current ones within a programs memory to a callback function
+    }
 
+    //gets function registries from the instructionRegister
     protected byte translateInstruction(Cb cb) {
         return this.instructionRegister.get(cb);
-    } //gets function registries from the instructionRegister
+    }
 
+    // returns the current program bytecode
     public byte translateProgramPointer() {
+        System.out.println(this.TBMinstructionPointers.get(this.programPointer) + ": " + (char) this.TBMinstructionPointers.get(this.programPointer).byteValue());
         return this.TBMinstructionPointers.get(this.programPointer);
-    }// returns the current program bytecode
+    }
 
+    // if the current program bytecode is mapped to a callback function, run that function
     protected void translateInstruction(byte code) {
         if (instructionMap.containsKey(code)) {
             instructionMap.get(code).cb();
         }
-    }// if the current program bytecode is mapped to a callback function, run that function
+    }
 
+    //moves the program forward by + 1
     public void itter() { this.programPointer++; }
 
+    //inserts an instruction at the end of the program
     public void insertInstruction(byte b) { this.TBMinstructionPointers.add(b); }
 
+    //inserts an instruction at the specified index in the program
     public void insertInstruction(byte b, int i) { this.TBMinstructionPointers.add(i, b); }
 
+    //adds multiple instructions to the end of the program
     public void addInstructions(ArrayList<Byte> bytes) { this.TBMinstructionPointers.addAll(bytes); }
 
+    //inserts multiple instructions at the specified index in the program
     public void insertInstructions(ArrayList<Byte> bytes, int i) { this.TBMinstructionPointers.addAll(i, bytes); }
 
+    //adds an instruction at a floating point based priority index within the program
     public void scheduleInstruction(byte b, float priority) {
 
         int index = floor((this.TBMinstructionPointers.size() - 1) * (priority - 1));
@@ -73,6 +87,7 @@ public abstract class BasicFunctions {
 
     }
 
+    //adds multiple instructions at a floating point based priority index within the program
     public void scheduleInstructions(ArrayList<Byte> bytes, float priority) {
 
         int index = floor((this.TBMinstructionPointers.size() - 1) * (priority - 1));
@@ -80,6 +95,7 @@ public abstract class BasicFunctions {
 
     }
 
+    //constructor
     public BasicFunctions(ArrayList<Byte> program) {
         this.TBMinstructionPointers = program;
     }
