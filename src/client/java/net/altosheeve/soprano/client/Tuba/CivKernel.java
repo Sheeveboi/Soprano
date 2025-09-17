@@ -578,6 +578,77 @@ public class CivKernel extends BasicFunctions {
         }
     }
 
+    public void _WAIT() {
+
+        final int[] ticks = {Encoding._PARSE_INT(this)};
+
+        this.addRequest(new Request(() -> {
+            if (ticks[0] <= 0) return true;
+            ticks[0]--;
+            return false;
+        }));
+
+    }
+
+    public void _PUT() {
+
+        int register = Encoding._PARSE_INT(this);
+        int value = Encoding._PARSE_INT(this);
+
+        this.memory.put((byte) register, (byte) value);
+
+    }
+
+    public void _PUT_ALL() {
+
+        int register = Encoding._PARSE_INT(this);
+        int length = Encoding._PARSE_INT(this);
+
+        for (int i = 0; i < length; i++) {
+            this.itter();
+            this.memory.put((byte) (register + i), this.translateProgramPointer());
+        }
+
+    }
+
+    public void _PRINT_UTF_8() {
+        String out = Encoding._PARSE_STRING(this);
+        System.out.println(out);
+    }
+
+    public void _PRINT_RAW() {
+        int length = Encoding._PARSE_INT(this);
+
+        this.itter();
+        int staticOrDynamic = this.translateProgramPointer();
+
+        if (staticOrDynamic == 0) {
+
+            StringBuilder out = new StringBuilder();
+
+            for (int i = 0; i < length; i++) {
+                this.itter();
+                out.append(this.translateProgramPointer());
+                out.append(", ");
+            }
+
+            System.out.println(out);
+        }
+
+        else {
+
+            int registry = Encoding._PARSE_INT(this);
+            StringBuilder out = new StringBuilder();
+
+            for (int i = 0; i < length; i++) {
+                out.append(this.memory.get((byte) (registry + i)).byteValue());
+                out.append(", ");
+            }
+
+            System.out.println(out);
+        }
+    }
+
     public CivKernel(ArrayList<Byte> program) {
         super(program);
 
@@ -602,5 +673,12 @@ public class CivKernel extends BasicFunctions {
         this.registerInstruction((byte) 0x14, this::_SWAP_BY_SOURCE_DEST);
         this.registerInstruction((byte) 0x15, this::_SWAP_BY_NAME_DEST_INCLUSIVE);
         this.registerInstruction((byte) 0x16, this::_SWAP_BY_NAME_DEST_EXCLUSIVE);
+
+        this.registerInstruction((byte) 0x17, this::_WAIT);
+        this.registerInstruction((byte) 0x18, this::_PUT);
+        this.registerInstruction((byte) 0x19, this::_PUT_ALL);
+
+        this.registerInstruction((byte) 0x20, this::_PRINT_UTF_8);
+        this.registerInstruction((byte) 0x21, this::_PRINT_RAW);
     }
 }
