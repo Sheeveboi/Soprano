@@ -11,12 +11,13 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.math.Vec3d;
 
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CivKernel extends BasicFunctions {
+
+    private static int[] dynamicTypes = {1};
+    private static Map<Integer, Integer> staticTypes = new HashMap<>();
 
     public void _CALIBRATE() {
         System.out.println("Calibrating");
@@ -26,10 +27,7 @@ public class CivKernel extends BasicFunctions {
         assert player != null;
 
         String targetTag = Encoding._PARSE_STRING(this);
-        int toleranceNumerator = Encoding._PARSE_INTEGER(this);
-        int toleranceDenominator = Encoding._PARSE_INTEGER(this);
-
-        double tolerance = (double) toleranceNumerator / toleranceDenominator;
+        double tolerance = Encoding._PARSE_FLOAT(this);
 
         Optional<Node> testing = Navigation.nodes.stream().filter(node -> Objects.equals(targetTag, node.tag)).findFirst();
         if (testing.isEmpty()) return;
@@ -188,9 +186,6 @@ public class CivKernel extends BasicFunctions {
         dy /= dist;
         dz /= dist;
 
-        int toleranceNumerator = Encoding._PARSE_INTEGER(this);
-        int toleranceDenominator = Encoding._PARSE_INTEGER(this);
-
         float pitch = (float) Math.asin(-dy);
         float yaw = (float) Math.atan2(dz, dx);
 
@@ -199,7 +194,7 @@ public class CivKernel extends BasicFunctions {
 
         yaw += 90;
 
-        double tolerance = (double) toleranceNumerator / (double) toleranceDenominator;
+        double tolerance = Encoding._PARSE_FLOAT(this);
 
         player.setPitch(pitch);
         player.setYaw(yaw);
@@ -228,8 +223,7 @@ public class CivKernel extends BasicFunctions {
 
     public void _PATH_TO() {
         String targetTag = Encoding._PARSE_STRING(this);
-        int toleranceNumerator = Encoding._PARSE_INTEGER(this);
-        int toleranceDenominator = Encoding._PARSE_INTEGER(this);
+        float tolerance = Encoding._PARSE_FLOAT(this);
 
         int origin = this.programPointer + 1;
         for (int i : Objects.requireNonNull(Navigation.generatePathingIttinerary(targetTag))) {
@@ -241,30 +235,25 @@ public class CivKernel extends BasicFunctions {
             switch (node.type) {
                 case NORMAL:
                     this.insertInstruction((byte) 0x5, origin); origin++; //set basic movement chestHandler
-                    this.insertInstruction((byte) 8, origin); origin++; //apply velocity threshold
-                    this.insertInstruction((byte) 100, origin); origin++;
+                    this.insertInstructions(Encoding._ENCODE_FLOAT(.008f), origin); origin += staticTypes.get(2) + 1; //set velocity threshold
                     break;
                 case DOOR:
                     this.insertInstruction((byte) 0x6, origin); origin++; //set basic movement chestHandler
-                    this.insertInstruction((byte) 3, origin); origin++; //apply door threshold
-                    this.insertInstruction((byte) 1, origin); origin++;
-                    this.insertInstruction((byte) 8, origin); origin++; //apply velocity threshold
-                    this.insertInstruction((byte) 100, origin); origin++;
+                    this.insertInstructions(Encoding._ENCODE_FLOAT(.3f), origin); origin += staticTypes.get(2) + 1; //set door threshold
+                    this.insertInstructions(Encoding._ENCODE_FLOAT(.008f), origin); origin += staticTypes.get(2) + 1; //set velocity threshold
                     break;
                 case ICEROAD:
                     this.insertInstruction((byte) 0x7, origin); origin++; //set basic movement chestHandler
-                    this.insertInstruction((byte) 8, origin); origin++; //apply velocity threshold
-                    this.insertInstruction((byte) 100, origin); origin++;
+                    this.insertInstructions(Encoding._ENCODE_FLOAT(.008f), origin); origin += staticTypes.get(2) + 1; //set velocity threshold
                     break;
                 case INTERACTABLE:
-                    this.insertInstruction((byte) 0x8, origin); origin++;//set basic interaction chestHandler
-                    this.insertInstruction((byte) 3, origin); origin++; //apply interaction threshold
-                    this.insertInstruction((byte) 1, origin); origin++;
-                    this.insertInstruction((byte) 8, origin); origin++; //apply velocity threshold
-                    this.insertInstruction((byte) 100, origin); origin++;
+                    this.insertInstruction((byte) 0x8, origin); origin++; //set basic interaction chestHandler
+                    this.insertInstruction((byte) 0x0, origin); origin++; //set static interaction threshold
+                    this.insertInstructions(Encoding._ENCODE_FLOAT(.3f), origin); origin += staticTypes.get(2) + 1;
+                    this.insertInstruction((byte) 0x0, origin); origin++; //set static velocity threshold
+                    this.insertInstructions(Encoding._ENCODE_FLOAT(.008f), origin); origin += staticTypes.get(2) + 1; //set velocity threshold
 
-                    toleranceNumerator = 3; //we can override these as there is a block in the node
-                    toleranceDenominator = 1;
+                    tolerance = .3f;
 
             }
 
@@ -272,11 +261,11 @@ public class CivKernel extends BasicFunctions {
             this.insertInstruction((byte) node.x, origin); origin++;
             this.insertInstruction((byte) node.y, origin); origin++;
             this.insertInstruction((byte) node.z, origin); origin++;
-            this.insertInstruction((byte) toleranceNumerator, origin); origin++;
-            this.insertInstruction((byte) toleranceDenominator, origin); origin++;
+            this.insertInstructions(Encoding._ENCODE_FLOAT(tolerance), origin); origin += staticTypes.get(2) + 1; //set door threshold
 
             this.insertInstruction((byte) 0x4, origin); origin++; //set as current node
-            this.insertInstruction((byte) i, origin); origin++;
+            this.insertInstruction((byte) 0x0, origin); origin++; //
+            this.insertInstructions(Encoding._ENCODE_INTEGER(i), origin); origin += staticTypes.get(0) + 1; //encode static integer
         }
     }
 
@@ -292,42 +281,29 @@ public class CivKernel extends BasicFunctions {
     }
 
     public void _SET_BASIC_MOVEMENT_HANDLER() {
-        int numerator = Encoding._PARSE_INTEGER(this);
-        int denominator = Encoding._PARSE_INTEGER(this);
-        Navigation.velocityThreshold = (double) numerator / denominator;
+        Navigation.velocityThreshold = Encoding._PARSE_FLOAT(this);
         Navigation.handler = Navigation::basicWalkHandler;
     }
 
     public void _SET_DOOR_HANDLER() {
-        int numerator = Encoding._PARSE_INTEGER(this);
-        int denominator = Encoding._PARSE_INTEGER(this);
-        Navigation.interactionThreshold = (double) numerator / denominator;
-        numerator = Encoding._PARSE_INTEGER(this);
-        denominator = Encoding._PARSE_INTEGER(this);
-        Navigation.velocityThreshold = (double) numerator / denominator;
+        Navigation.interactionThreshold = Encoding._PARSE_FLOAT(this);
+        Navigation.velocityThreshold = Encoding._PARSE_FLOAT(this);
         Navigation.handler = Navigation::doorHandler;
     }
 
     public void _SET_ICEROAD_HANDLER() {
-        float numerator = Encoding._PARSE_INTEGER(this);
-        float denominator = Encoding._PARSE_INTEGER(this);
-        Navigation.velocityThreshold = (double) numerator / denominator;
+        Navigation.velocityThreshold = Encoding._PARSE_FLOAT(this);
         Navigation.handler = Navigation::iceroadHandler;
     }
 
     public void _SET_INTERACTION_HANDLER() {
-        int numerator = Encoding._PARSE_INTEGER(this);
-        int denominator = Encoding._PARSE_INTEGER(this);
-        Navigation.interactionThreshold = (double) numerator / denominator;
-        numerator = Encoding._PARSE_INTEGER(this);
-        denominator = Encoding._PARSE_INTEGER(this);
-        Navigation.velocityThreshold = (double) numerator / denominator;
+        Navigation.interactionThreshold = Encoding._PARSE_FLOAT(this);
+        Navigation.velocityThreshold = Encoding._PARSE_FLOAT(this);
         Navigation.handler = Navigation::interactionHandler;
     }
 
     public void _EXIT_INTERACTION() {
         if (MinecraftClient.getInstance().player.currentScreenHandler == null) return;
-
         MinecraftClient.getInstance().currentScreen.close();
     }
 
@@ -655,6 +631,9 @@ public class CivKernel extends BasicFunctions {
 
     public CivKernel(ArrayList<Byte> program) {
         super(program);
+
+        staticTypes.put(0, 1); //integer value (one byte large)
+        staticTypes.put(2, 4); //float value (four bytes large)
 
         this.registerInstruction((byte) 0x0, this::_CALIBRATE);
 
