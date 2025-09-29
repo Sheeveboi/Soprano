@@ -1,27 +1,14 @@
 package net.altosheeve.soprano.client.Core;
 
 import net.altosheeve.soprano.client.BetterGUI.Hotkeys;
-import net.altosheeve.soprano.client.Networking.Verification;
 import net.altosheeve.soprano.client.Nodes.Navigation;
 import net.altosheeve.soprano.client.Nodes.NodeCreation;
-import net.altosheeve.soprano.client.RenderMethods.Waypoint;
-import net.altosheeve.soprano.client.Tuba.Encoding;
 import net.altosheeve.soprano.client.Tuba.Execution;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.minecraft.util.ActionResult;
-import net.minecraft.world.event.GameEvent;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Client implements ClientModInitializer {
 

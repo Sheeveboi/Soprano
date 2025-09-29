@@ -16,9 +16,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CivKernel extends BasicFunctions {
 
-    private static int[] dynamicTypes = {1};
-    private static Map<Integer, Integer> staticTypes = new HashMap<>();
-
     public void _CALIBRATE() {
         System.out.println("Calibrating");
 
@@ -26,8 +23,8 @@ public class CivKernel extends BasicFunctions {
         ClientPlayerEntity player = client.player;
         assert player != null;
 
-        String targetTag = Encoding._PARSE_STRING(this);
-        double tolerance = Encoding._PARSE_FLOAT(this);
+        String targetTag = Typing._PARSE_STRING(this);
+        double tolerance = Typing._PARSE_FLOAT(this);
 
         Optional<Node> testing = Navigation.nodes.stream().filter(node -> Objects.equals(targetTag, node.tag)).findFirst();
         if (testing.isEmpty()) return;
@@ -172,9 +169,9 @@ public class CivKernel extends BasicFunctions {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         assert player != null;
 
-        int blockX = Encoding._PARSE_INTEGER(this);
-        int blockY = Encoding._PARSE_INTEGER(this);
-        int blockZ = Encoding._PARSE_INTEGER(this);
+        int blockX = Typing._PARSE_INTEGER(this);
+        int blockY = Typing._PARSE_INTEGER(this);
+        int blockZ = Typing._PARSE_INTEGER(this);
 
         double dx = player.getX() - blockX - .5;
         double dy = player.getY() - blockY;
@@ -194,7 +191,7 @@ public class CivKernel extends BasicFunctions {
 
         yaw += 90;
 
-        double tolerance = Encoding._PARSE_FLOAT(this);
+        double tolerance = Typing._PARSE_FLOAT(this);
 
         player.setPitch(pitch);
         player.setYaw(yaw);
@@ -222,8 +219,8 @@ public class CivKernel extends BasicFunctions {
     }
 
     public void _PATH_TO() {
-        String targetTag = Encoding._PARSE_STRING(this);
-        float tolerance = Encoding._PARSE_FLOAT(this);
+        String targetTag = Typing._PARSE_STRING(this);
+        float tolerance = Typing._PARSE_FLOAT(this);
 
         int origin = this.programPointer + 1;
         for (int i : Objects.requireNonNull(Navigation.generatePathingIttinerary(targetTag))) {
@@ -235,23 +232,23 @@ public class CivKernel extends BasicFunctions {
             switch (node.type) {
                 case NORMAL:
                     this.insertInstruction((byte) 0x5, origin); origin++; //set basic movement chestHandler
-                    this.insertInstructions(Encoding._ENCODE_FLOAT(.008f), origin); origin += staticTypes.get(2) + 1; //set velocity threshold
+                    this.insertInstructions(Typing._ENCODE_FLOAT(.008f), origin); origin += Typing.FLOAT_SIZE + 1; //set velocity threshold
                     break;
                 case DOOR:
                     this.insertInstruction((byte) 0x6, origin); origin++; //set basic movement chestHandler
-                    this.insertInstructions(Encoding._ENCODE_FLOAT(.3f), origin); origin += staticTypes.get(2) + 1; //set door threshold
-                    this.insertInstructions(Encoding._ENCODE_FLOAT(.008f), origin); origin += staticTypes.get(2) + 1; //set velocity threshold
+                    this.insertInstructions(Typing._ENCODE_FLOAT(.3f), origin); origin += Typing.FLOAT_SIZE + 1; //set door threshold
+                    this.insertInstructions(Typing._ENCODE_FLOAT(.008f), origin); origin += Typing.FLOAT_SIZE + 1; //set velocity threshold
                     break;
                 case ICEROAD:
                     this.insertInstruction((byte) 0x7, origin); origin++; //set basic movement chestHandler
-                    this.insertInstructions(Encoding._ENCODE_FLOAT(.008f), origin); origin += staticTypes.get(2) + 1; //set velocity threshold
+                    this.insertInstructions(Typing._ENCODE_FLOAT(.008f), origin); origin += Typing.FLOAT_SIZE + 1; //set velocity threshold
                     break;
                 case INTERACTABLE:
                     this.insertInstruction((byte) 0x8, origin); origin++; //set basic interaction chestHandler
                     this.insertInstruction((byte) 0x0, origin); origin++; //set static interaction threshold
-                    this.insertInstructions(Encoding._ENCODE_FLOAT(.3f), origin); origin += staticTypes.get(2) + 1;
+                    this.insertInstructions(Typing._ENCODE_FLOAT(.3f), origin); origin += Typing.FLOAT_SIZE + 1;
                     this.insertInstruction((byte) 0x0, origin); origin++; //set static velocity threshold
-                    this.insertInstructions(Encoding._ENCODE_FLOAT(.008f), origin); origin += staticTypes.get(2) + 1; //set velocity threshold
+                    this.insertInstructions(Typing._ENCODE_FLOAT(.008f), origin); origin += Typing.FLOAT_SIZE + 1; //set velocity threshold
 
                     tolerance = .3f;
 
@@ -261,44 +258,44 @@ public class CivKernel extends BasicFunctions {
             this.insertInstruction((byte) node.x, origin); origin++;
             this.insertInstruction((byte) node.y, origin); origin++;
             this.insertInstruction((byte) node.z, origin); origin++;
-            this.insertInstructions(Encoding._ENCODE_FLOAT(tolerance), origin); origin += staticTypes.get(2) + 1; //set door threshold
+            this.insertInstructions(Typing._ENCODE_FLOAT(tolerance), origin); origin += Typing.FLOAT_SIZE + 1; //set door threshold
 
             this.insertInstruction((byte) 0x4, origin); origin++; //set as current node
             this.insertInstruction((byte) 0x0, origin); origin++; //
-            this.insertInstructions(Encoding._ENCODE_INTEGER(i), origin); origin += staticTypes.get(0) + 1; //encode static integer
+            this.insertInstructions(Typing._ENCODE_INTEGER(i), origin); origin += Typing.FLOAT_SIZE + 1; //encode static integer
         }
     }
 
     public void _SET_CURRENT_NODE() {
-        int index = Encoding._PARSE_INTEGER(this);
+        int index = Typing._PARSE_INTEGER(this);
         Navigation.currentNode = Navigation.nodes.get(index);
     }
 
     public void _SET_TARGET_NODE() {
-        int index = Encoding._PARSE_INTEGER(this);
+        int index = Typing._PARSE_INTEGER(this);
         Navigation.targetNode = Navigation.nodes.get(index);
         System.out.println(Navigation.targetNode.tag);
     }
 
     public void _SET_BASIC_MOVEMENT_HANDLER() {
-        Navigation.velocityThreshold = Encoding._PARSE_FLOAT(this);
+        Navigation.velocityThreshold = Typing._PARSE_FLOAT(this);
         Navigation.handler = Navigation::basicWalkHandler;
     }
 
     public void _SET_DOOR_HANDLER() {
-        Navigation.interactionThreshold = Encoding._PARSE_FLOAT(this);
-        Navigation.velocityThreshold = Encoding._PARSE_FLOAT(this);
+        Navigation.interactionThreshold = Typing._PARSE_FLOAT(this);
+        Navigation.velocityThreshold = Typing._PARSE_FLOAT(this);
         Navigation.handler = Navigation::doorHandler;
     }
 
     public void _SET_ICEROAD_HANDLER() {
-        Navigation.velocityThreshold = Encoding._PARSE_FLOAT(this);
+        Navigation.velocityThreshold = Typing._PARSE_FLOAT(this);
         Navigation.handler = Navigation::iceroadHandler;
     }
 
     public void _SET_INTERACTION_HANDLER() {
-        Navigation.interactionThreshold = Encoding._PARSE_FLOAT(this);
-        Navigation.velocityThreshold = Encoding._PARSE_FLOAT(this);
+        Navigation.interactionThreshold = Typing._PARSE_FLOAT(this);
+        Navigation.velocityThreshold = Typing._PARSE_FLOAT(this);
         Navigation.handler = Navigation::interactionHandler;
     }
 
@@ -308,7 +305,7 @@ public class CivKernel extends BasicFunctions {
     }
 
     public void _QUICK_MOVE_BY_INDEX() {
-        int index = Encoding._PARSE_INTEGER(this);
+        int index = Typing._PARSE_INTEGER(this);
 
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         ScreenHandler chestHandler = player.currentScreenHandler;
@@ -327,8 +324,8 @@ public class CivKernel extends BasicFunctions {
 
     public void _QUICK_MOVE_BY_NAME_INCLUSIVE() {
 
-        String name = Encoding._PARSE_STRING(this);
-        int toInventoryOrInteractable = Encoding._PARSE_INTEGER(this);
+        String name = Typing._PARSE_STRING(this);
+        int toInventoryOrInteractable = Typing._PARSE_INTEGER(this);
 
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         ScreenHandler chestHandler = player.currentScreenHandler;
@@ -377,8 +374,8 @@ public class CivKernel extends BasicFunctions {
 
     public void _QUICK_MOVE_BY_NAME_EXCLUSIVE() {
 
-        String name = Encoding._PARSE_STRING(this);
-        int toInventoryOrInteractable = Encoding._PARSE_INTEGER(this);
+        String name = Typing._PARSE_STRING(this);
+        int toInventoryOrInteractable = Typing._PARSE_INTEGER(this);
 
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         ScreenHandler chestHandler = player.currentScreenHandler;
@@ -423,8 +420,8 @@ public class CivKernel extends BasicFunctions {
     }
 
     public void _SWAP_BY_SOURCE_DEST() {
-        int source = Encoding._PARSE_INTEGER(this);
-        int destination = Encoding._PARSE_INTEGER(this);
+        int source = Typing._PARSE_INTEGER(this);
+        int destination = Typing._PARSE_INTEGER(this);
 
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         ScreenHandler chestHandler = player.currentScreenHandler;
@@ -444,9 +441,9 @@ public class CivKernel extends BasicFunctions {
     }
 
     public void _SWAP_BY_NAME_DEST_INCLUSIVE() {
-        String name = Encoding._PARSE_STRING(this);
-        int destination = Encoding._PARSE_INTEGER(this);
-        int toInventoryOrInteractable = Encoding._PARSE_INTEGER(this);
+        String name = Typing._PARSE_STRING(this);
+        int destination = Typing._PARSE_INTEGER(this);
+        int toInventoryOrInteractable = Typing._PARSE_INTEGER(this);
 
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         ScreenHandler chestHandler = player.currentScreenHandler;
@@ -492,9 +489,9 @@ public class CivKernel extends BasicFunctions {
     }
 
     public void _SWAP_BY_NAME_DEST_EXCLUSIVE() {
-        String name = Encoding._PARSE_STRING(this);
-        int destination = Encoding._PARSE_INTEGER(this);
-        int toInventoryOrInteractable = Encoding._PARSE_INTEGER(this);
+        String name = Typing._PARSE_STRING(this);
+        int destination = Typing._PARSE_INTEGER(this);
+        int toInventoryOrInteractable = Typing._PARSE_INTEGER(this);
 
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         ScreenHandler chestHandler = player.currentScreenHandler;
@@ -556,7 +553,7 @@ public class CivKernel extends BasicFunctions {
 
     public void _WAIT() {
 
-        final int[] ticks = {Encoding._PARSE_INTEGER(this)};
+        final int[] ticks = {Typing._PARSE_INTEGER(this)};
 
         this.addRequest(new Request(() -> {
             if (ticks[0] <= 0) return true;
@@ -568,8 +565,8 @@ public class CivKernel extends BasicFunctions {
 
     public void _PUT() {
 
-        int register = Encoding._PARSE_INTEGER(this);
-        int value = Encoding._PARSE_INTEGER(this);
+        int register = Typing._PARSE_INTEGER(this);
+        int value = Typing._PARSE_INTEGER(this);
 
         this.memory.put((byte) register, (byte) value);
 
@@ -577,8 +574,8 @@ public class CivKernel extends BasicFunctions {
 
     public void _PUT_ALL() {
 
-        int register = Encoding._PARSE_INTEGER(this);
-        int length = Encoding._PARSE_INTEGER(this);
+        int register = Typing._PARSE_INTEGER(this);
+        int length = Typing._PARSE_INTEGER(this);
 
         for (int i = 0; i < length; i++) {
             this.itter();
@@ -588,12 +585,12 @@ public class CivKernel extends BasicFunctions {
     }
 
     public void _PRINT_UTF_8() {
-        String out = Encoding._PARSE_STRING(this);
+        String out = Typing._PARSE_STRING(this);
         System.out.println(out);
     }
 
     public void _PRINT_RAW() {
-        int length = Encoding._PARSE_INTEGER(this);
+        int length = Typing._PARSE_INTEGER(this);
 
         this.itter();
         int staticOrDynamic = this.translateProgramPointer();
@@ -613,7 +610,7 @@ public class CivKernel extends BasicFunctions {
 
         else {
 
-            int registry = Encoding._PARSE_INTEGER(this);
+            int registry = Typing._PARSE_INTEGER(this);
             StringBuilder out = new StringBuilder();
 
             for (int i = 0; i < length; i++) {
@@ -631,9 +628,6 @@ public class CivKernel extends BasicFunctions {
 
     public CivKernel(ArrayList<Byte> program) {
         super(program);
-
-        staticTypes.put(0, 1); //integer value (one byte large)
-        staticTypes.put(2, 4); //float value (four bytes large)
 
         this.registerInstruction((byte) 0x0, this::_CALIBRATE);
 
