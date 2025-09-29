@@ -23,7 +23,7 @@ public class TestProgram {
         //calibrate
         testProgram.add((byte) 0x0);
 
-        //dynamic value
+        //dynamic target value
         testProgram.add((byte) 1);
 
         //static registry value
@@ -31,16 +31,14 @@ public class TestProgram {
         testProgram.addAll(Encoding._ENCODE_INTEGER(0));
 
         //tolerance
-        testProgram.add((byte) 0); //static value
-        testProgram.addAll(Encoding._ENCODE_INTEGER(2));
-
-        testProgram.add((byte) 0); //static value
-        testProgram.addAll(Encoding._ENCODE_INTEGER(100));
+        testProgram.add((byte) 0);
+        testProgram.addAll(Encoding._ENCODE_FLOAT((float) 2 / 100));
 
         //wait five seconds
         testProgram.add((byte) 0x17);
 
-        testProgram.add((byte) 0); //static value
+        //static time value
+        testProgram.add((byte) 0);
         testProgram.addAll(Encoding._ENCODE_INTEGER(20 * 5));
 
         //create 'this is a test variable' value in memory
@@ -60,7 +58,7 @@ public class TestProgram {
         //print 'this is a test variable'
         testProgram.add((byte) 0x20);
 
-        //dynamic value
+        //dynamic print value
         testProgram.add((byte) 1);
 
         //static registry value
