@@ -3,7 +3,14 @@ package net.altosheeve.soprano.client.Tuba;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-public class Encoding {
+public class Typing {
+
+    public static final int INTEGER_IDENTIFIER = 0;
+    public static final int STRING_IDENTIFIER = 1;
+    public static final int FLOAT_IDENTIFIER = 2;
+
+    public static final int INTEGER_SIZE = 1;
+    public static final int FLOAT_SIZE = 4;
 
     public static int _PARSE_INTEGER(BasicFunctions instructions) {
 
@@ -27,7 +34,7 @@ public class Encoding {
         else {
 
             //get location of value in memory. we can add + 1 to skip the integer mark
-            int registry = Encoding._PARSE_INTEGER(instructions) + 1;
+            int registry = _PARSE_INTEGER(instructions) + 1;
 
             //decode value from memory
             return instructions.memory.get((byte) registry);
@@ -64,7 +71,7 @@ public class Encoding {
         else {
 
             //get location of dynamic value in memory. we can add + 1 to the pointer to skip the string mark
-            int registry = Encoding._PARSE_INTEGER(instructions) + 1;
+            int registry = _PARSE_INTEGER(instructions) + 1;
 
             //get length from memory
             int length = instructions.memory.get((byte) registry);
@@ -105,7 +112,7 @@ public class Encoding {
         else {
 
             //get location of value in memory. we can add + 1 to skip the integer mark
-            int registry = Encoding._PARSE_INTEGER(instructions) + 1;
+            int registry = _PARSE_INTEGER(instructions) + 1;
 
             //get float bytes from memory
             byte first  = instructions.memory.get((byte) (registry));
@@ -122,7 +129,7 @@ public class Encoding {
     public static ArrayList<Byte> _ENCODE_FLOAT(float value) {
         ArrayList<Byte> out = new ArrayList<>();
 
-        out.add((byte) 2); //mark as float
+        out.add((byte) FLOAT_IDENTIFIER); //mark as float
 
         //encode value
         int intBits = Float.floatToIntBits(value);
@@ -139,7 +146,7 @@ public class Encoding {
 
         ArrayList<Byte> out = new ArrayList<>(); //instantiate out
 
-        out.add((byte) 1); //mark as string
+        out.add((byte) STRING_IDENTIFIER); //mark as string
         out.add((byte) string.length()); //encode length of string
 
         for (char c : string.toCharArray()) out.add((byte) c); //encode body of string
@@ -152,7 +159,7 @@ public class Encoding {
 
         ArrayList<Byte> out = new ArrayList<>(); //instantiate out
 
-        out.add((byte) 0); //mark as integer
+        out.add((byte) INTEGER_IDENTIFIER); //mark as integer
         out.add((byte) value); //encode value
 
         return out;
