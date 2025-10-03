@@ -35,7 +35,7 @@ public abstract class BasicFunctions {
 
     // runs all concurrent requests
     protected void fulfillRequests() {
-        while (!this.requests.isEmpty() && this.requests.get(0).exec()) { this.requests.remove(0); }
+        while (!this.requests.isEmpty() && this.requests.getFirst().exec()) { this.requests.removeFirst(); }
     }
 
     //stops TBM for instructions that need to halt the main program
