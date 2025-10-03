@@ -626,8 +626,8 @@ public class CivKernel extends BasicFunctions {
 
     }
 
-    public CivKernel(ArrayList<Byte> program) {
-        super(program);
+    public CivKernel(ArrayList<Byte> program, ArrayList<Byte> arguments) {
+        super(program, arguments);
 
         this.registerInstruction((byte) 0x0, this::_CALIBRATE);
 
