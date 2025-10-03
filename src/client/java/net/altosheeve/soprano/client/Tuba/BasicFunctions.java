@@ -67,6 +67,12 @@ public abstract class BasicFunctions {
     //moves the program forward by + 1
     public void itter() { this.programPointer++; }
 
+    //skips ahead by a set amount and returns the skipped bytes
+    public ArrayList<Byte> skip(int amount) {
+        this.programPointer += amount;
+        return (ArrayList<Byte>) this.TBMinstructionPointers.subList(this.programPointer - amount, this.programPointer);
+    }
+
     //inserts an instruction at the end of the program
     public void insertInstruction(byte b) { this.TBMinstructionPointers.add(b); }
 
