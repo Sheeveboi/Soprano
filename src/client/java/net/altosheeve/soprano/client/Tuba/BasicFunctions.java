@@ -28,7 +28,7 @@ public abstract class BasicFunctions {
     protected int programPointer = 0; // tells where the TBM is in the program memory
 
     private BasicFunctions childStackObject; //object below this in the stack
-    private final BasicFunctions parentStackObject; //object above this in the stack
+    public final BasicFunctions parentStackObject; //object above this in the stack
     private static int stackCount = 0; //number of stack objects
 
     // tells the TBM if the program has finished executing or not
