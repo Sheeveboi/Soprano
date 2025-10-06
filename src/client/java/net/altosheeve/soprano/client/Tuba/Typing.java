@@ -109,7 +109,14 @@ public class Typing {
     }
 
     public static String _PARSE_STRING(BasicFunctions instructions) {
-        return new String(new StringBuffer(String.valueOf(_GATHER_BODY(instructions))));
+
+        StringBuilder out = new StringBuilder();
+        ArrayList<Byte> stringData = _GATHER_BODY(instructions);
+
+        for (byte b : stringData) out.append((char) b);
+
+        return out.toString();
+
     }
 
     public static float _PARSE_FLOAT(BasicFunctions instructions) {
