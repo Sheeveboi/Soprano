@@ -19,6 +19,7 @@ public abstract class BasicFunctions {
     private ArrayList<Request> requests = new ArrayList<>();// list of concurrent requests being executed alongside the main program
     protected Map<Byte, Byte> memory = new HashMap<>(); //general memory for programs to use
     protected ArrayList<Byte> entryValues;
+    protected ArrayList<Byte> exitValues;
 
     protected int programPointer = 0; // tells where the TBM is in the program memory
 
