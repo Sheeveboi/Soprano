@@ -108,6 +108,33 @@ public class Typing {
                 }
 
                 break;
+
+            //functional
+            case FUNCTIONAL_EXPRESSION :
+
+                int identifier = instructions.exitValues.getFirst();
+
+                if (identifier == NULL_IDENTIFIER) break;
+
+                length = getTypeSize(identifier);
+
+                System.out.println("identifier: " + identifier);
+
+                if (length == -1) {
+
+                    length = instructions.exitValues.get(1);
+
+                    System.out.println("length: " + length);
+
+                    for (int i = 2; i < length + 2; i++) out.add(instructions.exitValues.get(i));
+
+                    break;
+                }
+
+                for (int i = 1; i < length + 1; i++) out.add(instructions.exitValues.get(i));
+
+                break;
+
         }
 
         return out;
