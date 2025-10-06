@@ -592,36 +592,7 @@ public class CivKernel extends BasicFunctions {
     }
 
     public void _PRINT_RAW() {
-        int length = Typing._PARSE_INTEGER(this);
-
-        this.itter();
-        int staticOrDynamic = this.translateProgramPointer();
-
-        if (staticOrDynamic == 0) {
-
-            StringBuilder out = new StringBuilder();
-
-            for (int i = 0; i < length; i++) {
-                this.itter();
-                out.append(this.translateProgramPointer());
-                out.append(", ");
-            }
-
-            System.out.println(out);
-        }
-
-        else {
-
-            int registry = Typing._PARSE_INTEGER(this);
-            StringBuilder out = new StringBuilder();
-
-            for (int i = 0; i < length; i++) {
-                out.append(this.memory.get((byte) (registry + i)).byteValue());
-                out.append(", ");
-            }
-
-            System.out.println(out);
-        }
+        System.out.println(Typing._GATHER_BODY(this));
     }
 
     public void _EXECUTE() {
