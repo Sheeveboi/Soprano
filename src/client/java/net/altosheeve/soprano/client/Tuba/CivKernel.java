@@ -693,6 +693,8 @@ public class CivKernel extends BasicFunctions {
         this.registerInstruction((byte) 0x21, this::_PRINT_RAW);
 
         this.registerInstruction((byte) 0x22, this::_EXECUTE);
+        this.registerInstruction((byte) 0x23, this::_RETURN);
+        this.registerInstruction((byte) 0x24, this::_CONDITIONAL);
 
     }
 }
