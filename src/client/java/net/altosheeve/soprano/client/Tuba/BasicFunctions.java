@@ -119,6 +119,13 @@ public abstract class BasicFunctions {
         stackCount++;
     }
 
+    public void breakStack(ArrayList<Byte> out) {
+        System.out.println("breaking off of stack");
+        this.childStackObject = null;
+        this.exitValues = out;
+        stackCount--;
+    }
+
     //runs a stack-based execution abstraction
     public void run() {
 
