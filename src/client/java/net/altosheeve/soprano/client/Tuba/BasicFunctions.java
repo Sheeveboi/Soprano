@@ -76,8 +76,9 @@ public abstract class BasicFunctions {
 
     //skips ahead by a set amount and returns the skipped bytes
     public ArrayList<Byte> skip(int amount) {
-        this.programPointer += amount;
-        return (ArrayList<Byte>) this.TBMinstructionPointers.subList(this.programPointer - amount, this.programPointer);
+        ArrayList<Byte> out = new ArrayList<>(this.TBMinstructionPointers.subList(this.programPointer, this.programPointer + amount).stream().toList());
+        this.programPointer += amount - 1;
+        return out;
     }
 
     //inserts an instruction at the end of the program
