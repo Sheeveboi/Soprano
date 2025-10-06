@@ -54,6 +54,8 @@ public class Typing {
                 instructions.itter();
                 idenfitier = instructions.translateProgramPointer();
 
+                if (idenfitier == NULL_IDENTIFIER) break;
+
                 length = getTypeSize(idenfitier);
 
                 if (length == -1) {
@@ -79,6 +81,9 @@ public class Typing {
                 int registry = _PARSE_INTEGER(instructions);
 
                 idenfitier = instructions.memory.get((byte) registry);
+
+                if (idenfitier == NULL_IDENTIFIER) break;
+
                 length = getTypeSize(idenfitier);
 
                 if (length == -1) length = instructions.memory.get((byte) (registry + 1));
@@ -101,6 +106,9 @@ public class Typing {
                 while (valuesIterator.hasNext()) {
 
                     idenfitier = valuesIterator.next();
+
+                    if (idenfitier == NULL_IDENTIFIER) break;
+
                     length = getTypeSize(idenfitier);
 
                     if (length == -1) length = valuesIterator.next();
