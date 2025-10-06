@@ -1,6 +1,7 @@
 package net.altosheeve.soprano.client.Tuba;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -27,6 +28,8 @@ public class Typing {
     }
 
     public static ArrayList<Byte> _GATHER_BODY(BasicFunctions instructions) {
+
+        System.out.println("gathering type body");
 
         //get retrieval method
         instructions.itter();
@@ -56,6 +59,9 @@ public class Typing {
                 instructions.itter();
                 out = instructions.skip(length);
 
+                System.out.println("static");
+                System.out.println(out);
+
                 break;
 
             //dynamic
@@ -69,6 +75,9 @@ public class Typing {
                 if (length == -1) length = instructions.memory.get((byte) (registry + 1));
 
                 for (int i = 0; i < length; i++) out.add(instructions.memory.get((byte) (registry + 2 + i)));
+
+                System.out.println("dynamic");
+                System.out.println(out);
 
                 break;
 
@@ -154,6 +163,8 @@ public class Typing {
         out.add((byte) (intBits >> 16));
         out.add((byte) (intBits >> 8));
         out.add((byte) (intBits));
+
+        System.out.println(out);
 
         return out;
     }

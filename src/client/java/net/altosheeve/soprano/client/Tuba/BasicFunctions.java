@@ -1,6 +1,8 @@
 package net.altosheeve.soprano.client.Tuba;
 
 import net.altosheeve.soprano.client.Tuba.Async.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +11,9 @@ import java.util.Map;
 import static net.minecraft.util.math.MathHelper.floor;
 
 public abstract class BasicFunctions {
+
     private ArrayList<Byte> TBMinstructionPointers = new ArrayList<>(); //This is the program memory. the TBM will read from this list and call the translateInstruction() function to interpret the instruction
+
     protected interface Cb {
         void cb();
     } // generic callback method

@@ -538,6 +538,8 @@ public class CivKernel extends BasicFunctions {
 
     public void _DEBUG_INTERACTION_DATA() {
 
+        System.out.println("is this being called?");
+
         ScreenHandler handler = MinecraftClient.getInstance().player.currentScreenHandler;
 
         if (handler == null) return;
@@ -586,7 +588,7 @@ public class CivKernel extends BasicFunctions {
 
     public void _PRINT_UTF_8() {
         String out = Typing._PARSE_STRING(this);
-        System.out.println(out);
+        System.out.println("stout: " + out);
     }
 
     public void _PRINT_RAW() {
@@ -633,8 +635,8 @@ public class CivKernel extends BasicFunctions {
 
     }
 
-    public CivKernel(ArrayList<Byte> program, ArrayList<Byte> arguments) {
-        super(program, arguments);
+    public CivKernel(ArrayList<Byte> program, ArrayList<Byte> arguments, BasicFunctions parent) {
+        super(program, arguments, parent);
 
         this.registerInstruction((byte) 0x0, this::_CALIBRATE);
 
@@ -664,5 +666,8 @@ public class CivKernel extends BasicFunctions {
 
         this.registerInstruction((byte) 0x20, this::_PRINT_UTF_8);
         this.registerInstruction((byte) 0x21, this::_PRINT_RAW);
+
+        this.registerInstruction((byte) 0x22, this::_EXECUTE);
+
     }
 }
