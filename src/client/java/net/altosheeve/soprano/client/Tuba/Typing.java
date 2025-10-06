@@ -68,7 +68,6 @@ public class Typing {
                 instructions.itter();
                 out = instructions.skip(length);
 
-                System.out.println("static");
                 System.out.println(out);
 
                 break;
@@ -86,11 +85,14 @@ public class Typing {
 
                 length = getTypeSize(idenfitier);
 
+                System.out.println("identifier: " + idenfitier);
+
                 if (length == -1) length = instructions.memory.get((byte) (registry + 1));
+
+                System.out.println("length: " + length);
 
                 for (int i = 0; i < length; i++) out.add(instructions.memory.get((byte) (registry + 2 + i)));
 
-                System.out.println("dynamic");
                 System.out.println(out);
 
                 break;
@@ -116,6 +118,7 @@ public class Typing {
                     if (targetArgument == currentArgument) {
 
                         for (int i = 0; i < length && valuesIterator.hasNext(); i++) out.add(valuesIterator.next());
+
                         break;
 
                     }
