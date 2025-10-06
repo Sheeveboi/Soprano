@@ -631,6 +631,23 @@ public class CivKernel extends BasicFunctions {
 
     }
 
+    public void _RETURN() {
+
+        int length = Typing._PARSE_INTEGER(this);
+
+        this.exitValues = new ArrayList<>();
+
+        for (int i = 0; i < length; i++) {
+            this.itter();
+            this.exitValues.add(this.translateProgramPointer());
+        }
+
+        System.out.println(this.exitValues);
+
+        this.parentStackObject.breakStack(this.exitValues);
+
+    }
+
     public void _CONDITIONAL() {
 
     }
