@@ -15,10 +15,10 @@ public class TestProgram {
 
         testProgram.add((byte) 0x19);
 
-        testProgram.add((byte) 0); //static value
+        testProgram.add((byte) Typing.STATIC_EXPRESSION); //static value
         testProgram.addAll(Typing._ENCODE_INTEGER(0)); //registery zero
 
-        testProgram.add((byte) 0); //static value
+        testProgram.add((byte) Typing.STATIC_EXPRESSION); //static value
         testProgram.addAll(Typing._ENCODE_INTEGER(Typing._ENCODE_STRING("test 1").size()));
 
         //add body
@@ -31,33 +31,80 @@ public class TestProgram {
         testProgram.add((byte) 1);
 
         //static registry value
-        testProgram.add((byte) 0);
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
         testProgram.addAll(Typing._ENCODE_INTEGER(0));
 
         //tolerance
-        testProgram.add((byte) 0);
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
         testProgram.addAll(Typing._ENCODE_FLOAT((float) 2 / 100));
 
         //wait five seconds
-        /*testProgram.add((byte) 0x17);
+        testProgram.add((byte) 0x17);
 
         //static time value
-        testProgram.add((byte) 0);
-        testProgram.addAll(Typing._ENCODE_INTEGER(20 * 5));*/
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
+        testProgram.addAll(Typing._ENCODE_INTEGER(20 * 5));
 
         //print 'test 1'
         testProgram.add((byte) 0x20);
 
         //dynamic print value
-        testProgram.add((byte) 1);
+        testProgram.add((byte) Typing.DYNAMIC_EXPRESSION);
 
         //static registry value
-        testProgram.add((byte) 0);
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
         testProgram.addAll(Typing._ENCODE_INTEGER(0));
 
+        //print "hello world!"
         testProgram.add((byte) 0x20);
-        testProgram.add((byte) 0x0);
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
         testProgram.addAll(Typing._ENCODE_STRING("hello world!"));
+
+        //create a function in memory
+        testProgram.add((byte) 0x19); //put all
+
+        //static registry value
+        testProgram.add((byte) Typing.STATIC_EXPRESSION); //static value
+        testProgram.addAll(Typing._ENCODE_INTEGER(0)); //registery zero
+
+        //create body
+        ArrayList<Byte> testConditional = new ArrayList<>();
+
+        testConditional.add((byte) 0x23); // return
+        testConditional.add((byte) Typing.STATIC_EXPRESSION); // static value
+        testConditional.addAll(Typing._ENCODE_INTEGER(Typing._ENCODE_STRING("this condition has passed!").size())); // encode string object length
+        testConditional.addAll(Typing._ENCODE_STRING("this condition has passed!")); // encode string
+
+
+        //encode length
+        testProgram.add((byte) 0); //static value
+        testProgram.addAll(Typing._ENCODE_INTEGER(Typing._ENCODE_FUNCTION_BODY(testConditional).size())); //encode conditional size
+
+        //encode body
+        testProgram.addAll(Typing._ENCODE_FUNCTION_BODY(testConditional));
+
+        //conditional
+        testProgram.add((byte) 0x24);
+
+        //get conditional value
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
+        testProgram.addAll(Typing._ENCODE_INTEGER(1));
+
+        //dynamic condition body
+        testProgram.add((byte) Typing.DYNAMIC_EXPRESSION);
+
+        //static registry value
+        testProgram.add((byte) Typing.STATIC_EXPRESSION); //static registry value
+        testProgram.addAll(Typing._ENCODE_INTEGER(0)); //registry 0
+
+        //print result
+        testProgram.add((byte) 0x20); //print utf-8
+        testProgram.add((byte) Typing.FUNCTIONAL_EXPRESSION); //functional expression
+
+        testProgram.add((byte) 0x23);
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
+        testProgram.addAll(Typing._ENCODE_INTEGER(Typing._ENCODE_STRING("RETURN VALUE!!").size()));
+        testProgram.addAll(Typing._ENCODE_STRING("RETURN VALUE!!"));
 
         return testProgram;
 
@@ -78,6 +125,9 @@ public class TestProgram {
 
         testProgram.add((byte) 0); //static body assignment
         testProgram.addAll(Typing._ENCODE_FUNCTION_BODY(testFunction)); //encode function body
+
+        testProgram.add((byte) 0x20); //print return value
+        testProgram.add((byte) Typing.FUNCTIONAL_EXPRESSION);
 
         return testProgram;
     }
