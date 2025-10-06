@@ -12,7 +12,12 @@ public class Typing {
     public static final int FLOAT_IDENTIFIER = 2;
     public static final int FUNCTION_BODY_IDENTIFIER = 3;
     public static final int FUNCTION_ARGS_IDENTIFIER = 4;
-    public static final int FUNCTION_OUT_IDENTIFIER = 5;
+    public static final int NULL_IDENTIFIER = 5;
+
+    public static final int STATIC_EXPRESSION = 0;
+    public static final int DYNAMIC_EXPRESSION = 1;
+    public static final int ARGUMENTITIVE_EXPRESSION = 2;
+    public static final int FUNCTIONAL_EXPRESSION = 3;
 
     public static final int INTEGER_SIZE = 1;
     public static final int FLOAT_SIZE = 4;
@@ -42,7 +47,9 @@ public class Typing {
         switch (retrievalMethod) {
 
             //static
-            case 0 :
+            case STATIC_EXPRESSION :
+
+                System.out.println("static");
 
                 instructions.itter();
                 idenfitier = instructions.translateProgramPointer();
@@ -65,7 +72,9 @@ public class Typing {
                 break;
 
             //dynamic
-            case 1 :
+            case DYNAMIC_EXPRESSION :
+
+                System.out.println("dynamic");
 
                 int registry = _PARSE_INTEGER(instructions);
 
@@ -82,7 +91,7 @@ public class Typing {
                 break;
 
             //argumentative
-            case 2 :
+            case ARGUMENTITIVE_EXPRESSION :
 
                 int targetArgument = _PARSE_INTEGER(instructions);
                 int currentArgument = 0;
