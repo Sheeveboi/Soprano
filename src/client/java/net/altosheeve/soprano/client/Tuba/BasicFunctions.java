@@ -22,8 +22,8 @@ public abstract class BasicFunctions {
     protected Map<Cb, Byte> instructionRegister = new HashMap<>(); //this map allows implementations of this class to reference how its instructions are mapped
     private ArrayList<Request> requests = new ArrayList<>();// list of concurrent requests being executed alongside the main program
     protected Map<Byte, Byte> memory = new HashMap<>(); //general memory for programs to use
-    protected ArrayList<Byte> entryValues;
-    protected ArrayList<Byte> exitValues;
+    protected ArrayList<Byte> entryValues = new ArrayList<>();
+    protected ArrayList<Byte> exitValues = new ArrayList<>();
 
     protected int programPointer = 0; // tells where the TBM is in the program memory
 
@@ -142,6 +142,10 @@ public abstract class BasicFunctions {
         this.entryValues = valuesIn;
         this.TBMinstructionPointers = program;
         this.parentStackObject = parent;
+
+        this.exitValues.add((byte) 5);
+        this.entryValues.add((byte) 5);
+
     }
 
     //constructor
