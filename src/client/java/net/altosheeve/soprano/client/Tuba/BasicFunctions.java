@@ -146,6 +146,7 @@ public abstract class BasicFunctions {
 
     //constructor
     public BasicFunctions(ArrayList<Byte> program, ArrayList<Byte> valuesIn, BasicFunctions parent) {
+
         this.entryValues = valuesIn;
         this.TBMinstructionPointers = program;
         this.parentStackObject = parent;
@@ -153,13 +154,5 @@ public abstract class BasicFunctions {
         this.exitValues.add((byte) 5);
         this.entryValues.add((byte) 5);
 
-    }
-
-    //constructor
-    public BasicFunctions(ArrayList<Byte> program, ArrayList<Byte> valuesIn, BasicFunctions parent, ArrayList<Request> requests) {
-        this.entryValues = valuesIn;
-        this.TBMinstructionPointers = program;
-        this.parentStackObject = parent;
-        this.requests = requests;
     }
 }
