@@ -102,6 +102,30 @@ public abstract class BasicFunctions {
 
     }
 
+    public void pushStack(BasicFunctions instructions) {
+        this.childStackObject = instructions;
+        System.out.println("pushing onto stack");
+        stackCount++;
+    }
+
+    //runs a stack-based execution abstraction
+    public void run() {
+
+        if (!this.finished()) {
+            if (childStackObject != null) { //if there are stack objects ahead of this the stack
+                if (childStackObject.hasRequests()) childStackObject.fulfillRequests();
+                else childStackObject.run();
+            } else { //if there are no stack objects ahead of this in the stack
+                if (this.hasRequests()) this.fulfillRequests();
+                else {
+                    this.translateInstruction(this.translateProgramPointer()); //execute current instruction
+                    this.itter(); //move forward once in the program
+                }
+            }
+        }
+
+    }
+
     //constructor
     public BasicFunctions(ArrayList<Byte> program, ArrayList<Byte> valuesIn) {
         this.entryValues = valuesIn;
