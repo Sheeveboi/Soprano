@@ -23,10 +23,15 @@ public abstract class BasicFunctions {
 
     protected int programPointer = 0; // tells where the TBM is in the program memory
 
+    private BasicFunctions childStackObject; //object below this in the stack
+    private final BasicFunctions parentStackObject; //object above this in the stack
+    private static int stackCount = 0; //number of stack objects
+
     // tells the TBM if the program has finished executing or not
     public boolean finished() {
         return (TBMinstructionPointers.isEmpty() || this.programPointer > TBMinstructionPointers.size() - 1) &&
-                this.requests.isEmpty();
+                this.childStackObject == null &&
+                !this.hasRequests();
     }
 
     // tells the TBM if there are concurrent requests to be run after the main thread is finished with its current program iteration
@@ -128,8 +133,17 @@ public abstract class BasicFunctions {
     }
 
     //constructor
-    public BasicFunctions(ArrayList<Byte> program, ArrayList<Byte> valuesIn) {
+    public BasicFunctions(ArrayList<Byte> program, ArrayList<Byte> valuesIn, BasicFunctions parent) {
         this.entryValues = valuesIn;
         this.TBMinstructionPointers = program;
+        this.parentStackObject = parent;
+    }
+
+    //constructor
+    public BasicFunctions(ArrayList<Byte> program, ArrayList<Byte> valuesIn, BasicFunctions parent, ArrayList<Request> requests) {
+        this.entryValues = valuesIn;
+        this.TBMinstructionPointers = program;
+        this.parentStackObject = parent;
+        this.requests = requests;
     }
 }
