@@ -650,6 +650,14 @@ public class CivKernel extends BasicFunctions {
 
     public void _CONDITIONAL() {
 
+        ArrayList<Byte> value = Typing._GATHER_BODY(this);
+
+        boolean out = true;
+        for (int i = 0; i < value.size() && out; i++) out = value.get(i) == 0;
+
+        ArrayList<Byte> body = Typing._GATHER_BODY(this);
+        if (out) this.pushStack(new CivKernel(body, new ArrayList<>(), this));
+
     }
 
     public CivKernel(ArrayList<Byte> program, ArrayList<Byte> arguments, BasicFunctions parent) {
