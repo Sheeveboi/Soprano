@@ -622,6 +622,13 @@ public class CivKernel extends BasicFunctions {
         }
     }
 
+    public void _EXECUTE() {
+
+        CivKernel program = Typing._PARSE_FUNCTION(this);
+        this.pushStack(program);
+
+    }
+
     public void _CONDITIONAL() {
 
     }

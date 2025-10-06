@@ -9,6 +9,9 @@ public class Typing {
     public static final int INTEGER_IDENTIFIER = 0;
     public static final int STRING_IDENTIFIER = 1;
     public static final int FLOAT_IDENTIFIER = 2;
+    public static final int FUNCTION_BODY_IDENTIFIER = 3;
+    public static final int FUNCTION_ARGS_IDENTIFIER = 4;
+    public static final int FUNCTION_OUT_IDENTIFIER = 5;
 
     public static final int INTEGER_SIZE = 1;
     public static final int FLOAT_SIZE = 4;
@@ -50,6 +53,7 @@ public class Typing {
 
                 }
 
+                instructions.itter();
                 out = instructions.skip(length);
 
                 break;
@@ -122,6 +126,15 @@ public class Typing {
 
     }
 
+    public static CivKernel _PARSE_FUNCTION(BasicFunctions instructions) {
+
+        ArrayList<Byte> arguments = _GATHER_BODY(instructions);
+        ArrayList<Byte> body = _GATHER_BODY(instructions);
+
+        return new CivKernel(body, arguments, instructions);
+
+    }
+
     public static ArrayList<Byte> _ENCODE_FLOAT(float value) {
         ArrayList<Byte> out = new ArrayList<>();
 
@@ -157,6 +170,30 @@ public class Typing {
 
         out.add((byte) INTEGER_IDENTIFIER); //mark as integer
         out.add((byte) value); //encode value
+
+        return out;
+
+    }
+
+    public static ArrayList<Byte> _ENCODE_FUNCTION_ARGS(ArrayList<Byte> arguments) {
+
+        ArrayList<Byte> out = new ArrayList<>(); //instantiate out
+
+        out.add((byte) FUNCTION_ARGS_IDENTIFIER); //mark as function arguments
+        out.add((byte) (arguments.size())); //encode size of arguments
+        out.addAll(arguments); //encode arguments
+
+        return out;
+
+    }
+
+    public static ArrayList<Byte> _ENCODE_FUNCTION_BODY(ArrayList<Byte> body) {
+
+        ArrayList<Byte> out = new ArrayList<>(); //instantiate out
+
+        out.add((byte) FUNCTION_BODY_IDENTIFIER); //mark as function body
+        out.add((byte) (body.size())); //encode length of function body
+        out.addAll(body); //encode function body
 
         return out;
 
