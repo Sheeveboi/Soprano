@@ -33,7 +33,7 @@ public abstract class BasicFunctions {
 
     // tells the TBM if the program has finished executing or not
     public boolean finished() {
-        return (TBMinstructionPointers.isEmpty() || this.programPointer > TBMinstructionPointers.size() - 1) &&
+        return (TBMinstructionPointers.isEmpty() || this.programPointer >= TBMinstructionPointers.size()) &&
                 this.childStackObject == null &&
                 !this.hasRequests();
     }
