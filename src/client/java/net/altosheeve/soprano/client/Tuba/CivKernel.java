@@ -662,10 +662,24 @@ public class CivKernel extends BasicFunctions {
 
         boolean out = true;
         for (int i = 0; i < value.size() && out; i++) out = value.get(i) == 0;
+        //I could use streams but they're slower
 
         ArrayList<Byte> body = Typing._GATHER_BODY(this);
         if (out) this.pushStack(new CivKernel(body, new ArrayList<>(), this));
 
+    }
+
+    public void _GO_TO_POINT() {
+
+        this.programPointer = Typing._PARSE_INTEGER(this);
+
+        //risky business! potential to be faster but more technically demanding for the developer
+
+    }
+
+    public void _GO_TO_VAGUE() {
+        //move the pointer forward and back by however many expressions. slower but simpler
+        //implement after prototyping is done
     }
 
     public CivKernel(ArrayList<Byte> program, ArrayList<Byte> arguments, BasicFunctions parent) {
@@ -704,6 +718,8 @@ public class CivKernel extends BasicFunctions {
         this.registerInstruction((byte) 0x22, this::_EXECUTE);
         this.registerInstruction((byte) 0x23, this::_RETURN);
         this.registerInstruction((byte) 0x24, this::_CONDITIONAL);
+        this.registerInstruction((byte) 0x25, this::_GO_TO_POINT);
+        this.registerInstruction((byte) 0x26, this::_GO_TO_VAGUE);
 
     }
 }
