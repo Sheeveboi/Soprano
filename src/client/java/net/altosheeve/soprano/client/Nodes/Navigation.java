@@ -39,6 +39,8 @@ public class Navigation {
         client.options.backKey.setPressed(false);
         client.options.attackKey.setPressed(false);
         client.options.sprintKey.setPressed(false);
+        client.options.sneakKey.setPressed(false);
+
     }
 
     public static void basicWalkHandler() {
@@ -47,9 +49,6 @@ public class Navigation {
         assert player != null;
 
         double velocity = player.getVelocity().length();
-
-        client.options.useKey.setPressed(false);
-        client.options.jumpKey.setPressed(false);
 
         if (velocity > velocityThreshold) return;
 
@@ -199,9 +198,6 @@ public class Navigation {
         float yaw = (float) Math.atan2(dz, dx);
 
         boolean direction = player.getYaw() - yaw < 0;
-
-        client.options.rightKey.setPressed(false);
-        client.options.leftKey.setPressed(false);
 
         if (direction) client.options.rightKey.setPressed(true);
         else client.options.leftKey.setPressed(true);

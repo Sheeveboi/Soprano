@@ -173,6 +173,8 @@ public class CivKernel extends BasicFunctions {
         int blockY = Typing._PARSE_INTEGER(this);
         int blockZ = Typing._PARSE_INTEGER(this);
 
+        float tolerance = Typing._PARSE_FLOAT(this);
+
         double dx = player.getX() - blockX - .5;
         double dy = player.getY() - blockY;
         double dz = player.getZ() - blockZ - .5;
@@ -190,8 +192,6 @@ public class CivKernel extends BasicFunctions {
         yaw = (float) (yaw * 180.0 / Math.PI);
 
         yaw += 90;
-
-        double tolerance = Typing._PARSE_FLOAT(this);
 
         player.setPitch(pitch);
         player.setYaw(yaw);
@@ -300,6 +300,8 @@ public class CivKernel extends BasicFunctions {
 
         this.insertInstruction((byte) 0x2a, origin); //reset all controls
     }
+
+    public void _RESET_CONTROLS() { Navigation.resetControls(); }
 
     public void _SET_CURRENT_NODE() {
         int index = Typing._PARSE_INTEGER(this);
@@ -673,6 +675,7 @@ public class CivKernel extends BasicFunctions {
 
         this.registerInstruction((byte) 0x1, this::_MOVE_TO);
         this.registerInstruction((byte) 0x2, this::_PATH_TO);
+        this.registerInstruction((byte) 0x2a, this::_RESET_CONTROLS);
 
         this.registerInstruction((byte) 0x3, this::_SET_TARGET_NODE);
         this.registerInstruction((byte) 0x4, this::_SET_CURRENT_NODE);
