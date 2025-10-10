@@ -98,8 +98,6 @@ public class Navigation {
         if (tick % 2 == 0) client.options.jumpKey.setPressed(true);
         else client.options.jumpKey.setPressed(false);
         client.options.sprintKey.setPressed(true);
-        client.options.rightKey.setPressed(false);
-        client.options.leftKey.setPressed(false);
 
         Vector3f idealVector = new Vector3f(targetNode.x, targetNode.y, targetNode.z).sub(currentNode.x, currentNode.y, currentNode.z);
         Vector3f idealNormal = new Vector3f(idealVector.z, idealVector.y, -idealVector.x);
