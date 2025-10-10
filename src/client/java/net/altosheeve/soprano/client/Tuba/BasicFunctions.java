@@ -89,13 +89,19 @@ public abstract class BasicFunctions {
     public void insertInstruction(byte b) { this.TBMinstructionPointers.add(b); }
 
     //inserts an instruction at the specified index in the program
-    public void insertInstruction(byte b, int i) { this.TBMinstructionPointers.add(i, b); }
+    public void insertInstruction(byte b, int i) {
+        if (i < this.TBMinstructionPointers.size()) this.TBMinstructionPointers.add(i, b);
+        else this.TBMinstructionPointers.add(b);
+    }
 
     //adds multiple instructions to the end of the program
     public void addInstructions(ArrayList<Byte> bytes) { this.TBMinstructionPointers.addAll(bytes); }
 
     //inserts multiple instructions at the specified index in the program
-    public void insertInstructions(ArrayList<Byte> bytes, int i) { this.TBMinstructionPointers.addAll(i, bytes); }
+    public void insertInstructions(ArrayList<Byte> bytes, int i) {
+        if (i < this.TBMinstructionPointers.size()) this.TBMinstructionPointers.addAll(i, bytes);
+        else this.TBMinstructionPointers.addAll(bytes);
+    }
 
     //adds an instruction at a floating point based priority index within the program
     public void scheduleInstruction(byte b, float priority) {
