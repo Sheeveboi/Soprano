@@ -128,6 +128,16 @@ public class TestProgram {
         testProgram.add((byte) 0x20); //print return value
         testProgram.add((byte) Typing.FUNCTIONAL_EXPRESSION);
 
+        testProgram.add((byte) 0x2); //path to
+
+        //encode node to path to
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
+        testProgram.addAll(Typing._ENCODE_STRING("Conditional Test 1"));
+
+        //encode tolerance
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
+        testProgram.addAll(Typing._ENCODE_FLOAT(.8f));
+
         return testProgram;
     }
 }
