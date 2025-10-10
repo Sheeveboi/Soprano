@@ -36,7 +36,7 @@ public class TestProgram {
 
         //tolerance
         testProgram.add((byte) Typing.STATIC_EXPRESSION);
-        testProgram.addAll(Typing._ENCODE_FLOAT((float) 2 / 100));
+        testProgram.addAll(Typing._ENCODE_FLOAT(.002f));
 
         //wait five seconds
         testProgram.add((byte) 0x17);
