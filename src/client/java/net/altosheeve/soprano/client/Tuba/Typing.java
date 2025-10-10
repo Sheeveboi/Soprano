@@ -1,7 +1,8 @@
 package net.altosheeve.soprano.client.Tuba;
 
+import org.joml.Vector3f;
+
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -13,14 +14,17 @@ public class Typing {
     public static final int FUNCTION_BODY_IDENTIFIER = 3;
     public static final int FUNCTION_ARGS_IDENTIFIER = 4;
     public static final int NULL_IDENTIFIER = 5;
+    public static final int XYZ_IDENTIFIER = 6;
 
     public static final int STATIC_EXPRESSION = 0;
     public static final int DYNAMIC_EXPRESSION = 1;
-    public static final int ARGUMENTITIVE_EXPRESSION = 2;
+    public static final int ARGUMENTATIVE_EXPRESSION = 2;
     public static final int FUNCTIONAL_EXPRESSION = 3;
 
     public static final int INTEGER_SIZE = 1;
     public static final int FLOAT_SIZE = 4;
+    public static final int NULL_SIZE = 0;
+    public static final int XYZ_SIZE = 16;
 
     //we won't use enums here so we can directly use type identifiers in the program
     public static int getTypeSize(int identifier) {
@@ -28,6 +32,8 @@ public class Typing {
         switch (identifier) {
             case INTEGER_IDENTIFIER -> { return INTEGER_SIZE; }
             case FLOAT_IDENTIFIER -> { return FLOAT_SIZE; }
+            case NULL_IDENTIFIER -> { return NULL_SIZE; }
+            case XYZ_IDENTIFIER -> { return XYZ_SIZE; }
             default -> { return -1; }
         }
     }
@@ -98,7 +104,7 @@ public class Typing {
                 break;
 
             //argumentative
-            case ARGUMENTITIVE_EXPRESSION :
+            case ARGUMENTATIVE_EXPRESSION:
 
                 int targetArgument = _PARSE_INTEGER(instructions);
                 int currentArgument = 0;
@@ -198,6 +204,38 @@ public class Typing {
 
     }
 
+    public static Vector3f _PARSE_XYZ(BasicFunctions instructions) {
+
+        ArrayList<Byte> body = _GATHER_BODY(instructions);
+        Vector3f out = new Vector3f();
+
+        byte first = body.get(0);
+        byte second = body.get(1);
+        byte third = body.get(2);
+        byte fourth = body.get(3);
+
+        float x = ByteBuffer.wrap(new byte[] { first, second, third, fourth }).getFloat();
+
+        first = body.get(4);
+        second = body.get(5);
+        third = body.get(6);
+        fourth = body.get(7);
+
+        float y = ByteBuffer.wrap(new byte[] { first, second, third, fourth }).getFloat();
+
+        first = body.get(8);
+        second = body.get(9);
+        third = body.get(10);
+        fourth = body.get(11);
+
+        float z = ByteBuffer.wrap(new byte[] { first, second, third, fourth }).getFloat();
+
+        out.add(x, y, z);
+
+        return out;
+
+    }
+
     public static ArrayList<Byte> _ENCODE_FLOAT(float value) {
         ArrayList<Byte> out = new ArrayList<>();
 
@@ -259,6 +297,48 @@ public class Typing {
         out.add((byte) FUNCTION_BODY_IDENTIFIER); //mark as function body
         out.add((byte) (body.size())); //encode length of function body
         out.addAll(body); //encode function body
+
+        return out;
+
+    }
+
+    public static ArrayList<Byte> _ENCODE_XYZ(Vector3f xyz) {
+
+        ArrayList<Byte> out = new ArrayList<>();
+
+        out.add((byte) XYZ_IDENTIFIER);
+
+        //encode X
+        int intBits = Float.floatToIntBits(xyz.x);
+
+        out.add((byte) (intBits >> 24));
+        out.add((byte) (intBits >> 16));
+        out.add((byte) (intBits >> 8));
+        out.add((byte) (intBits));
+
+        //encode Y
+        intBits = Float.floatToIntBits(xyz.y);
+
+        out.add((byte) (intBits >> 24));
+        out.add((byte) (intBits >> 16));
+        out.add((byte) (intBits >> 8));
+        out.add((byte) (intBits));
+
+        //encode Z
+        intBits = Float.floatToIntBits(xyz.z);
+
+        out.add((byte) (intBits >> 24));
+        out.add((byte) (intBits >> 16));
+        out.add((byte) (intBits >> 8));
+        out.add((byte) (intBits));
+
+        //encode Magnitude
+        intBits = Float.floatToIntBits(xyz.length());
+
+        out.add((byte) (intBits >> 24));
+        out.add((byte) (intBits >> 16));
+        out.add((byte) (intBits >> 8));
+        out.add((byte) (intBits));
 
         return out;
 
