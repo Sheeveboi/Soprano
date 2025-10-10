@@ -75,7 +75,6 @@ public class TestProgram {
         testConditional.addAll(Typing._ENCODE_INTEGER(Typing._ENCODE_STRING("this condition has passed!").size())); // encode string object length
         testConditional.addAll(Typing._ENCODE_STRING("this condition has passed!")); // encode string
 
-
         //encode length
         testProgram.add((byte) 0); //static value
         testProgram.addAll(Typing._ENCODE_INTEGER(Typing._ENCODE_FUNCTION_BODY(testConditional).size())); //encode conditional size
