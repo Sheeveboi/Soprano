@@ -19,6 +19,9 @@ public class Navigation {
     public static double velocityThreshold;
     public static double interactionThreshold;
     public static int tick;
+    public static int deepThreshold = 3;
+    public static int maxDeepSearchDistance = 5;
+    public static Vector3f playerPrev = new Vector3f();
 
     public static Handler handler;
 

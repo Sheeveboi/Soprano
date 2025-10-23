@@ -48,6 +48,7 @@ public class Client implements ClientModInitializer {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            if (MinecraftClient.getInstance().player != null) Navigation.playerPrev = MinecraftClient.getInstance().player.getPos().toVector3f();
         });
 
         WorldRenderEvents.LAST.register(Rendering::render3d);
