@@ -38,15 +38,16 @@ public class Typing {
         }
     }
 
-    public static ArrayList<Byte> _GATHER_BODY(BasicFunctions instructions) {
+    public static ArrayList<Byte> _GATHER_BODY(BasicFunctions instructions, boolean includeMeta) {
 
         System.out.println("gathering type body");
 
         //get retrieval method
         instructions.itter();
         int retrievalMethod = instructions.translateProgramPointer();
-        int idenfitier;
-        int length;
+
+        int idenfitier = 0;
+        int length = 0;
 
         ArrayList<Byte> out = new ArrayList<>();
 
@@ -160,6 +161,13 @@ public class Typing {
                 for (int i = 1; i < length + 1; i++) out.add(instructions.exitValues.get(i));
 
                 break;
+
+        }
+
+        if (includeMeta) {
+
+            if (getTypeSize(idenfitier) != -1) out.addFirst((byte) length);
+            out.addFirst((byte) idenfitier);
 
         }
 
