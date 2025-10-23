@@ -175,13 +175,13 @@ public class Typing {
     }
 
     public static int _PARSE_INTEGER(BasicFunctions instructions) {
-        return _GATHER_BODY(instructions).getFirst();
+        return _GATHER_BODY(instructions, false).getFirst();
     }
 
     public static String _PARSE_STRING(BasicFunctions instructions) {
 
         StringBuilder out = new StringBuilder();
-        ArrayList<Byte> stringData = _GATHER_BODY(instructions);
+        ArrayList<Byte> stringData = _GATHER_BODY(instructions, false);
 
         for (byte b : stringData) out.append((char) b);
 
@@ -192,7 +192,7 @@ public class Typing {
     public static float _PARSE_FLOAT(BasicFunctions instructions) {
 
         //get type body
-        ArrayList<Byte> body = _GATHER_BODY(instructions);
+        ArrayList<Byte> body = _GATHER_BODY(instructions, false);
 
         byte first = body.get(0);
         byte second = body.get(1);
@@ -205,8 +205,8 @@ public class Typing {
 
     public static CivKernel _PARSE_FUNCTION(BasicFunctions instructions) {
 
-        ArrayList<Byte> arguments = _GATHER_BODY(instructions);
-        ArrayList<Byte> body = _GATHER_BODY(instructions);
+        ArrayList<Byte> arguments = _GATHER_BODY(instructions, false);
+        ArrayList<Byte> body = _GATHER_BODY(instructions, false);
 
         return new CivKernel(body, arguments, instructions);
 
@@ -214,7 +214,7 @@ public class Typing {
 
     public static Vector3f _PARSE_XYZ(BasicFunctions instructions) {
 
-        ArrayList<Byte> body = _GATHER_BODY(instructions);
+        ArrayList<Byte> body = _GATHER_BODY(instructions, false);
         Vector3f out = new Vector3f();
 
         byte first = body.get(0);
