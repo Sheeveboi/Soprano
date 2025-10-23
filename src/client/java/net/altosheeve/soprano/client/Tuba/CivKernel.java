@@ -1089,7 +1089,7 @@ public class CivKernel extends BasicFunctions {
 
         this.registerInstruction((byte) 0x1, this::_MOVE_TO);
         this.registerInstruction((byte) 0x2, this::_PATH_TO);
-        this.registerInstruction((byte) 0x2a, this::_RESET_CONTROLS);
+        this.registerInstruction((byte) 0x2aa, this::_RESET_CONTROLS);
 
         this.registerInstruction((byte) 0x3, this::_SET_TARGET_NODE);
         this.registerInstruction((byte) 0x4, this::_SET_CURRENT_NODE);
@@ -1114,12 +1114,41 @@ public class CivKernel extends BasicFunctions {
 
         this.registerInstruction((byte) 0x20, this::_PRINT_UTF_8);
         this.registerInstruction((byte) 0x21, this::_PRINT_RAW);
+        this.registerInstruction((byte) 0x22a, this::_PRINT_FLOAT);
 
         this.registerInstruction((byte) 0x22, this::_EXECUTE);
         this.registerInstruction((byte) 0x23, this::_RETURN);
         this.registerInstruction((byte) 0x24, this::_CONDITIONAL);
+
         this.registerInstruction((byte) 0x25, this::_GO_TO_POINT);
-        this.registerInstruction((byte) 0x26, this::_GO_TO_VAGUE);
+
+        this.registerInstruction((byte) 0x27, this::_OP_AND);
+        this.registerInstruction((byte) 0x28, this::_OP_OR);
+        this.registerInstruction((byte) 0x29, this::_OP_XOR);
+        this.registerInstruction((byte) 0x30, this::_OP_INV);
+        this.registerInstruction((byte) 0x31, this::_OP_SHIFT_LEFT);
+        this.registerInstruction((byte) 0x32, this::_OP_SHIFT_RIGHT);
+
+        this.registerInstruction((byte) 0x33, this::_OP_ADD);
+        this.registerInstruction((byte) 0x34, this::_OP_SUB);
+        this.registerInstruction((byte) 0x35, this::_OP_MUL);
+        this.registerInstruction((byte) 0x36, this::_OP_DIV);
+        this.registerInstruction((byte) 0x37, this::_OP_MOD);
+
+        this.registerInstruction((byte) 0x38, this::_GET_X);
+        this.registerInstruction((byte) 0x39, this::_GET_Y);
+        this.registerInstruction((byte) 0x40, this::_GET_Z);
+        this.registerInstruction((byte) 0x41, this::_GET_XYZ);
+        this.registerInstruction((byte) 0x42, this::_GET_VX);
+        this.registerInstruction((byte) 0x43, this::_GET_VY);
+        this.registerInstruction((byte) 0x44, this::_GET_VZ);
+        this.registerInstruction((byte) 0x45, this::_GET_VXYZ);
+        this.registerInstruction((byte) 0x46, this::_GET_PROGRAM_POINTER);
+        this.registerInstruction((byte) 0x47, this::_COUNT_ITEM_INVENTORY);
+        this.registerInstruction((byte) 0x48, this::_COUNT_ITEM_INTERACTABLE);
+
+        this.registerInstruction((byte) 0x49, this::_ATTACK_HOLD);
+        this.registerInstruction((byte) 0x50, this::_USE_HOLD);
 
     }
 }
