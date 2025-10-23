@@ -356,6 +356,7 @@ public class CivKernel extends BasicFunctions {
 
     public void _EXIT_INTERACTION() {
         if (MinecraftClient.getInstance().player.currentScreenHandler == null) return;
+        if (MinecraftClient.getInstance().currentScreen == null) return;
         MinecraftClient.getInstance().currentScreen.close();
     }
 
