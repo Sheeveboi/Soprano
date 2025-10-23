@@ -225,12 +225,19 @@ public class CivKernel extends BasicFunctions {
         float tolerance = Typing._PARSE_FLOAT(this);
 
         int origin = this.programPointer + 1;
-        for (int i : Objects.requireNonNull(Navigation.generatePathingIttinerary(targetTag))) {
+
+        ArrayList<Integer> itinerary = Navigation.generatePathingItinerary(targetTag);
+        assert itinerary != null;
+
+        System.out.println("itinerary: " + itinerary);
+
+        for (int i : itinerary) {
+
             Node node = Navigation.nodes.get(i);
 
             this.insertInstruction((byte) 0x3, origin); origin++; //set as target node
 
-            this.insertInstruction((byte) Typing.STATIC_EXPRESSION); origin++; //set as static expression
+            this.insertInstruction((byte) Typing.STATIC_EXPRESSION, origin); origin++; //set as static expression
             this.insertInstructions(Typing._ENCODE_INTEGER(i), origin); origin += Typing.INTEGER_SIZE + 1; //encode index
 
             switch (node.type) {
@@ -238,7 +245,7 @@ public class CivKernel extends BasicFunctions {
 
                     this.insertInstruction((byte) 0x5, origin); origin++; //set basic movement chestHandler
 
-                    this.insertInstruction((byte) Typing.STATIC_EXPRESSION); origin++; //set as static expression
+                    this.insertInstruction((byte) Typing.STATIC_EXPRESSION, origin); origin++; //set as static expression
                     this.insertInstructions(Typing._ENCODE_FLOAT(.008f), origin); origin += Typing.FLOAT_SIZE + 1; //encode velocity threshold
 
                     break;
@@ -247,10 +254,10 @@ public class CivKernel extends BasicFunctions {
 
                     this.insertInstruction((byte) 0x6, origin); origin++; //set basic movement chestHandler
 
-                    this.insertInstruction((byte) Typing.STATIC_EXPRESSION); origin++; //set as static expression
+                    this.insertInstruction((byte) Typing.STATIC_EXPRESSION, origin); origin++; //set as static expression
                     this.insertInstructions(Typing._ENCODE_FLOAT(.3f), origin); origin += Typing.FLOAT_SIZE + 1; //encode door threshold
 
-                    this.insertInstruction((byte) Typing.STATIC_EXPRESSION); origin++; //set as static expression
+                    this.insertInstruction((byte) Typing.STATIC_EXPRESSION, origin); origin++; //set as static expression
                     this.insertInstructions(Typing._ENCODE_FLOAT(.008f), origin); origin += Typing.FLOAT_SIZE + 1; //encode velocity threshold
 
                     break;
@@ -259,7 +266,7 @@ public class CivKernel extends BasicFunctions {
 
                     this.insertInstruction((byte) 0x7, origin); origin++; //set basic movement chestHandler
 
-                    this.insertInstruction((byte) Typing.STATIC_EXPRESSION); origin++; //set as static expression
+                    this.insertInstruction((byte) Typing.STATIC_EXPRESSION, origin); origin++; //set as static expression
                     this.insertInstructions(Typing._ENCODE_FLOAT(.008f), origin); origin += Typing.FLOAT_SIZE + 1; //encode velocity threshold
 
                     break;
@@ -268,10 +275,12 @@ public class CivKernel extends BasicFunctions {
 
                     this.insertInstruction((byte) 0x8, origin); origin++; //set basic interaction chestHandler
 
-                    this.insertInstruction((byte) Typing.STATIC_EXPRESSION); origin++; //set as static expression
-                    this.insertInstructions(Typing._ENCODE_FLOAT(.3f), origin); origin += Typing.FLOAT_SIZE + 1; //encode interaction threshold
+                    this.insertInstruction((byte) Typing.STATIC_EXPRESSION, origin); origin++; //set as static expression
+                    this.insertInstructions(Typing._ENCODE_FLOAT(2), origin); origin += Typing.FLOAT_SIZE + 1; //encode interaction threshold
 
-                    this.insertInstruction((byte) Typing.STATIC_EXPRESSION); origin++; //set as static expression
+                    tolerance = 2;
+
+                    this.insertInstruction((byte) Typing.STATIC_EXPRESSION, origin); origin++; //set as static expression
                     this.insertInstructions(Typing._ENCODE_FLOAT(.008f), origin); origin += Typing.FLOAT_SIZE + 1; //encode velocity threshold
 
                     break;
@@ -280,25 +289,26 @@ public class CivKernel extends BasicFunctions {
 
             this.insertInstruction((byte) 0x1, origin); origin++; //walk to
 
-            this.insertInstruction((byte) Typing.STATIC_EXPRESSION); origin++;
+            this.insertInstruction((byte) Typing.STATIC_EXPRESSION, origin); origin++;
             this.insertInstructions(Typing._ENCODE_INTEGER(node.x), origin); origin += Typing.INTEGER_SIZE + 1;
 
-            this.insertInstruction((byte) Typing.STATIC_EXPRESSION); origin++;
+            this.insertInstruction((byte) Typing.STATIC_EXPRESSION, origin); origin++;
             this.insertInstructions(Typing._ENCODE_INTEGER(node.y), origin); origin += Typing.INTEGER_SIZE + 1;
 
-            this.insertInstruction((byte) Typing.STATIC_EXPRESSION); origin++;
+            this.insertInstruction((byte) Typing.STATIC_EXPRESSION, origin); origin++;
             this.insertInstructions(Typing._ENCODE_INTEGER(node.z), origin); origin += Typing.INTEGER_SIZE + 1;
 
-            this.insertInstruction((byte) Typing.STATIC_EXPRESSION); origin++;
+            this.insertInstruction((byte) Typing.STATIC_EXPRESSION, origin); origin++;
             this.insertInstructions(Typing._ENCODE_FLOAT(tolerance), origin); origin += Typing.FLOAT_SIZE + 1; //set door threshold
 
             this.insertInstruction((byte) 0x4, origin); origin++; //set as current node
-            this.insertInstruction((byte) Typing.STATIC_EXPRESSION); origin++;
-            this.insertInstructions(Typing._ENCODE_INTEGER(i), origin); origin += Typing.FLOAT_SIZE + 1; //encode static integer
+            this.insertInstruction((byte) Typing.STATIC_EXPRESSION, origin); origin++;
+            this.insertInstructions(Typing._ENCODE_INTEGER(i), origin); origin += Typing.INTEGER_SIZE + 1; //encode static integer
 
         }
 
-        this.insertInstruction((byte) 0x2a, origin); //reset all controls
+        this.insertInstruction((byte) 0x2aa, origin); //reset all controls
+
     }
 
     public void _RESET_CONTROLS() { Navigation.resetControls(); }
