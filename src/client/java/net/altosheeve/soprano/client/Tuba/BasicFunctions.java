@@ -31,6 +31,16 @@ public abstract class BasicFunctions {
     public final BasicFunctions parentStackObject; //object above this in the stack
     private static int stackCount = 0; //number of stack objects
 
+    //does not clear the program but resets back everything back to an initialized state
+    public void reset() {
+        this.requests = new ArrayList<>();
+        this.memory = new HashMap<>();
+        this.entryValues = new ArrayList<>();
+        this.exitValues = new ArrayList<>();
+
+        this.programPointer = 0;
+    }
+
     // tells the TBM if the program has finished executing or not
     public boolean finished() {
         return (TBMinstructionPointers.isEmpty() || this.programPointer >= TBMinstructionPointers.size()) &&
