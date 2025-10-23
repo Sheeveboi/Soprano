@@ -1094,6 +1094,12 @@ public class CivKernel extends BasicFunctions {
 
     }
 
+    public void _WRAP_TYPE() {
+
+        this.exitValues = Typing._ENCODE_STRING(Typing._GATHER_BODY(this, true));
+
+    }
+
     public CivKernel(ArrayList<Byte> program, ArrayList<Byte> arguments, BasicFunctions parent) {
         super(program, arguments, parent);
 
@@ -1161,6 +1167,8 @@ public class CivKernel extends BasicFunctions {
 
         this.registerInstruction((byte) 0x49, this::_ATTACK_HOLD);
         this.registerInstruction((byte) 0x50, this::_USE_HOLD);
+
+        this.registerInstruction((byte) 0x51, this::_WRAP_TYPE);
 
     }
 }
