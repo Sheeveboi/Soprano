@@ -158,6 +158,8 @@ public abstract class BasicFunctions {
             }
         }
 
+        else if (parentStackObject != null) parentStackObject.breakStack(new ArrayList<>());
+
     }
 
     //constructor
