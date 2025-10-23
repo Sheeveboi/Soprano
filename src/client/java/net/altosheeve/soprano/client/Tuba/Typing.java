@@ -267,6 +267,20 @@ public class Typing {
 
     }
 
+    public static ArrayList<Byte> _ENCODE_STRING(ArrayList<Byte> string) {
+
+        ArrayList<Byte> out = new ArrayList<>(); //instantiate out
+
+        out.add((byte) STRING_IDENTIFIER); //mark as string
+        out.add((byte) string.size()); //encode length of string
+
+        //encode body of string
+        out.addAll(string);
+
+        return out;
+
+    }
+
     public static ArrayList<Byte> _ENCODE_INTEGER(int value) {
 
         ArrayList<Byte> out = new ArrayList<>(); //instantiate out
