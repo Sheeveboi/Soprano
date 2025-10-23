@@ -142,7 +142,7 @@ public abstract class BasicFunctions {
         stackCount--;
     }
 
-    //runs a stack-based execution abstraction
+    //iterates forward once on a stack-based execution abstraction
     public void run() {
 
         if (!this.finished()) {
