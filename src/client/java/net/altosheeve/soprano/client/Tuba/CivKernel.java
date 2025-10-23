@@ -692,9 +692,388 @@ public class CivKernel extends BasicFunctions {
 
     }
 
-    public void _GO_TO_VAGUE() {
-        //move the pointer forward and back by however many expressions. slower but simpler
-        //implement after prototyping is done
+    public void _OP_AND() {
+
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+
+        ArrayList<Byte> out = new ArrayList<>();
+
+        if (value1.size() > value2.size()) {
+
+            for (int i = 0; i < value1.size(); i++) {
+                if (i < value2.size()) out.add((byte) (value1.get(i) & value2.get(i)));
+                else                   out.add((byte) (0));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+
+        }
+
+        else {
+
+            for (int i = 0; i < value2.size(); i++) {
+                if (i < value1.size()) out.add((byte) (value1.get(i) & value2.get(i)));
+                else                   out.add((byte) (0));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+
+        }
+
+    }
+
+    public void _OP_OR() {
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+
+        ArrayList<Byte> out = new ArrayList<>();
+
+        if (value1.size() > value2.size()) {
+
+            for (int i = 0; i < value1.size(); i++) {
+                if (i < value2.size()) out.add((byte) (value1.get(i) | value2.get(i)));
+                else                   out.add(value1.get(i));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+
+        }
+
+        else {
+
+            for (int i = 0; i < value2.size(); i++) {
+                if (i < value1.size()) out.add((byte) (value1.get(i) | value2.get(i)));
+                else                   out.add(value2.get(i));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+
+        }
+
+    }
+
+    public void _OP_XOR() {
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+
+        ArrayList<Byte> out = new ArrayList<>();
+
+        if (value1.size() > value2.size()) {
+
+            for (int i = 0; i < value1.size(); i++) {
+                if (i < value2.size()) out.add((byte) (value1.get(i) ^ value2.get(i)));
+                else                   out.add(value1.get(i));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+
+        }
+
+        else {
+
+            for (int i = 0; i < value2.size(); i++) {
+                if (i < value1.size()) out.add((byte) (value1.get(i) ^ value2.get(i)));
+                else                   out.add(value2.get(i));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+        }
+
+    }
+
+    public void _OP_INV() {
+
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> out = new ArrayList<>();
+
+        for (byte b : value1) out.add((byte) ~b);
+
+        this.exitValues = Typing._ENCODE_STRING(out);
+
+    }
+
+    public void _OP_SHIFT_LEFT() {
+
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
+        int places = Typing._PARSE_INTEGER(this);
+
+        ArrayList<Byte> out = new ArrayList<>();
+
+        for (byte b : value1) out.add((byte) (b << places));
+
+        this.exitValues = Typing._ENCODE_STRING(out);
+
+    }
+
+    public void _OP_SHIFT_RIGHT() {
+
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
+        int places = Typing._PARSE_INTEGER(this);
+
+        ArrayList<Byte> out = new ArrayList<>();
+
+        for (byte b : value1) out.add((byte) (b >> places));
+
+        this.exitValues = Typing._ENCODE_STRING(out);
+
+    }
+
+    public void _OP_ADD() {
+
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+
+        ArrayList<Byte> out = new ArrayList<>();
+
+        if (value1.size() > value2.size()) {
+
+            for (int i = 0; i < value1.size(); i++) {
+                if (i < value2.size()) out.add((byte) (value1.get(i) + value2.get(i)));
+                else                   out.add(value1.get(i));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+
+        }
+
+        else {
+
+            for (int i = 0; i < value2.size(); i++) {
+                if (i < value1.size()) out.add((byte) (value1.get(i) + value2.get(i)));
+                else                   out.add(value2.get(i));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+
+        }
+
+    }
+
+    public void _OP_SUB() {
+
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+
+        ArrayList<Byte> out = new ArrayList<>();
+
+        if (value1.size() > value2.size()) {
+
+            for (int i = 0; i < value1.size(); i++) {
+                if (i < value2.size()) out.add((byte) (value1.get(i) - value2.get(i)));
+                else                   out.add(value1.get(i));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+
+        }
+
+        else {
+
+            for (int i = 0; i < value2.size(); i++) {
+                if (i < value1.size()) out.add((byte) (value1.get(i) - value2.get(i)));
+                else                   out.add(value2.get(i));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+
+        }
+
+    }
+
+    public void _OP_MUL() {
+
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+
+        ArrayList<Byte> out = new ArrayList<>();
+
+        if (value1.size() > value2.size()) {
+
+            for (int i = 0; i < value1.size(); i++) {
+                if (i < value2.size()) out.add((byte) (value1.get(i) * value2.get(i)));
+                else                   out.add((byte) (0));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+
+        }
+
+        else {
+
+            for (int i = 0; i < value2.size(); i++) {
+                if (i < value1.size()) out.add((byte) (value1.get(i) * value2.get(i)));
+                else                   out.add((byte) (0));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+
+        }
+    }
+
+    public void _OP_DIV() {
+
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+
+        ArrayList<Byte> out = new ArrayList<>();
+
+        if (value1.size() > value2.size()) {
+
+            for (int i = 0; i < value1.size(); i++) {
+                if (i < value2.size()) out.add((byte) (value1.get(i) / value2.get(i)));
+                else                   out.add((byte) (0));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+
+        }
+
+        else {
+
+            for (int i = 0; i < value2.size(); i++) {
+                if (i < value1.size()) out.add((byte) (value1.get(i) / value2.get(i)));
+                else                   out.add((byte) (0));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+
+        }
+    }
+
+    public void _OP_MOD() {
+
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+
+        ArrayList<Byte> out = new ArrayList<>();
+
+        if (value1.size() > value2.size()) {
+
+            for (int i = 0; i < value1.size(); i++) {
+                if (i < value2.size()) out.add((byte) (value1.get(i) % value2.get(i)));
+                else                   out.add((byte) (0));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+
+        }
+
+        else {
+
+            for (int i = 0; i < value2.size(); i++) {
+                if (i < value1.size()) out.add((byte) (value1.get(i) % value2.get(i)));
+                else                   out.add((byte) (0));
+            }
+
+            this.exitValues = Typing._ENCODE_STRING(out);
+
+        }
+    }
+
+    public void _GET_X() {
+
+        assert MinecraftClient.getInstance().player != null;
+        this.exitValues = Typing._ENCODE_FLOAT((float) MinecraftClient.getInstance().player.getX());
+
+    }
+
+    public void _GET_Y() {
+
+        assert MinecraftClient.getInstance().player != null;
+        this.exitValues = Typing._ENCODE_FLOAT((float) MinecraftClient.getInstance().player.getY());
+
+    }
+
+    public void _GET_Z() {
+
+        assert MinecraftClient.getInstance().player != null;
+        this.exitValues = Typing._ENCODE_FLOAT((float) MinecraftClient.getInstance().player.getZ());
+
+    }
+
+    public void _GET_XYZ() {
+
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        assert player != null;
+
+        this.exitValues = Typing._ENCODE_XYZ(player.getPos().toVector3f());
+
+    }
+
+    public void _GET_VX() {
+
+        assert MinecraftClient.getInstance().player != null;
+        this.exitValues = Typing._ENCODE_FLOAT((float) MinecraftClient.getInstance().player.getX() - Navigation.playerPrev.x);
+
+    }
+
+    public void _GET_VY() {
+
+        assert MinecraftClient.getInstance().player != null;
+        System.out.println(MinecraftClient.getInstance().player.getY() - Navigation.playerPrev.y);
+        this.exitValues = Typing._ENCODE_FLOAT((float) MinecraftClient.getInstance().player.getY() - Navigation.playerPrev.y);
+
+    }
+
+    public void _GET_VZ() {
+
+        assert MinecraftClient.getInstance().player != null;
+        this.exitValues = Typing._ENCODE_FLOAT((float) MinecraftClient.getInstance().player.getZ() - Navigation.playerPrev.z);
+
+    }
+
+    public void _GET_VXYZ() {
+
+        assert MinecraftClient.getInstance().player != null;
+        this.exitValues = Typing._ENCODE_XYZ(MinecraftClient.getInstance().player.getVelocity().toVector3f());
+
+    }
+
+    public void _GET_PROGRAM_POINTER() {
+        this.exitValues = Typing._ENCODE_INTEGER(this.programPointer);
+    }
+
+    public void _ATTACK_HOLD() {
+        boolean enable = Typing._PARSE_INTEGER(this) == 0;
+        MinecraftClient.getInstance().options.attackKey.setPressed(enable);
+    }
+
+    public void _USE_HOLD() {
+        boolean enable = Typing._PARSE_INTEGER(this) == 0;
+        MinecraftClient.getInstance().options.useKey.setPressed(enable);
+    }
+
+    public void _COUNT_ITEM_INVENTORY() {
+
+        String itemName = Typing._PARSE_STRING(this);
+
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        PlayerInventory inventory = player.getInventory();
+
+        int total = 0;
+
+        for (int i = 0; i < inventory.size(); i++) total += inventory.getStack(i).getCount();
+
+        this.exitValues = Typing._ENCODE_INTEGER(total);
+
+    }
+
+    public void _COUNT_ITEM_INTERACTABLE() {
+
+        String itemName = Typing._PARSE_STRING(this);
+
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        ScreenHandler chestHandler = player.currentScreenHandler;
+        ClientPlayerInteractionManager interactionManager = MinecraftClient.getInstance().interactionManager;
+
+        if (chestHandler == null) return;
+
+        int total = 0;
+        int interactableSize = chestHandler.slots.size() - 36;
+
+        for (int i = 0; i < interactableSize - 1; i++) total += chestHandler.slots.get(i).getStack().getCount();
+
     }
 
     public CivKernel(ArrayList<Byte> program, ArrayList<Byte> arguments, BasicFunctions parent) {
