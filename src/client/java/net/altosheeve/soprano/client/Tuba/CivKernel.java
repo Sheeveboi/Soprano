@@ -311,7 +311,10 @@ public class CivKernel extends BasicFunctions {
 
     }
 
-    public void _RESET_CONTROLS() { Navigation.resetControls(); }
+    public void _RESET_CONTROLS() {
+        System.out.println("resetting controls");
+        Navigation.resetControls();
+    }
 
     public void _SET_CURRENT_NODE() {
         int index = Typing._PARSE_INTEGER(this);
