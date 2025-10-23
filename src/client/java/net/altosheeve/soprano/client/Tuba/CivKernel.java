@@ -635,10 +635,9 @@ public class CivKernel extends BasicFunctions {
         int register = Typing._PARSE_INTEGER(this);
         int length = Typing._PARSE_INTEGER(this);
 
-        for (int i = 0; i < length; i++) {
-            this.itter();
-            this.memory.put((byte) (register + i), this.translateProgramPointer());
-        }
+        ArrayList<Byte> body = Typing._GATHER_BODY(this, false);
+
+        for (int i = 0; i < body.size(); i++) this.memory.put((byte) (register + i), body.get(i));
 
     }
 
@@ -648,7 +647,7 @@ public class CivKernel extends BasicFunctions {
     }
 
     public void _PRINT_RAW() {
-        System.out.println(Typing._GATHER_BODY(this));
+        System.out.println(Typing._GATHER_BODY(this, false));
     }
 
     public void _PRINT_FLOAT() { System.out.println(Typing._PARSE_FLOAT(this)); }
@@ -679,7 +678,7 @@ public class CivKernel extends BasicFunctions {
 
     public void _CONDITIONAL() {
 
-        ArrayList<Byte> value = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value = Typing._GATHER_BODY(this, false);
 
         boolean out = true;
         for (int i = 0; i < value.size() && out; i++) out = value.get(i) == 0;
@@ -700,8 +699,8 @@ public class CivKernel extends BasicFunctions {
 
     public void _OP_AND() {
 
-        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
-        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this, false);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this, false);
 
         ArrayList<Byte> out = new ArrayList<>();
 
@@ -730,8 +729,8 @@ public class CivKernel extends BasicFunctions {
     }
 
     public void _OP_OR() {
-        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
-        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this, false);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this, false);
 
         ArrayList<Byte> out = new ArrayList<>();
 
@@ -760,8 +759,8 @@ public class CivKernel extends BasicFunctions {
     }
 
     public void _OP_XOR() {
-        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
-        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this, false);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this, false);
 
         ArrayList<Byte> out = new ArrayList<>();
 
@@ -790,7 +789,7 @@ public class CivKernel extends BasicFunctions {
 
     public void _OP_INV() {
 
-        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this, false);
         ArrayList<Byte> out = new ArrayList<>();
 
         for (byte b : value1) out.add((byte) ~b);
@@ -801,7 +800,7 @@ public class CivKernel extends BasicFunctions {
 
     public void _OP_SHIFT_LEFT() {
 
-        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this, false);
         int places = Typing._PARSE_INTEGER(this);
 
         ArrayList<Byte> out = new ArrayList<>();
@@ -814,7 +813,7 @@ public class CivKernel extends BasicFunctions {
 
     public void _OP_SHIFT_RIGHT() {
 
-        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this, false);
         int places = Typing._PARSE_INTEGER(this);
 
         ArrayList<Byte> out = new ArrayList<>();
@@ -827,8 +826,8 @@ public class CivKernel extends BasicFunctions {
 
     public void _OP_ADD() {
 
-        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
-        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this, false);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this, false);
 
         ArrayList<Byte> out = new ArrayList<>();
 
@@ -858,8 +857,8 @@ public class CivKernel extends BasicFunctions {
 
     public void _OP_SUB() {
 
-        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
-        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this, false);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this, false);
 
         ArrayList<Byte> out = new ArrayList<>();
 
@@ -889,8 +888,8 @@ public class CivKernel extends BasicFunctions {
 
     public void _OP_MUL() {
 
-        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
-        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this, false);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this, false);
 
         ArrayList<Byte> out = new ArrayList<>();
 
@@ -919,8 +918,8 @@ public class CivKernel extends BasicFunctions {
 
     public void _OP_DIV() {
 
-        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
-        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this, false);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this, false);
 
         ArrayList<Byte> out = new ArrayList<>();
 
@@ -949,8 +948,8 @@ public class CivKernel extends BasicFunctions {
 
     public void _OP_MOD() {
 
-        ArrayList<Byte> value1 = Typing._GATHER_BODY(this);
-        ArrayList<Byte> value2 = Typing._GATHER_BODY(this);
+        ArrayList<Byte> value1 = Typing._GATHER_BODY(this, false);
+        ArrayList<Byte> value2 = Typing._GATHER_BODY(this, false);
 
         ArrayList<Byte> out = new ArrayList<>();
 
