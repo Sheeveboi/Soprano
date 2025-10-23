@@ -39,6 +39,7 @@ public class Client implements ClientModInitializer {
                 tick ++;
                 tick = tick % 100;
                 Navigation.tick = tick;
+                Navigation.calculateAllNodes();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

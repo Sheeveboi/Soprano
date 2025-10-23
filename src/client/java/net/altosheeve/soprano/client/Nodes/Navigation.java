@@ -4,7 +4,6 @@ import net.altosheeve.soprano.client.Core.Rendering;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.Camera;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
 
@@ -47,6 +46,7 @@ public class Navigation {
     }
 
     public static void basicWalkHandler() {
+
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
         assert player != null;
@@ -57,6 +57,7 @@ public class Navigation {
 
         client.options.useKey.setPressed(true);
         client.options.jumpKey.setPressed(true);
+
     }
 
     public static void doorHandler() {
@@ -161,7 +162,7 @@ public class Navigation {
             Camera camera = Rendering.client.gameRenderer.getCamera();
 
             double dx = camera.getPos().x - targetNode.x - .5;
-            double dy = camera.getPos().y - targetNode.y - 2.5;
+            double dy = camera.getPos().y - targetNode.y - .5;
             double dz = camera.getPos().z - targetNode.z - .5;
 
             double dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
@@ -176,7 +177,7 @@ public class Navigation {
             pitch = (float) (pitch * 180.0 / Math.PI);
             yaw = (float) (yaw * 180.0 / Math.PI) + 90;
 
-            player.setPitch(pitch);
+            player.setPitch(-pitch);
             player.setYaw(yaw);
 
             client.options.useKey.setPressed(true);
@@ -204,8 +205,13 @@ public class Navigation {
         else client.options.leftKey.setPressed(true);
     }
 
-    public static ArrayList<Integer> generatePathingIttinerary(String nodeTag) {
-        ArrayList<Integer> out = new ArrayList<>();
+    public static void calculateAllNodes() {
+        for (Node node : nodes) node.calculateDistances();
+    }
+
+    public static ArrayList<Integer> generatePathingItinerary(String nodeTag) {
+
+        ArrayList<Integer> closestApproachOut = new ArrayList<>();
 
         Optional<Node> testing = nodes.stream().filter(node -> Objects.equals(nodeTag, node.tag)).findFirst();
         if (testing.isEmpty()) return null;
@@ -218,56 +224,69 @@ public class Navigation {
         class key implements Comparator {
             @Override
             public int compare(Object o1, Object o2) {
+
                 Node node1 = nodes.get((Integer) o1);
                 Node node2 = nodes.get((Integer) o2);
 
-                double node1Dist = Math.sqrt(
-                        Math.pow(targetNode.x - node1.x , 2) +
-                        Math.pow(targetNode.y - node1.y , 2) +
-                        Math.pow(targetNode.z - node1.z , 2)
-                );
+                int node1Dist = 99999;
+                int node2Dist = 99999;
 
-                double node2Dist = Math.sqrt(
-                        Math.pow(targetNode.x - node2.x , 2) +
-                        Math.pow(targetNode.y - node2.y , 2) +
-                        Math.pow(targetNode.z - node2.z , 2)
-                );
+                if (node1.distanceMap.containsKey(nodes.indexOf(targetNode))) node1Dist = node1.distanceMap.get(nodes.indexOf(targetNode));
+                if (node2.distanceMap.containsKey(nodes.indexOf(targetNode))) node2Dist = node2.distanceMap.get(nodes.indexOf(targetNode));
 
                 if (node1Dist > node2Dist) return 1;
+                else if (node1Dist == node2Dist) return 0;
                 return -1;
             }
         }
 
-        while (testNode != targetNode) {
+        //gather based on closest approach
+        while (true) {
 
-            //get next closest node from the current testNode and set that node as the textNode
             ArrayList<Integer> sorted = testNode.connections;
             sorted.sort(new key());
 
             boolean deadEnd = true;
 
-            for (int i : sorted) {
-                Node instance = nodes.get(i);
-                if (!searched.contains(i)) {
-                    if (instance.type != Node.NodeType.INTERACTABLE || instance == targetNode) {
-                        searched.add(i);
-                        out.add(i);
-                        testNode = instance;
+            if (testNode.connections.contains(nodes.indexOf(targetNode))) {
+                closestApproachOut.add(nodes.indexOf(targetNode));
+                return closestApproachOut;
+            }
+
+            if (!searched.containsAll(testNode.connections)) {
+                for (int i : sorted) {
+
+                    Node instance = nodes.get(i);
+
+                    if (!searched.contains(i)) {
+
                         deadEnd = false;
+
+                        searched.add(i);
+                        closestApproachOut.add(i);
+
+                        testNode = instance;
+
+                        System.out.println(testNode.distanceMap.get(nodes.indexOf(targetNode)));
+
                         break;
+
                     }
+
                 }
             }
 
+            else if (closestApproachOut.isEmpty()) return closestApproachOut;
+
             //if all the nodes in the testNode's connections have been tested already, jump back one node
             if (deadEnd) {
-                out.removeLast();
-                testNode = nodes.get(out.getLast());
+
+                closestApproachOut.removeLast();
+
+                testNode = nodes.get(closestApproachOut.getLast());
+
             }
+
         }
-
-        System.out.println(out);
-
-        return out;
     }
 }

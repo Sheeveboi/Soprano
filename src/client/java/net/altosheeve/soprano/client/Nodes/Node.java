@@ -3,6 +3,9 @@ package net.altosheeve.soprano.client.Nodes;
 import net.altosheeve.soprano.client.RenderMethods.Util.RenderBox;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Node extends RenderBox {
 
@@ -16,6 +19,7 @@ public class Node extends RenderBox {
     public String tag;
     public ArrayList<Integer> connections;
     public NodeType type;
+    public Map<Integer, Integer> distanceMap = new HashMap<>();
 
     public void setColor() {
         this.a = .3f;
@@ -72,5 +76,69 @@ public class Node extends RenderBox {
         this.setColor();
         this.tag = tag;
         this.connections = connections;
+    }
+
+    public void calculateDistances() {
+
+        Map<Integer, ArrayList<Integer>> potentialDistances = new HashMap<>();
+
+        //gather distances of all neighbors
+        for (int index : this.connections) {
+
+            Node neighbor = Navigation.nodes.get(index);
+
+            //set distances to self to one
+            Navigation.nodes.get(index).distanceMap.put(Navigation.nodes.indexOf(this), 1);
+            this.distanceMap.put(index, 1);
+
+            for (int distanceKey : neighbor.distanceMap.keySet()) {
+
+                if (distanceKey != Navigation.nodes.indexOf(this)) {
+
+                    int distance = neighbor.distanceMap.get(distanceKey);
+
+                    if (!potentialDistances.containsKey(distanceKey))
+                        potentialDistances.put(distanceKey, new ArrayList<>());
+
+                    potentialDistances.get(distanceKey).add(distance);
+
+                }
+
+            }
+
+        }
+
+        class key implements Comparator {
+            @Override
+            public int compare(Object o1, Object o2) {
+
+                int distance1 = (int) o1;
+                int distance2 = (int) o2;
+
+                if      (distance1 > distance2) return 1;
+                else if (distance1 == distance2) return 0;
+                return -1;
+
+            }
+        }
+
+        //assign the closest distance of all the nodes the neighbors can see + 1
+        //do not assign if the distance is larger than the pre-existing distance
+        for (int distanceKey : potentialDistances.keySet()) {
+
+            ArrayList<Integer> sortedDistances = potentialDistances.get(distanceKey);
+            sortedDistances.sort(new key());
+
+            int finalDistance = sortedDistances.getLast() + 1;
+
+            if (!distanceMap.containsKey(distanceKey))
+                distanceMap.put(distanceKey, finalDistance);
+            else if (distanceMap.get(distanceKey) > finalDistance) {
+                distanceMap.put(distanceKey, finalDistance);
+                Navigation.nodes.get(distanceKey).distanceMap.put(distanceKey, finalDistance);
+            }
+
+        }
+
     }
 }
