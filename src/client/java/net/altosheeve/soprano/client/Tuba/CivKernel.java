@@ -645,6 +645,8 @@ public class CivKernel extends BasicFunctions {
         System.out.println(Typing._GATHER_BODY(this));
     }
 
+    public void _PRINT_FLOAT() { System.out.println(Typing._PARSE_FLOAT(this)); }
+
     public void _EXECUTE() {
 
         CivKernel program = Typing._PARSE_FUNCTION(this);
