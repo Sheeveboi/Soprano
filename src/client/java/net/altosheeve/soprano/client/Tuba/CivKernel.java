@@ -193,7 +193,7 @@ public class CivKernel extends BasicFunctions {
 
         yaw += 90;
 
-        player.setPitch(pitch);
+        player.setPitch(-pitch);
         player.setYaw(yaw);
 
         final boolean[] firstTick = {true};
