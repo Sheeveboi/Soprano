@@ -21,12 +21,12 @@ public class EditNodeScreen extends Screen {
 
     @Override
     public void init() {
-        TextFieldWidget nodeX = new TextFieldWidget(this.textRenderer, 10, 20, 100, 20, Text.of("Node X"));
-        TextFieldWidget nodeY = new TextFieldWidget(this.textRenderer, 10, 40, 100, 20, Text.of("Node Y"));
-        TextFieldWidget nodeZ = new TextFieldWidget(this.textRenderer, 10, 60, 100, 20, Text.of("Node Z"));
+        TextFieldWidget nodeX = new TextFieldWidget(this.textRenderer, 10, 20, 150, 20, Text.of("Node X"));
+        TextFieldWidget nodeY = new TextFieldWidget(this.textRenderer, 10, 40, 150, 20, Text.of("Node Y"));
+        TextFieldWidget nodeZ = new TextFieldWidget(this.textRenderer, 10, 60, 150, 20, Text.of("Node Z"));
 
-        TextFieldWidget type = new TextFieldWidget(this.textRenderer, 10, 80, 100, 20, Text.of("Node Type"));
-        TextFieldWidget name = new TextFieldWidget(this.textRenderer, 10, 100, 100, 20, Text.of("Node Name"));
+        TextFieldWidget type = new TextFieldWidget(this.textRenderer, 10, 80, 150, 20, Text.of("Node Type"));
+        TextFieldWidget name = new TextFieldWidget(this.textRenderer, 10, 100, 150, 20, Text.of("Node Name"));
 
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         assert player != null;
@@ -71,8 +71,6 @@ public class EditNodeScreen extends Screen {
             catch (IOException e) { throw new RuntimeException(e); }
         }).dimensions(60, 120, 50, 20).build();;
 
-
-
         ButtonWidget add = ButtonWidget.builder(Text.of("Add"), (widget) -> {
             try {
 
@@ -100,6 +98,27 @@ public class EditNodeScreen extends Screen {
             catch (IOException e) { throw new RuntimeException(e); }
         }).dimensions(10, 120, 50, 20).build();
 
+        ButtonWidget delete = ButtonWidget.builder(Text.of("Delete"), (widget) -> {
+
+            if (Navigation.currentNode != null) {
+
+                for (Node node : Navigation.nodes) {
+                    if (node != Navigation.currentNode && node.connections.contains(Navigation.nodes.indexOf(Navigation.currentNode)))
+                        node.connections.remove((Integer) Navigation.nodes.indexOf(Navigation.currentNode));
+                    node.distanceMap.remove(Navigation.nodes.indexOf(Navigation.currentNode));
+                }
+
+
+                Navigation.nodes.remove(Navigation.currentNode);
+
+                Navigation.currentNode = null;
+
+            }
+
+            try { NodeCreation.dumpNodes(); }
+            catch (IOException e) { throw new RuntimeException(e); }
+        }).dimensions(110, 120, 50, 20).build();
+
         ButtonWidget getPlayerCoords = ButtonWidget.builder(
                 Text.of("Apply Player Coords"),
                 (widget) -> {
@@ -107,7 +126,7 @@ public class EditNodeScreen extends Screen {
                     nodeY.setText(String.valueOf(player.getBlockY()));
                     nodeZ.setText(String.valueOf(player.getBlockZ()));
                 }
-        ).dimensions(10, 140, 100, 20).build();
+        ).dimensions(10, 140, 150, 20).build();
 
         addDrawableChild(nodeX);
         addDrawableChild(nodeY);
@@ -115,6 +134,7 @@ public class EditNodeScreen extends Screen {
         addDrawableChild(name);
         addDrawableChild(type);
         addDrawableChild(update);
+        addDrawableChild(delete);
         addDrawableChild(add);
         addDrawableChild(getPlayerCoords);
     }
