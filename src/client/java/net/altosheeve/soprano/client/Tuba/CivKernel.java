@@ -684,7 +684,20 @@ public class CivKernel extends BasicFunctions {
         for (int i = 0; i < value.size() && out; i++) out = value.get(i) == 0;
         //I could use streams but they're slower
 
-        ArrayList<Byte> body = Typing._GATHER_BODY(this);
+        ArrayList<Byte> body = Typing._GATHER_BODY(this, false);
+        if (out) this.pushStack(new CivKernel(body, new ArrayList<>(), this));
+
+    }
+
+    public void _INVERSE_CONDITIONAL() {
+
+        ArrayList<Byte> value = Typing._GATHER_BODY(this, false);
+
+        boolean out = true;
+        for (int i = 0; i < value.size() && out; i++) out = value.get(i) != 0;
+        //I could use streams but they're slower
+
+        ArrayList<Byte> body = Typing._GATHER_BODY(this, false);
         if (out) this.pushStack(new CivKernel(body, new ArrayList<>(), this));
 
     }
