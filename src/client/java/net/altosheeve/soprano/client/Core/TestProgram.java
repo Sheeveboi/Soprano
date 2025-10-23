@@ -18,12 +18,8 @@ public class TestProgram {
         testProgram.add((byte) Typing.STATIC_EXPRESSION); //static value
         testProgram.addAll(Typing._ENCODE_INTEGER(0)); //registery zero
 
-        //add length
-        testProgram.add((byte) Typing.STATIC_EXPRESSION); //static value
-        testProgram.addAll(Typing._ENCODE_INTEGER(Typing._ENCODE_STRING("test 1").size()));
-
-        //add body
-        testProgram.addAll(Typing._ENCODE_STRING("test 1"));
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
+        testProgram.addAll(Typing._ENCODE_STRING(Typing._ENCODE_STRING("test 1")));
 
         //calibrate
 
@@ -77,12 +73,9 @@ public class TestProgram {
         testConditional.addAll(Typing._ENCODE_INTEGER(Typing._ENCODE_STRING("this condition has passed!").size())); // encode string object length
         testConditional.addAll(Typing._ENCODE_STRING("this condition has passed!")); // encode string
 
-        //encode length
-        testProgram.add((byte) 0); //static value
-        testProgram.addAll(Typing._ENCODE_INTEGER(Typing._ENCODE_FUNCTION_BODY(testConditional).size())); //encode conditional size
-
         //encode body
-        testProgram.addAll(Typing._ENCODE_FUNCTION_BODY(testConditional));
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
+        testProgram.addAll(Typing._ENCODE_STRING(Typing._ENCODE_STRING(testConditional)));
 
         //conditional
         testProgram.add((byte) 0x24);
@@ -121,11 +114,11 @@ public class TestProgram {
 
         testProgram.add((byte) 0x22); //execute a function
 
-        testProgram.add((byte) 0); //static argument assignment
-        testProgram.addAll(Typing._ENCODE_FUNCTION_ARGS(testParameters)); //encode function arguments
+        testProgram.add((byte) Typing.STATIC_EXPRESSION); //static argument assignment
+        testProgram.addAll(Typing._ENCODE_STRING(testParameters)); //encode function arguments
 
-        testProgram.add((byte) 0); //static body assignment
-        testProgram.addAll(Typing._ENCODE_FUNCTION_BODY(testFunction)); //encode function body
+        testProgram.add((byte) Typing.STATIC_EXPRESSION); //static body assignment
+        testProgram.addAll(Typing._ENCODE_STRING(testFunction)); //encode function body
 
         testProgram.add((byte) 0x20); //print return value
         testProgram.add((byte) Typing.FUNCTIONAL_EXPRESSION);
@@ -144,7 +137,9 @@ public class TestProgram {
         basicPassConditional.add((byte) Typing.STATIC_EXPRESSION);
         basicPassConditional.addAll(Typing._ENCODE_FLOAT(.9f));
 
-        basicPassConditional.add((byte) 0x9);
+        basicPassConditional.add((byte) 0x20);
+        basicPassConditional.add((byte) Typing.STATIC_EXPRESSION);
+        basicPassConditional.addAll(Typing._ENCODE_STRING("Pass!"));
 
         ArrayList<Byte> basicFailConditional = new ArrayList<>();
 
@@ -157,6 +152,10 @@ public class TestProgram {
         //encode tolerance
         basicFailConditional.add((byte) Typing.STATIC_EXPRESSION);
         basicFailConditional.addAll(Typing._ENCODE_FLOAT(.9f));
+
+        basicFailConditional.add((byte) 0x20);
+        basicFailConditional.add((byte) Typing.STATIC_EXPRESSION);
+        basicFailConditional.addAll(Typing._ENCODE_STRING("Fail!"));
 
         testProgram.add((byte) 0x2); //path to
 
@@ -175,22 +174,40 @@ public class TestProgram {
 
         //pass conditional operation
         testProgram.add((byte) 0x43); //gather y velocity
+        testProgram.add((byte) 0x51); //wrap for memory assignment
+        testProgram.add((byte) Typing.FUNCTIONAL_EXPRESSION); //wrap for memory assignment
 
-        testProgram.add((byte) 0x21);
+        //put operation result in memory
+        testProgram.add((byte) 0x19);
+
         testProgram.add((byte) Typing.STATIC_EXPRESSION);
-        testProgram.addAll(Typing._ENCODE_FLOAT(.5f));
-        testProgram.add((byte) 0x21);
-        testProgram.add((byte) Typing.STATIC_EXPRESSION);
-        testProgram.addAll(Typing._ENCODE_FLOAT(1));
+        testProgram.addAll(Typing._ENCODE_INTEGER(0));
+
+        testProgram.add((byte) Typing.FUNCTIONAL_EXPRESSION); //encode wrapped value
 
         //pass conditional
         testProgram.add((byte) 0x24);
 
-        testProgram.add((byte) Typing.FUNCTIONAL_EXPRESSION); //if velocity is zero, value will be interpreted as false
+        testProgram.add((byte) Typing.DYNAMIC_EXPRESSION); //if velocity is zero, body will execute
+
+        testProgram.add((byte) Typing.STATIC_EXPRESSION); //static registry value
+        testProgram.addAll(Typing._ENCODE_INTEGER(0));
 
         //create static body
         testProgram.add((byte) Typing.STATIC_EXPRESSION);
-        testProgram.addAll(Typing._ENCODE_FUNCTION_BODY(basicPassConditional));
+        testProgram.addAll(Typing._ENCODE_STRING(basicPassConditional));
+
+        //fail conditional
+        testProgram.add((byte) 0x24a);
+
+        testProgram.add((byte) Typing.DYNAMIC_EXPRESSION); //if velocity is not zero, body will execute
+
+        testProgram.add((byte) Typing.STATIC_EXPRESSION); //static registry value
+        testProgram.addAll(Typing._ENCODE_INTEGER(0));
+
+        //create static body
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
+        testProgram.addAll(Typing._ENCODE_STRING(basicFailConditional));
 
         testProgram.add((byte) 0x2);
 
