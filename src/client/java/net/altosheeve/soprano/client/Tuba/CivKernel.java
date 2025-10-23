@@ -6,15 +6,20 @@ import net.altosheeve.soprano.client.Tuba.Async.Request;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.math.Vec3d;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CivKernel extends BasicFunctions {
+
+    private static final Logger log = LoggerFactory.getLogger(CivKernel.class);
 
     public void _CALIBRATE() {
         System.out.println("Calibrating");
