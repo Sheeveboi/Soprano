@@ -13,11 +13,12 @@ public class TestProgram {
 
         //create test 1 value in memory
 
-        testProgram.add((byte) 0x19);
+        testProgram.add((byte) 0x19); //put all
 
         testProgram.add((byte) Typing.STATIC_EXPRESSION); //static value
         testProgram.addAll(Typing._ENCODE_INTEGER(0)); //registery zero
 
+        //add length
         testProgram.add((byte) Typing.STATIC_EXPRESSION); //static value
         testProgram.addAll(Typing._ENCODE_INTEGER(Typing._ENCODE_STRING("test 1").size()));
 
@@ -25,7 +26,8 @@ public class TestProgram {
         testProgram.addAll(Typing._ENCODE_STRING("test 1"));
 
         //calibrate
-        testProgram.add((byte) 0x0);
+
+        testProgram.add((byte) 0x0); //calibrate
 
         //dynamic target value
         testProgram.add((byte) 1);
@@ -87,7 +89,7 @@ public class TestProgram {
 
         //get conditional value
         testProgram.add((byte) Typing.STATIC_EXPRESSION);
-        testProgram.addAll(Typing._ENCODE_INTEGER(1));
+        testProgram.addAll(Typing._ENCODE_INTEGER(0));
 
         //dynamic condition body
         testProgram.add((byte) Typing.DYNAMIC_EXPRESSION);
@@ -128,15 +130,78 @@ public class TestProgram {
         testProgram.add((byte) 0x20); //print return value
         testProgram.add((byte) Typing.FUNCTIONAL_EXPRESSION);
 
-        testProgram.add((byte) 0x2); //path to
+        //basic logic test
+
+        ArrayList<Byte> basicPassConditional = new ArrayList<>();
+
+        basicPassConditional.add((byte) 0x2);
 
         //encode node to path to
+        basicPassConditional.add((byte) Typing.STATIC_EXPRESSION);
+        basicPassConditional.addAll(Typing._ENCODE_STRING("Pass Button"));
+
+        //encode tolerance
+        basicPassConditional.add((byte) Typing.STATIC_EXPRESSION);
+        basicPassConditional.addAll(Typing._ENCODE_FLOAT(.9f));
+
+        basicPassConditional.add((byte) 0x9);
+
+        ArrayList<Byte> basicFailConditional = new ArrayList<>();
+
+        basicFailConditional.add((byte) 0x2);
+
+        //encode node to path to
+        basicFailConditional.add((byte) Typing.STATIC_EXPRESSION);
+        basicFailConditional.addAll(Typing._ENCODE_STRING("Fail Button"));
+
+        //encode tolerance
+        basicFailConditional.add((byte) Typing.STATIC_EXPRESSION);
+        basicFailConditional.addAll(Typing._ENCODE_FLOAT(.9f));
+
+        testProgram.add((byte) 0x2); //path to
+
         testProgram.add((byte) Typing.STATIC_EXPRESSION);
         testProgram.addAll(Typing._ENCODE_STRING("Conditional Test 1"));
 
-        //encode tolerance
         testProgram.add((byte) Typing.STATIC_EXPRESSION);
-        testProgram.addAll(Typing._ENCODE_FLOAT(.8f));
+        testProgram.addAll(Typing._ENCODE_FLOAT(1f));
+
+        //wait 3 ticks
+        testProgram.add((byte) 0x17);
+
+        //static time value
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
+        testProgram.addAll(Typing._ENCODE_INTEGER(3));
+
+        //pass conditional operation
+        testProgram.add((byte) 0x43); //gather y velocity
+
+        testProgram.add((byte) 0x21);
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
+        testProgram.addAll(Typing._ENCODE_FLOAT(.5f));
+        testProgram.add((byte) 0x21);
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
+        testProgram.addAll(Typing._ENCODE_FLOAT(1));
+
+        //pass conditional
+        testProgram.add((byte) 0x24);
+
+        testProgram.add((byte) Typing.FUNCTIONAL_EXPRESSION); //if velocity is zero, value will be interpreted as false
+
+        //create static body
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
+        testProgram.addAll(Typing._ENCODE_FUNCTION_BODY(basicPassConditional));
+
+        testProgram.add((byte) 0x2);
+
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
+        testProgram.addAll(Typing._ENCODE_STRING("chest 1"));
+
+        testProgram.add((byte) Typing.STATIC_EXPRESSION);
+        testProgram.addAll(Typing._ENCODE_FLOAT(1f));
+
+        testProgram.add((byte) 0x10);
+        testProgram.add((byte) 0x9);
 
         return testProgram;
     }
